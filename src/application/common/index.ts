@@ -17,6 +17,13 @@ export const CREATE_INSTALLATION = "/installations/"
 export const DELETE_INSTALLATION = "/installations/delete/"
 export const UPDATE_STATE_INSTALLATION = "/installations/state/"
 
+
+export const GET_PERSONAL = "/personal"
+export const CREATE_PERSONAL = "/personal"
+export const GET_BY_ID_PERSONAL = "/personal/"
+export const DELETE_PERSONAL = "/personal/delete/"
+
+
 // Error Messages
 export const errorEncountered = 'Error was encountered processing this request';
 export const timeoutMessage = "We are unable to fetch data at this time, kindly check your internet connection and we'll reconnect you.";
