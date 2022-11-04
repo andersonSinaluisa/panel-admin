@@ -5,6 +5,7 @@ import CreateClient from '../container/clients/create-container';
 import UpdateClient from '../container/clients/update-container';
 import ViewInstallations from '../container/installations/view-container';
 import CreateInstallation from '../container/installations/create-container';
+import PersonalView from '../container/personal/view-container';
 
 interface RoutesProps{
     name:string;
@@ -115,6 +116,20 @@ const routes:RoutesProps[] =[
         ],
         visible_in_menu:false,
         icon:'bx bxs-briefcase-alt-2',
+        order:1,
+        
+    },
+    {
+        name:'Personal',
+        relative_path:'personal',
+        path:'/inicio/personal',
+        element:<PersonalView title="Personal" breadcrumbs={['Personal']} />,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:true,
+        icon:'bx bxs-user',
         order:1,
         
     }

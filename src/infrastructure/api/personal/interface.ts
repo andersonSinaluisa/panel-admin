@@ -6,7 +6,7 @@ interface Permission{
 
 interface Personal{
     _id: string;
-    identityCounter: number;
+    identityCounter: string;
     userId: string;
     documentType: string;
     document: string;
