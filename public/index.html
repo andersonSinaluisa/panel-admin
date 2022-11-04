@@ -15,29 +15,70 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/app-assets/images/ico/apple-icon-120.png">
+    <link rel="shortcut icon" type="image/x-icon" href="%PUBLIC_URL%/assets/app-assets/images/ico/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/extensions/bootstrap-treeview.min.css">
+
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/editors/quill/quill.snow.css">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/colors.css">
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/components.css">
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/themes/dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/themes/semi-dark-layout.css">
+    <!-- END: Theme CSS-->
+
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/app-assets/vendors/css/forms/select/select2.min.css">
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/core/menu/menu-types/vertical-menu.css">
+
+    <!-- END: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/pages/app-email.css">
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/style.css">
+
+    
+    <title>Panel de control</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+   
+   
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+      <!-- BEGIN: Vendor JS-->
+    <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/vendors.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js"></script>
+    <!-- BEGIN Vendor JS-->
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/editors/quill/quill.min.js"></script>
+
+    <!-- END: Page Vendor JS-->
+    <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/extensions/bootstrap-treeview.min.js"></script>
+
+    <!-- BEGIN: Theme JS-->
+    <script src="%PUBLIC_URL%/assets/app-assets/js/core/app-menu.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/js/core/app.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/components.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/footer.js"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/pages/app-email.js"></script>
+    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/extensions/ext-component-treeview.js"></script>
+
   </body>
 </html>
