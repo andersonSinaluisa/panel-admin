@@ -4,6 +4,8 @@ import {USERS} from './users'
 import {CLIENTS} from './clients'
 import {INSTALLATIONS} from './installations'
 import {PERSONAL} from './personal'
+import {JOBS} from './jobs'
+import {TASKS} from './tasks'
 
 export interface RootModel extends Models<RootModel> {
 	AUTH: typeof AUTH;
@@ -11,7 +13,9 @@ export interface RootModel extends Models<RootModel> {
 	CLIENTS: typeof CLIENTS;
 	INSTALLATIONS: typeof INSTALLATIONS;
 	PERSONAL: typeof PERSONAL;
+	JOBS: typeof JOBS;
+	TASKS: typeof TASKS;
 }
 
 export const models :RootModel = { AUTH,USERS,
-	CLIENTS,INSTALLATIONS,PERSONAL };
+	CLIENTS,INSTALLATIONS,PERSONAL,JOBS,TASKS };

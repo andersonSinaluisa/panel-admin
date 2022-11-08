@@ -8,6 +8,7 @@ export interface PrivateLayoutProps{
     token:string;
     loading:boolean;
     clearSession:()=>void;
+    connectToWebSocket:()=>WebSocket;
 }
 
 
@@ -19,7 +20,8 @@ const mapSatateToProps = ({AUTH,loading}:any)=>(
 
 
 const mapDispatchToProps = ({ AUTH }: any) => ({
-    clearSession:()=>AUTH.clearSession()
+    clearSession:()=>AUTH.clearSession(),
+    connectToWebSocket:()=>AUTH.connectToWebSocket()
 })
 
 export default connect(mapSatateToProps, mapDispatchToProps)(PrivateLayout)

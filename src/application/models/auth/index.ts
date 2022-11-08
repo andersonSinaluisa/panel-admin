@@ -2,6 +2,7 @@ import { createModel } from "@rematch/core";
 import { ResponseServer } from "infrastructure/api/api-handler";
 import { RootModel } from "..";
 import {auth_interfaces, auth_request} from 'infrastructure/api/auth'
+import { WEBSOCKET } from "application/common";
 
 export interface SessionStateProps extends ResponseServer{
     data:auth_interfaces.LoginResponse;
@@ -59,7 +60,21 @@ export const AUTH = createModel<RootModel>()({
                 status:0,
                 error:""
             })
+        },
+        //connect to websocket
+        async connectToWebSocket(){
+            let ws = new WebSocket(WEBSOCKET);
+            
+            return new Promise((resolve,reject)=>{
+                ws.onopen = function(){
+                    resolve(ws);
+                }
+                ws.onerror = function(e){
+                    reject(e);
+                }
+            })
         }
+
 
     }),
     reducers:{

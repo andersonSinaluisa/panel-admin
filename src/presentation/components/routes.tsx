@@ -6,6 +6,9 @@ import UpdateClient from '../container/clients/update-container';
 import ViewInstallations from '../container/installations/view-container';
 import CreateInstallation from '../container/installations/create-container';
 import PersonalView from '../container/personal/view-container';
+import CreatePersonal from '../container/personal/create-container';
+import TaskView from '../container/tasks/view-container';
+import ViewJobs from '../container/jobs/view-container';
 
 interface RoutesProps{
     name:string;
@@ -132,7 +135,49 @@ const routes:RoutesProps[] =[
         icon:'bx bxs-user',
         order:1,
         
-    }
+    },
+    {
+        name:'Nuevo Personal',
+        relative_path:'personal/nuevo',
+        path:'/inicio/personal/nuevo',
+        element:<CreatePersonal title="Personal" breadcrumbs={['Nuevo Personal']} />,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:false,
+        icon:'bx bxs-user',
+        order:1,
+    },
+    
+    {
+        name:'Trabajos',
+        relative_path:'trabajos',
+        path:'/inicio/trabajos',
+        element:<ViewJobs title="Trabajos" breadcrumbs={["Listado de Trabajos"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:true,
+        icon:'bx bx-task',
+        order:1,
+
+    },
+    {
+        name:'Tareas',
+        relative_path:'tareas',
+        path:'/inicio/tareas',
+        element:<TaskView title="Tareas" breadcrumbs={["Listado de Tareas"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:true,
+        icon:'bx bx-task',
+        order:1,
+    },
+    
    
 ]
 

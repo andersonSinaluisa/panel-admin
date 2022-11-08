@@ -36,6 +36,10 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
         return <Navigate to="/" replace />;
     }
 
+
+    //connecto to websocket
+    
+
     return (
         <>
             <div className="header-navbar-shadow"></div>

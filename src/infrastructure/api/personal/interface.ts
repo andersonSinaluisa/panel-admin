@@ -46,6 +46,7 @@ interface CreatePersonalRequest{
     documentType: string;
     document: string;
     name: string;
+    lastname1:string;
     type: string;
     direction: string;
     postalCode: string;

@@ -75,7 +75,7 @@ const CreateClient = (props: CreateClientProps) => {
               visible:true
           })
           
-          navigate('/inicio/clientes/')
+          navigate('/inicio/personal/')
       }
 
       if(props.CreateClients.status!==0){
@@ -102,7 +102,6 @@ const CreateClient = (props: CreateClientProps) => {
    
     let error = ""
 
-    console.log(form)
 
     Object.values(form).forEach(e=>{
       if(e==""){

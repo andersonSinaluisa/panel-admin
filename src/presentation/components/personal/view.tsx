@@ -118,7 +118,7 @@ const PersonalView = (props: PersonalViewProps) => {
     return (
       <div className="row" id="table-borderless">
         <div className="col-12 mb-2">
-          <Link to="/inicio/persona/nuevo" className="btn btn-primary">
+          <Link to="/inicio/personal/nuevo" className="btn btn-primary">
             Nuevo Personal
           </Link>
         </div>
