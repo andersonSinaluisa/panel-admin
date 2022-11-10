@@ -17,7 +17,7 @@ const CreateJobs = (props:{headers:APIHANDLER.HeaderProps,body:CreateJobRequest}
 }
 
 const CloseJobs = (props:{headers:APIHANDLER.HeaderProps,body:CloseJobRequest,id:string})=>{
-    return APIHANDLER.post(Globals.CLOSE_JOBS+props.id,props.body,{
+    return APIHANDLER.put(Globals.CLOSE_JOBS+props.id,props.body,{
             Authorization:"Bearer "+props.headers.token
     })
 }

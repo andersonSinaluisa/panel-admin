@@ -352,9 +352,9 @@ const Navbar = (props:NavbarProps) => {
                     <i className="bx bx-message mr-50"></i> Chats
                   </a>
                   <div className="dropdown-divider"></div>
-                  <a className="dropdown-item" href="#" onClick={()=>props.onLogout()}>
+                  <button className="dropdown-item"  onClick={()=>props.onLogout()}>
                     <i className="bx bx-power-off mr-50"></i> Logout
-                  </a>
+                  </button>
                 </div>
               </li>
             </ul>

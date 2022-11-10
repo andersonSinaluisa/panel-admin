@@ -5,26 +5,26 @@ import { auth_interfaces } from "infrastructure/api/auth";
 import routes from "presentation/components/routes";
 
 
-interface SidebarProps{
-    dataLogin:auth_interfaces.LoginResponse;
+interface SidebarProps {
+    dataLogin: auth_interfaces.LoginResponse;
 }
 
 
-const Sidebar = (props:SidebarProps) => {
+const Sidebar = (props: SidebarProps) => {
 
-    const [data,setData] = useState<auth_interfaces.LoginResponse>({
-        message:{
-            idUser:0,
-            token:"",
+    const [data, setData] = useState<auth_interfaces.LoginResponse>({
+        message: {
+            idUser: "",
+            token: "",
         },
-        status:0
+        status: 0
     })
 
 
     useEffect(() => {
         setData(props.dataLogin);
     }, [props.dataLogin])
-    
+
 
 
     const hideMenu = () => {
@@ -35,12 +35,18 @@ const Sidebar = (props:SidebarProps) => {
     }
 
     return (
-        <div className="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+        <div className="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
             <div className="navbar-header">
                 <ul className="nav navbar-nav flex-row">
-                    <li className="nav-item mr-auto"><a className="navbar-brand" href="../../../html/ltr/vertical-menu-boxicons-template/index.html">
-                        <div className="brand-logo"><img className="logo" src="../../../app-assets/images/logo/logo.png" /></div>
-                        <h2 className="brand-text mb-0">{Globlas.APP_NAME.replace("Sistema", "")}</h2>
+                    <li className="nav-item mr-auto"><a className="navbar-brand" href="/">
+                        <div className="brand-logo"><img className="logo" src={window.location.origin + "/assets/app-assets/images/logo/logo.png"}
+                            style={{
+                                WebkitFilter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
+                                filter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
+                                width: "150px",
+                                height: "50px"
+                                
+                            }} /></div>
                     </a></li>
                     <li className="nav-item nav-toggle">
                         <a className="nav-link modern-nav-toggle pr-0" data-toggle="collapse" onClick={() => hideMenu()}>
@@ -51,12 +57,13 @@ const Sidebar = (props:SidebarProps) => {
                 </ul>
             </div>
             <div className="shadow-bottom"></div>
-            <div className="main-menu-content">
+            <div className="main-menu-content mt-5">
                 <ul className="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="">
 
-                {
+                    {
                         routes.map(e => {
-                            return e.visible_in_menu ? <li className="nav-item">
+                            return e.visible_in_menu ? <li className={window.location.pathname === e.path ? "nav-item active" : "nav-item"}>
+
                                 <Link to={e.path}>
                                     <i className={e.icon}></i>
                                     <span className="menu-title" data-i18n="">{e.name}</span></Link>

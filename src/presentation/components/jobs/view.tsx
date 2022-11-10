@@ -1,4 +1,5 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { clients_interface } from "infrastructure/api/clients";
 import { jobs_interface } from "infrastructure/api/jobs";
 import FilterLabel from "infrastructure/components/filter-label";
 import Input from "infrastructure/components/input";
@@ -16,7 +17,7 @@ import React, { useEffect, useState } from "react";
 
 
 
-const ViewJobs = (props:ViewJobsProps)=>{
+const ViewJobs = (props: ViewJobsProps) => {
 
 
     useTitle(props.title)
@@ -24,29 +25,41 @@ const ViewJobs = (props:ViewJobsProps)=>{
 
     const [show, setShow] = useState(false)
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [showModalClose, setShowModalClose] = useState<boolean>(false)
 
-    const [job, setJob] = useState<jobs_interface.Job>({
-        _id:"",
-        contactName:"",
-        contactPhone:"",
-        created_at:"",
-        description:"",
-        direction:"",
-        idClient:"",
-        identityCounter:"",
-        interventionDate:"",
+
+    const [closeJob,SetCloseJob] =  useState<jobs_interface.CloseJobRequest>({
         material:"",
         note:"",
-        obsContact:"",
-        priority:"",
-        technical:"",
-        type:"",
-        workReport:"",
+        workReport:""
+    })
+    const [job, setJob] = useState<jobs_interface.Job>({
+        _id: "",
+        contactName: "",
+        contactPhone: "",
+        created_at: "",
+        description: "",
+        direction: "",
+        idClient: "",
+        identityCounter: "",
+        interventionDate: "",
+        material: "",
+        note: "",
+        obsContact: "",
+        priority: "",
+        technical: "",
+        type: "",
+        workReport: "",
+        state: "",
     })
 
-    const [jobs,setJobs] = useState<jobs_interface.GetJobsResponse>({
-        message:[],
-        status:0
+    const [jobs, setJobs] = useState<jobs_interface.GetJobsResponse>({
+        message: [],
+        status: 0
+    })
+    const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
+        message: [],
+        status: 0
     })
 
     const [message, setMessage] = useState<ToastProps>({
@@ -55,27 +68,55 @@ const ViewJobs = (props:ViewJobsProps)=>{
         title: "",
         description: "",
     });
-    
-    
+
+
     const [form, setForm] = useState<jobs_interface.CreateJobRequest>({
-       contactName:"",
-       contactPhone:"",
-       description:"",
-       direction:"",
-       idClient:"",
-       interventionDate:"",
-       material:"",
-       obsContact:"",
-       priority:"",
-       technical:"",
-       type:""
+        contactName: "",
+        contactPhone: "",
+        description: "",
+        direction: "",
+        idClient: "",
+        interventionDate: "",
+        material: "",
+        obsContact: "",
+        priority: "",
+        technical: "",
+        type: ""
     })
 
-    useEffect(()=>{
+    useEffect(() => {
         props.onGetJobsAsync({
-            token:props.token
+            token: props.token
         })
-    },[])
+        props.onGetClientsAsync({
+            token: props.token
+        })
+    }, [])
+
+    useEffect(() => {
+        if (props.CreateJob.status === 200) {
+            setMessage({
+                description: "Trabajo Creado correctamente",
+                title: "",
+                type: "success",
+                visible: true
+            })
+            return;
+        }
+
+        if (props.CreateJob.status !== 0) {
+            setMessage({
+                description: props.CreateJob.error,
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+    }, [props.CreateJob])
+
+
+
     useEffect(() => {
         document.body.className = ""
         document.body.className = "vertical-layout vertical-menu-modern boxicon-layout no-card-shadow content-left-sidebar todo-application navbar-sticky footer-static "
@@ -83,12 +124,41 @@ const ViewJobs = (props:ViewJobsProps)=>{
 
     }, [])
 
+    useEffect(() => {
 
-    useEffect(()=>{
+        if (props.CloseJob.status !== 0) {
+            if (props.CloseJob.status === 200) {
+                setMessage({
+                    description: "Trabajo Cerrado correctamente",
+                    title: "",
+                    type: "success",
+                    visible: true
+                })
+                props.onGetJobsAsync({
+                    token: props.token
+                })
+                return;
+            }
+            setMessage({
+                description: props.CloseJob.error,
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+    }, [props.CloseJob])
+
+    useEffect(() => {
         setJobs(props.GetJobs)
-    },[props.GetJobs])
+    }, [props.GetJobs])
 
-    
+    useEffect(() => {
+        setClients(props.GetClients)
+    }, [props.GetClients])
+
+
     const handleChange = (
         event: React.FormEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
     ) => {
@@ -99,225 +169,527 @@ const ViewJobs = (props:ViewJobsProps)=>{
     };
 
 
+    const handleShowModal = (job: jobs_interface.Job) => {
+        setShowModal(true)
+        setJob(job)
+    }
+
 
 
     const handleSave = () => {
         
 
+        //validate fields
+        if (form.contactName === "") {
+            setMessage({
+                description: "El campo Nombre de contacto es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.contactPhone === "") {
+            setMessage({
+                description: "El campo Teléfono de contacto es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.description === "") {
+            setMessage({
+                description: "El campo Descripción es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.direction === "") {
+            setMessage({
+                description: "El campo Dirección es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.idClient === "") {
+
+            setMessage({
+                description: "El campo Cliente es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.interventionDate === "") {
+            setMessage({
+                description: "El campo Fecha de intervención es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.material === "") {
+
+            setMessage({
+                description: "El campo Material es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.obsContact === "") {
+            setMessage({
+                description: "El campo Observaciones de contacto es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.priority === "") {
+            setMessage({
+                description: "El campo Prioridad es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.technical === "") {
+            setMessage({
+                description: "El campo Técnico es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if (form.type === "") {
+            setMessage({
+                description: "El campo Tipo es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        props.onCreateJobAsync({
+            body: form,
+            headers:{
+                token: props.token
+            }
+        })
+
+        props.onGetJobsAsync({
+            token: props.token
+        })
+        setShow(false)
     }
 
 
-    const handleOpenCreateJob = ()=>{
+    const handleOpenCreateJob = () => {
         setShow(true)
-
+        setForm({
+            contactName: "",
+            contactPhone: "",
+            description: "",
+            direction: "",
+            idClient: "",
+            interventionDate: "",
+            material: "",
+            obsContact: "",
+            priority: "",
+            technical: "",
+            type: ""
+        })
+        setJob({
+            _id: "",
+            contactName: "",
+            contactPhone: "",
+            created_at: "",
+            description: "",
+            direction: "",
+            idClient: "",
+            identityCounter: "",
+            interventionDate: "",
+            material: "",
+            note: "",
+            obsContact: "",
+            priority: "",
+            technical: "",
+            type: "",
+            workReport: "",
+            state: ""
+        })
     }
 
-    const handleDeleteJob = (job:any)=>{
-
-    }
-
-
-    const handleCloseJob = (job:any)=>{
+    const handleDeleteJob = (job: any) => {
         
+        props.onDeleteJobAsync({
+            headers: {
+                token: props.token
+            },
+            id: job._id
+        })
+        setShowModal(false)
+        props.onGetJobsAsync({
+            token: props.token
+        })
     }
 
-    const handleSelect = (item:any)=>{
 
+    const handleCloseJob = (job: any) => {
+        setShowModalClose(true)
+        setJob(job)
     }
 
-    return(
+    const handleSaveCloseJob = ()=>{
+        //validate fields
+        if(closeJob.material === ""){
+            setMessage({
+                description: "El campo Material es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if(closeJob.note === ""){
+            setMessage({
+                description: "El campo Nota es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        if(closeJob.workReport === ""){
+            setMessage({
+                description: "El campo Reporte de trabajo es requerido",
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            return;
+        }
+
+        props.onCloseJobAsync({
+            body: closeJob,
+            headers:{
+                token: props.token
+            },
+            id: job._id
+        })
+        setShowModalClose(false)
+            
+    }
+
+    const handleSelect = (item: any) => {
+        setForm(
+            {
+                contactName: item.contactName,
+                contactPhone: item.contactPhone,
+                description: item.description,
+                direction: item.direction,
+                idClient: item.idClient,
+                interventionDate: item.interventionDate,
+                material: item.material,
+                obsContact: item.obsContact,
+                priority: item.priority,
+                technical: item.technical,
+                type: item.type
+            }
+        )
+        setJob(item)
+        setShow(true)
+    }
+
+    return (
         <div className="content-area-wrapper" style={{ top: '-90px' }}>
-        <SidebarLeft>
-            <TodoMenu>
-                <div className="form-group text-center add-task">
-                    {/* new task button */}
-                    <button type="button" className="btn btn-primary add-task-btn btn-block my-1" onClick={() => handleOpenCreateJob()}>
-                        <i className="bx bx-plus"></i>
-                        <span>Nuevo Trabajo</span>
-                    </button>
-                </div>
-                {/* sidebar list start */}
-                <div className="sidebar-menu-list">
-                    <ListGroup
-                        key={1}
-                        items={[
-                            {
-                                label: "Todas",
-                                onClick: () => { }
-                            },
-                        ]}
-                    />
-
-                    <FilterLabel label="Filtros" />
-                    <ListGroup
-                        key={1}
-                        items={[
-                            {
-                                label: "Hoy",
-                                onClick: () => { }
-                            },
-                            {
-                                label: "Ayer",
-                                onClick: () => { }
-                            },
-                        ]}
-                    />
-
-                    <FilterLabel label="Estados" />
-
-                    <ListGroup
-                        key={1}
-                        items={[
-                            {
-                                label: <>{"Abiertas"} <span className="bullet bullet-sm bullet-warning"></span></>,
-                                classes: "d-flex align-items-center justify-content-between",
-                                onClick: () => { }
-                            },
-                            {
-                                label: <>{"Cerradas"} <span className="bullet bullet-sm bullet-success"></span></>,
-                                classes: "d-flex align-items-center justify-content-between",
-                                onClick: () => { }
-                            },
-                        ]}
-                    />
-                    <FilterLabel label="Prioridad" />
-
-                    <ListGroup
-                        key={1}
-                        items={[
-                            {
-                                label: <>{"Alta"} <span className="bullet bullet-sm bullet-warning"></span></>,
-                                classes: "d-flex align-items-center justify-content-between",
-                                onClick: () => { }
-                            },
-                            {
-                                label: <>{"Media"} <span className="bullet bullet-sm bullet-info"></span></>,
-                                classes: "d-flex align-items-center justify-content-between",
-                                onClick: () => { }
-                            },
-                            {
-                                label: <>{"Baja"} <span className="bullet bullet-sm bullet-success"></span></>,
-                                classes: "d-flex align-items-center justify-content-between",
-                                onClick: () => { }
-                            },
-                        ]}
-                    />
-                </div>
-            </TodoMenu>
-
-            {/* todo new task sidebar */}
-            <SidebarRight
-                title="Nuevo Trabajo"
-                onClose={() => setShow(!show)}
-                show={show}
-
-            >
-                <>
-                    <Input
-                        label="Titulo"
-                        placeholder="Titulo"
-                        type="text"
-                        name="direction"
-                        onChange={handleChange}
-                        value={form.direction}
-                    />
-                    <Input
-                        label="Tipo tarea"
-                        placeholder="Tipo tarea"
-                        type="text"
-                        name="type"
-                        onChange={handleChange}
-                        value={form.type}
-
-                    />
-                    <div className="form-group">
-                        <label htmlFor="">Descripción</label>
-                        <textarea onChange={handleChange}
-                            name="description"
-                            className="form-control" placeholder="Descripción" rows={3} value={
-                                form.description
-                            }></textarea>
+            <SidebarLeft>
+                <TodoMenu>
+                    <div className="form-group text-center add-task">
+                        {/* new task button */}
+                        <button type="button" className="btn btn-primary add-task-btn btn-block my-1" onClick={() => handleOpenCreateJob()}>
+                            <i className="bx bx-plus"></i>
+                            <span>
+                                {
+                                    job._id === "" ? "Nuevo Trabajo" : "Editar Trabajo"
+                                }
+                            </span>
+                        </button>
                     </div>
+                    {/* sidebar list start */}
+                    <div className="sidebar-menu-list">
+                        <ListGroup
+                            key={1}
+                            items={[
+                                {
+                                    label: "Todas",
+                                    onClick: () => { }
+                                },
+                            ]}
+                        />
 
-                    <Select
-                        label="Prioridad"
-                        options={[
-                            {
-                                label: "Alta",
-                                value: "Alta"
-                            },
-                            {
-                                label: "Media",
-                                value: "Media"
-                            },
-                            {
-                                label: "Baja",
-                                value: "Baja"
+                        <FilterLabel label="Filtros" />
+                        <ListGroup
+                            key={1}
+                            items={[
+                                {
+                                    label: "Hoy",
+                                    onClick: () => { }
+                                },
+                                {
+                                    label: "Ayer",
+                                    onClick: () => { }
+                                },
+                            ]}
+                        />
+
+                        <FilterLabel label="Estados" />
+
+                        <ListGroup
+                            key={1}
+                            items={[
+                                {
+                                    label: <>{"Abiertas"} <span className="bullet bullet-sm bullet-warning"></span></>,
+                                    classes: "d-flex align-items-center justify-content-between",
+                                    onClick: () => { }
+                                },
+                                {
+                                    label: <>{"Cerradas"} <span className="bullet bullet-sm bullet-success"></span></>,
+                                    classes: "d-flex align-items-center justify-content-between",
+                                    onClick: () => { }
+                                },
+                            ]}
+                        />
+                        <FilterLabel label="Prioridad" />
+
+                        <ListGroup
+                            key={1}
+                            items={[
+                                {
+                                    label: <>{"Alta"} <span className="bullet bullet-sm bullet-warning"></span></>,
+                                    classes: "d-flex align-items-center justify-content-between",
+                                    onClick: () => { }
+                                },
+                                {
+                                    label: <>{"Media"} <span className="bullet bullet-sm bullet-info"></span></>,
+                                    classes: "d-flex align-items-center justify-content-between",
+                                    onClick: () => { }
+                                },
+                                {
+                                    label: <>{"Baja"} <span className="bullet bullet-sm bullet-success"></span></>,
+                                    classes: "d-flex align-items-center justify-content-between",
+                                    onClick: () => { }
+                                },
+                            ]}
+                        />
+                    </div>
+                </TodoMenu>
+
+                {/* todo new task sidebar */}
+                <SidebarRight
+                    title="Nuevo Trabajo"
+                    onClose={() => setShow(!show)}
+                    show={show}
+
+                >
+                    <>
+                        <Select
+                            label="Cliente"
+                            options={clients.message.map((client) => {
+                                return {
+                                    label: client.name,
+                                    value: client._id
+                                }
+                            })
                             }
-                        ]}
-                        name="priority"
-                        onChange={handleChange}
-                        selected={form.priority}
+                            name="idClient"
+                            onChange={handleChange}
+                            selected={form.idClient}
 
-                    />
-                    <Input
-                        label="Fecha intervención"
-                        placeholder="Fecha intervención"
-                        type="date"
-                        name="interventionDate"
-                        onChange={handleChange}
-                        value={form.interventionDate}
+                        />
+                        <Input
+                            label="Dirección"
+                            placeholder="Dirección"
+                            type="text"
+                            name="direction"
+                            onChange={handleChange}
+                            value={form.direction}
+                        />
+                        <Input
+                            label="Nombre de contacto"
+                            placeholder="Dirección"
+                            type="text"
+                            name="contactName"
+                            onChange={handleChange}
+                            value={form.contactName}
+                        />
+                        <Input
+                            label="Numero de contacto"
+                            placeholder="Numero de contacto"
+                            type="text"
+                            name="contactPhone"
+                            onChange={handleChange}
+                            value={form.contactPhone}
+                        />
+                        <Input
+                            label="Tipo tarea"
+                            placeholder="Tipo tarea"
+                            type="text"
+                            name="type"
+                            onChange={handleChange}
+                            value={form.type}
 
-                    />
-                    <Select
-                        label="Responsable"
-                        options={[]}
-                        name="responsible"
-                        onChange={handleChange}
-                        selected={form.idClient}
-                    />
-                   
-                    <div className="mt-1 d-flex justify-content-end">
-                        {
-                            job._id === "" ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
-                        }
+                        />
+                        <div className="form-group">
+                            <label htmlFor="">Observación Contacto</label>
+                            <textarea onChange={handleChange}
+                                name="obsContact"
+                                className="form-control" placeholder="Descripción" rows={3} value={
+                                    form.obsContact
+                                }></textarea>
+                        </div>
 
+                        <Select
+                            label="Prioridad"
+                            options={[
+                                {
+                                    label: "Alta",
+                                    value: "Alta"
+                                },
+                                {
+                                    label: "Media",
+                                    value: "Media"
+                                },
+                                {
+                                    label: "Baja",
+                                    value: "Baja"
+                                }
+                            ]}
+                            name="priority"
+                            onChange={handleChange}
+                            selected={form.priority}
+
+                        />
+                        <Input
+                            label="Fecha intervención"
+                            placeholder="Fecha intervención"
+                            type="date"
+                            name="interventionDate"
+                            onChange={handleChange}
+                            value={form.interventionDate}
+
+                        />
+
+                        <div className="form-group">
+                            <label htmlFor="">Descripción</label>
+                            <textarea onChange={handleChange}
+                                name="description"
+                                className="form-control" placeholder="Descripción" rows={3} value={
+                                    form.description
+                                }></textarea>
+                        </div>
+                        <Input
+                            label="Material"
+                            placeholder="Material"
+                            type="text"
+                            name="material"
+                            onChange={handleChange}
+                            value={form.material}
+
+                        />
+                        <Input
+                            label="Técnica"
+                            placeholder="Técnica"
+                            type="text"
+                            name="technical"
+                            onChange={handleChange}
+                            value={form.technical}
+
+                        />
+                        <div className="mt-1 d-flex justify-content-end">
+                            {
+                                job._id === "" ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
+                            }
+
+                        </div>
+                    </>
+                </SidebarRight>
+
+            </SidebarLeft>
+            <div className="content-right">
+                <div className="content-wrapper">
+                    <div className={`content-overlay`}></div>
+                    <div className="content-header row">
                     </div>
-                </>
-            </SidebarRight>
-
-        </SidebarLeft>
-        <div className="content-right">
-            <div className="content-wrapper">
-                <div className={`content-overlay`}></div>
-                <div className="content-header row">
-                </div>
-                <div className="content-body">
-                    <div className={`app-content-overlay  ${show ? 'show' : 'hide'}`} onClick={() => setShow(!show)}></div>
-                    <div className="todo-app-area">
-                        <div className="todo-app-list-wrapper" >
-                            <div className="todo-app-list" >
-                                <TodoSearch
-                                    items={[]}
-                                />
-                                <div className="todo-task-list list-group" style={{ overflow: 'auto' }}>
-                                    {/* task list start */}
-                                    <TaskList
-                                        items={jobs.message.map((item) => {
-                                            return {
-                                                label: item.direction,
-                                                onClick: () => handleSelect(item),
-                                                tags: [ ],
-                                                options: [],
-                                                data: item
-                                            }
-                                        })}
-                                        onChecked={handleCloseJob}
-                                        key={1}
+                    <div className="content-body">
+                        <div className={`app-content-overlay  ${show ? 'show' : 'hide'}`} onClick={() => setShow(!show)}></div>
+                        <div className="todo-app-area">
+                            <div className="todo-app-list-wrapper" >
+                                <div className="todo-app-list" >
+                                    <TodoSearch
+                                        items={[]}
                                     />
-                                    {/* task list end */}
-                                    <div className="no-results">
-                                        <h5>No Items Found</h5>
+                                    <div className="todo-task-list list-group" style={{ overflow: 'auto' }}>
+                                        {/* task list start */}
+                                        <TaskList
+                                            items={jobs.message.map((item) => {
+                                                return {
+                                                    label: item.direction,
+                                                    onClick: () => handleSelect(item),
+                                                    tags: [
+                                                        {
+                                                            label: "prioridad: "+item.priority,
+                                                            color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "info" : "success"
+                                                        },
+                                                        {
+                                                            label: "tipo: " +item.type,
+                                                            color: "info"
+                                                        },
+                                                        
+                                                    ],
+                                                    data: item,
+                                                    completed:item.state==="abierto"?false:true,
+                                                    options: [
+                                                        {
+                                                            element: <a className="todo-item-delete ml-75" 
+                                                            onClick={()=>handleShowModal(item)}>
+                                                                <i className="bx bx-trash"></i>
+                                                            </a>
+                                                        }
+                                                    ],
+                                                }
+                                            })}
+                                            onChecked={handleCloseJob}
+                                            key={1}
+                                        />
+                                        {/* task list end */}
+                                        <div className="no-results">
+                                            <h5>No Items Found</h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -325,27 +697,71 @@ const ViewJobs = (props:ViewJobsProps)=>{
                     </div>
                 </div>
             </div>
-        </div>
-        <div className="toast-bs-container">
-            <Toast {...message} />
-        </div>
-        <Modal className="modal-main" show={showModal} style={{}}>
-            <div className="card">
-                <div className="card-header">
-                    <h3>¿Desea eliminar la tarea ?</h3>
-                </div>
-                <div className="card-footer d-flex justify-content-md-end">
-                    <button type="button"
-                        className="btn btn-secondary"
-                        onClick={() => setShowModal(false)}
-                    >Cancelar</button>
-                    <button type="button"
-                        onClick={() => handleDeleteJob(job)}
-                        className="btn btn-danger ml-md-3">Eliminar</button>
-                </div>
+            <div className="toast-bs-container">
+                <Toast {...message} />
             </div>
-        </Modal>
-    </div>
+            <Modal className="modal-main" show={showModal} style={{}}>
+                <div className="card">
+                    <div className="card-header">
+                        <h3>¿Desea eliminar la tarea ?</h3>
+                    </div>
+                    <div className="card-footer d-flex justify-content-md-end">
+                        <button type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setShowModal(false)}
+                        >Cancelar</button>
+                        <button type="button"
+                            onClick={() => handleDeleteJob(job)}
+                            className="btn btn-danger ml-md-3">Eliminar</button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal className="modal-main" show={showModalClose} style={{}}>
+                <div className="card">
+                    <div className="card-header">
+                        <h3>¿Desea Cerrar el Trabajo ?</h3>
+                    </div>
+                    <div className="card-body">
+                    <Input
+                            label="Material"
+                            placeholder="Material"
+                            type="text"
+                            name="material"
+                            onChange={(e) => SetCloseJob({ ...closeJob, material: e.target.value })}
+                            value={closeJob.material}
+
+                        />
+                         <Input
+                            label="Notas"
+                            placeholder="Notas"
+                            type="text"
+                            name="note"
+                            onChange={(e) => SetCloseJob({ ...closeJob, note: e.target.value })}
+                            value={closeJob.note}
+
+                        />
+                         <Input
+                            label="Material"
+                            placeholder="Material"
+                            type="text"
+                            name="workReport"
+                            onChange={(e) => SetCloseJob({ ...closeJob, workReport: e.target.value })}
+                            value={closeJob.workReport}
+
+                        />
+                    </div>
+                    <div className="card-footer d-flex justify-content-md-end">
+                        <button type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setShowModalClose(false)}
+                        >Cancelar</button>
+                        <button type="button"
+                            onClick={() => handleSaveCloseJob()}
+                            className="btn btn-success ml-md-3">Cerrar Trabajo</button>
+                    </div>
+                </div>
+            </Modal>
+        </div>
     )
 }
 

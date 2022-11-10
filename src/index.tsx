@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Application from './presentation/components';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter  as Router } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { getPersistor } from '@rematch/persist';
 import store from './application';

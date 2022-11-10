@@ -20,7 +20,7 @@ const TodoSearch = (props:TodoSearchProps) => {
             </div>
             <fieldset className="form-group position-relative has-icon-left m-0 flex-grow-1">
                 <input type="text" className="form-control todo-search"
-                    id="todo-search" placeholder="Search Task" />
+                    id="todo-search" placeholder="Buscar..." />
                 <div className="form-control-position">
                     <i className="bx bx-search"></i>
                 </div>

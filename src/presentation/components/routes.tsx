@@ -9,6 +9,8 @@ import PersonalView from '../container/personal/view-container';
 import CreatePersonal from '../container/personal/create-container';
 import TaskView from '../container/tasks/view-container';
 import ViewJobs from '../container/jobs/view-container';
+import ProductView from '../container/products/view-container';
+import CreateProduct from '../container/products/create-container';
 
 interface RoutesProps{
     name:string;
@@ -175,6 +177,33 @@ const routes:RoutesProps[] =[
         ],
         visible_in_menu:true,
         icon:'bx bx-task',
+        order:1,
+    },
+    {
+        name:'Productos',
+        relative_path:'productos',
+        path:'/inicio/productos',
+        element:<ProductView title="Productos" breadcrumbs={["Listado de Productos"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:true,
+        icon:'bx bxl-product-hunt',
+        order:1,
+    },
+    {
+        name:'Nuevo Producto',
+        relative_path:'productos/nuevo',
+        path:'/inicio/productos/nuevo',
+        element:<CreateProduct title="Productos" breadcrumbs={["Nuevo Producto"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+
+        ],
+        visible_in_menu:false,
+        icon:'bx bxl-product-hunt',
         order:1,
     },
     

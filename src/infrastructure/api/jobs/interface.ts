@@ -16,6 +16,7 @@ interface Job{
     workReport: string;
     note: string;
     created_at: string;
+    state: string;
 }
 
 interface GetJobsResponse{

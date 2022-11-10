@@ -34,6 +34,27 @@ export const GET_TASKS = "/tasks";
 export const CREATE_TASKS = "/tasks/";
 export const CLOSE_TASKS = "/tasks/close/";
 export const DELETE_TASKS = "/tasks/delete/";
+
+
+
+
+
+export const GET_PRODUCTS = "/products/";
+export const CREATE_CATALOGED_PRODUCTS = "/products/cataloged";
+export const CREATE_UNCATALOGED_PRODUCTS = "/products/uncataloged";
+export const UPDATE_PRODUCTS = "/products/update/";
+export const UPDATE_STOCK_PRODUCT = "/products/update-stock/";
+export const CATALOGE_PRODUCT = "/products/catalog/";
+export const DELETE_PRODUCT = "/products/delete/";
+
+
+
+export const GET_BILLING = "/billing";
+export const CREATE_BILLING = "/billing";
+export const DELETE_BILLING = "/factura/delete/";
+
+
+
 // Error Messages
 export const errorEncountered = 'Error was encountered processing this request';
 export const timeoutMessage = "We are unable to fetch data at this time, kindly check your internet connection and we'll reconnect you.";

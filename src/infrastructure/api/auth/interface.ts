@@ -9,7 +9,7 @@ interface LoginRequest{
 interface LoginResponse{
     status: number,
     message: {
-      idUser: number
+      idUser: string
       token: string;
     }
 }

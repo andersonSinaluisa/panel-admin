@@ -54,7 +54,14 @@ const Login = () => {
         <div className="bg-authentication mb-0">
           <div className="row m-0">
             <div className="col-md-12 col-lg-6 col-12 px-md-5 mt-5">
-              <h4 className="text-center mb-2">{appname}</h4>
+              <h4 className="text-center mb-2"><img className="logo" src={window.location.origin + "/assets/app-assets/images/logo/logo.png"}
+                            style={{
+                                WebkitFilter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
+                                filter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
+                                width: "150px",
+                                height: "50px"
+                                
+                            }} /></h4>
 
               <div className="card disable-rounded-right mb-0 p-2  d-flex justify-content-center m-md-3">
                 <div className="card-content">
@@ -111,7 +118,7 @@ const Login = () => {
               <div className="card-content">
                 <img
                   className="img-fluid"
-                  src="./assets/app-assets/images/pages/login.png"
+                  src={window.location.origin+"/assets/app-assets/images/pages/login/undraw_presentation_re_sxof.svg"}
                   alt="branding logo"
                 />
               </div>

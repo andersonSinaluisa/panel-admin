@@ -112,7 +112,7 @@ const TaskView = (props: TasksViewProps) => {
         })
         props.onClear()
 
-    }, [])
+    }, [props.token])
 
 
     useEffect(() => {
@@ -498,11 +498,11 @@ const TaskView = (props: TasksViewProps) => {
                                                     tags: [
                                                         {
                                                             color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "primary" : "success",
-                                                            label: item.priority
+                                                            label: "prioridad: "+item.priority
                                                         },
                                                         {
                                                             color: item.state === TASK_OPEN ? "warning" : "success",
-                                                            label: item.state === TASK_OPEN ? "Abierta" : "Cerrada"
+                                                            label: "estado: "+item.state
                                                         }
                                                     ],
                                                     options: [

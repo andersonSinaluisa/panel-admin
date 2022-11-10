@@ -14,7 +14,7 @@ export const AUTH = createModel<RootModel>()({
         Session:{
             data:{
                 message:{
-                    idUser:0,
+                    idUser:"",
                     token:""
                 },
                 status:0

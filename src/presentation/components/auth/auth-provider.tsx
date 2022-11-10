@@ -27,7 +27,7 @@ const AuthProvider = (props: AuthProviderProps) => {
 
   const init: LoginResponse = {
     message:{
-      idUser:0,
+      idUser:"",
       token:""
     },
     status:0

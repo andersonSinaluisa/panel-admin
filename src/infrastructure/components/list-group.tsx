@@ -3,10 +3,10 @@ import React from "react";
 
 export interface ListGroupProps {
     items: Array<{
-        label: string|any;
+        label: string | any;
         icon?: string;
         onClick?: () => void;
-        classes?:string;
+        classes?: string;
     }>
 }
 
@@ -17,11 +17,16 @@ const ListGroup = (props: ListGroupProps) => {
             {
                 props.items.map((item, index) => {
                     return (
-                        <a key={index} href="#" className={"list-group-item list-group-item-action border-0 "+item.classes} onClick={item.onClick}>
+                        <a key={index} href="#" className={"list-group-item list-group-item-action border-0 " + item.classes} onClick={() => {
+                            if (item.onClick) {
+                                item.onClick();
+                            }
+                            return null;
+                        }}>
                             {
-                                item.icon&&<span className="fonticon-wrap mr-50">
-                                <i className={item.icon}></i>
-                            </span>
+                                item.icon && <span className="fonticon-wrap mr-50">
+                                    <i className={item.icon}></i>
+                                </span>
                             } {item.label}
                         </a>
                     )
