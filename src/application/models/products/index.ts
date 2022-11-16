@@ -1,11 +1,15 @@
 import { createModel } from "@rematch/core";
 import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
 import { products_request } from "infrastructure/api/products";
-import { CatalogProductRequest, CreateProductCatalogRequest, CreateProductUncatalogRequest, GetProductsResponse, UpdateProductRequest, UpdateStockProductRequest } from "infrastructure/api/products/interface";
+import { CatalogProductRequest, CreateProductCatalogRequest, CreateProductUncatalogRequest, GetProductResponse, GetProductsResponse, UpdateProductRequest, UpdateStockProductRequest } from "infrastructure/api/products/interface";
 import { RootModel } from "..";
 
 export interface GetProductsStateProps extends ResponseServer{
     data: GetProductsResponse;
+}
+
+export interface GetProductStateProps extends ResponseServer{
+    data: GetProductResponse;
 }
 
 export interface CreateProductCatalogStateProps extends ResponseServer{
@@ -109,7 +113,29 @@ export const PRODUCTS = createModel<RootModel>()({
                 message:""
             },
             status:0
-        } as DeleteProductStateProps
+        } as DeleteProductStateProps,
+        GetProduct:{
+            error:"",
+            data:{
+                code:0,
+                status:0,
+                message:{
+                    _id:"",
+                    identityCounter:"",
+                    name:"",
+                    assigned:false,
+                    assignedTo:"",
+                    cataloged:false,
+                    createdAt:"",
+                    description:"",
+                    note:"",
+                    nroSerie:"",
+                    precioVentaPublico:0,
+                    stock:0 
+                }
+            },
+            status:0
+        } as GetProductStateProps
         
 
     },
@@ -154,6 +180,12 @@ export const PRODUCTS = createModel<RootModel>()({
             return {
                 ...state,
                 DeleteProduct:payload
+            }
+        },
+        onGetProduct:(state, payload: GetProductStateProps)=>{
+            return {
+                ...state,
+                GetProduct:payload
             }
         }
     },
@@ -309,6 +341,42 @@ export const PRODUCTS = createModel<RootModel>()({
                 });
             }
         },
+        async onGetProductAsync(props:{headers:HeaderProps, id:string}){
+            try{
+
+                const response = await products_request.GetProduct(props).toPromise();
+                dispatch.PRODUCTS.onGetProduct({
+                    data:response.data,
+                    error:"",
+                    status:response.status
+                });
+
+            }catch(e:any){
+                dispatch.PRODUCTS.onGetProduct({
+                    data:{
+                        code:0,
+                        status:0,
+                        message:{
+                            _id:"",
+                            identityCounter:"",
+                            name:"",
+                            assigned:false,
+                            assignedTo:"",
+                            cataloged:false,
+                            createdAt:"",
+                            description:"",
+                            note:"",
+                            nroSerie:"",
+                            precioVentaPublico:0,
+                            stock:0 
+                        }
+                    },
+                    error:e.message,
+                    status:0
+                });
+            }
+        },
+
         onClearProducts(){
             
             dispatch.PRODUCTS.onCreateProductCatalog({

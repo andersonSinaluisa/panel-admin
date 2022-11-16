@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as Globals from '../../application/common'
+import { ExportToCsv } from 'export-to-csv';
 
 
 
@@ -129,7 +130,33 @@ const DataTable = (props: DataTableProps) => {
               onChange={onSearch}
             />
           </div>
-          
+          <div className="col-6">
+          <button
+            className="btn btn-primary "
+            onClick={() => {
+              const options = {
+                fieldSeparator: ',',
+                quoteStrings: '"',
+                decimalSeparator: '.',
+                showLabels: true,
+                showTitle: true,
+                title: 'Reporte',
+                useTextFile: false,
+                useBom: true,
+                useKeysAsHeaders: true,
+                filename: 'reporte',
+                headers: columns.map((column) => column.label),
+              };
+              const csvExporter = new ExportToCsv(options);
+              csvExporter.generateCsv(data_table);
+            }}
+          >
+            Exportar <i className="bx bxs-download"></i>
+          </button>
+          </div>
+         
+
+
         </div>
       </nav>
         <table className="table table-bordered bg-white" id="table">

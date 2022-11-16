@@ -1,5 +1,5 @@
 export const URLAPI = "http://80.240.126.227:3000"
-export const WEBSOCKET = "ws://80.240.126.227:3000"
+export const WEBSOCKET = "ws://80.240.126.227:8080"
 export const LOGIN = "/users/login"
 export const GET_USERS = "/users"
 export const CREATE_USER = "/users/register"
@@ -48,6 +48,7 @@ export const CATALOGE_PRODUCT = "/products/catalog/";
 export const DELETE_PRODUCT = "/products/delete/";
 
 
+export const SEARCH = "/searcher/";
 
 export const GET_BILLING = "/billing";
 export const CREATE_BILLING = "/billing";

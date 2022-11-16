@@ -16,7 +16,7 @@ interface Installation {
             role: string;
         }
     >,
-    created_at: string;
+    createdAt: string;
     state:number;
 }
 

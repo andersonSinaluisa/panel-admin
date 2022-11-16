@@ -8,6 +8,7 @@ import Toast, { ToastProps } from "infrastructure/components/toast";
 import { CreatePersonalProps } from "presentation/container/personal/create-container";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import SelectReact from 'react-select';
 
 
 const CreatePersonal = (props: CreatePersonalProps) => {
@@ -44,12 +45,12 @@ const CreatePersonal = (props: CreatePersonalProps) => {
     province: "",
     type: "",
     userId: "",
-    lastname1:""
+    lastname1: ""
   });
 
   //create array with fields name, type, label, options and value
   const fields = [
-    
+
     {
       name: "name",
       type: "text",
@@ -64,18 +65,18 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       options: [],
       value: form.lastname1,
     },
-    
+
     {
       name: "documentType",
       type: "select",
       label: "Tipo de documento",
       options: [
-        {label:'DNI',value:'DNI'},
-        {label:'Otro',value:'Otro'}
-    ],
+        { label: 'DNI', value: 'DNI' },
+        { label: 'Otro', value: 'Otro' }
+      ],
       value: form.documentType,
     },
-    
+
     {
       name: "document",
       type: "text",
@@ -83,7 +84,7 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       options: [],
       value: form.document,
     },
-    
+
     {
       name: "country",
       type: "text",
@@ -91,7 +92,7 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       options: [],
       value: form.country,
     },
-    
+
     {
       name: "direction",
       type: "text",
@@ -99,7 +100,7 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       options: [],
       value: form.direction,
     },
-    
+
     {
       name: "location",
       type: "text",
@@ -155,13 +156,13 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       type: "select",
       label: "Tipo",
       options: [
-        {label:'interno',value:'interno'},
-        {label:'externo',value:'externo'},
+        { label: 'interno', value: 'interno' },
+        { label: 'externo', value: 'externo' },
 
       ],
       value: form.type,
     },
-    
+
     {
       name: "contact",
       type: "text",
@@ -191,18 +192,7 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       options: [],
       value: form.createdBy,
     },
-    {
-      name: "userId",
-      type: "select",
-      label: "Usuario",
-      options: users.map((option) => {
-        return {
-          label: option.email,
-          value: option._id,
-        }
-      }),
-      value: form.userId,
-    },
+
   ];
 
   useEffect(() => {
@@ -254,17 +244,17 @@ const CreatePersonal = (props: CreatePersonalProps) => {
       }
     })
 
-    
 
-    if(error!==""){
+
+    if (error !== "") {
       setMessage({
-          description:error,
-          title:"Error",
-          type:"danger",
-          visible:true
+        description: error,
+        title: "Error",
+        type: "danger",
+        visible: true
       })
       return;
-  }
+    }
 
     props.onCreatePersonalAsync({
       headers: {
@@ -298,23 +288,44 @@ const CreatePersonal = (props: CreatePersonalProps) => {
                 )
               } else {
                 return (
-                <div className="col-12 col-md-6" key={index}>
-                  <Input
-                    name={field.name}
-                    type={field.type}
-                    label={field.label}
-                    value={field.value}
-                    onChange={handleChange}
+                  <div className="col-12 col-md-6" key={index}>
+                    <Input
+                      name={field.name}
+                      type={field.type}
+                      label={field.label}
+                      value={field.value}
+                      onChange={handleChange}
 
-                  />
-                </div>
+                    />
+                  </div>
                 )
               }
 
             })
 
-          }
 
+          }
+          <div className="col-3">
+            <label htmlFor="userId">Usuario</label>
+            <SelectReact
+              isSearchable={true}
+              name="userId"
+              options={users.map(e => ({
+                value: e._id,
+                label: e.email
+              }))}
+              placeholder="Seleccione un usuario"
+              onChange={
+                (e: any) => {
+                  setForm({
+                    ...form,
+                    userId: e.value
+                  })
+                }
+              }
+
+            />
+          </div>
         </div>
         <div className="col-12 row ">
           <div className="col-12 justify-content-end d-md-flex ">

@@ -1,11 +1,20 @@
 import { createModel } from "@rematch/core";
-import { ResponseServer } from "infrastructure/api/api-handler";
+import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
 import { RootModel } from "..";
 import {auth_interfaces, auth_request} from 'infrastructure/api/auth'
 import { WEBSOCKET } from "application/common";
+import { user_interface, user_request } from "infrastructure/api/users";
+import { io } from "socket.io-client";
 
 export interface SessionStateProps extends ResponseServer{
     data:auth_interfaces.LoginResponse;
+}
+
+export interface UserStateProps extends ResponseServer{
+    data:{
+        message:user_interface.User,
+        status:number
+    }
 }
 
 
@@ -22,7 +31,22 @@ export const AUTH = createModel<RootModel>()({
             status:0,
             error:""
             
-        } as SessionStateProps
+        } as SessionStateProps,
+        UserData:{
+            data:{
+                message:{
+                    _id:"",
+                    createdAt:"",
+                    email:"",
+                    identityCounter:"",
+                    personalData:"",
+                    role:"",
+                },
+                status:0
+            },
+            error:"",
+            status:0
+        } as UserStateProps
     },
     effects:(dispatch:any)=>({
 
@@ -62,24 +86,55 @@ export const AUTH = createModel<RootModel>()({
             })
         },
         //connect to websocket
-        async connectToWebSocket(){
-            let ws = new WebSocket(WEBSOCKET);
-            
-            return new Promise((resolve,reject)=>{
-                ws.onopen = function(){
-                    resolve(ws);
-                }
-                ws.onerror = function(e){
-                    reject(e);
-                }
+        connectToWebSocket(){
+            //connect to websocket
+            let socket = io(WEBSOCKET,{
+                transports: ['websocket'],
             })
-        }
+            
+            return socket;
+        },
+        async onGetUserAsync(props:{
+            headers:HeaderProps,
+            id:string
+        }){
+
+            try{
+                const res = await user_request.GetUser(props).toPromise();
+                dispatch.AUTH.onGetUser({
+                    data:res.data,
+                    status:res.status,
+                    error:""
+                })
+            }catch(e:any){
+                dispatch.AUTH.onGetUser({
+                    data:{
+                        message:{
+                            _id:"",
+                            identityCounter:"",
+                            email:"",
+                            role:"",
+                            personalData:"",
+                            createdAt:""
+                        },
+                        status:0
+                    },
+                    status:e.response?e.response.status:400,
+                    error:e.response?e.response.data.message:"Ocurrió un error"
+                })
+            }
+        },
+
+        
 
 
     }),
     reducers:{
         onLogin(state:any,payload:any){
             return {...state,Session:payload}
+        },
+        onGetUser(state:any,payload:any){
+            return {...state,UserData:payload}
         }
     }
 })

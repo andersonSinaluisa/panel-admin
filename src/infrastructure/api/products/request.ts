@@ -12,6 +12,14 @@ const GetProducts = (props:APIHANDLER.HeaderProps)=>{
     })
 }
 
+const GetProduct = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
+    return APIHANDLER.get(Globals.GET_PRODUCTS+props.id,{
+        headers:{
+            Authorization:"Bearer "+props.headers.token
+        }
+    })
+}
+
 const CreateCatalogedProduct = (props:{headers:APIHANDLER.HeaderProps,body:CreateProductCatalogRequest})=>{
     return APIHANDLER.post(Globals.CREATE_CATALOGED_PRODUCTS,props.body,{
             Authorization:"Bearer "+props.headers.token
@@ -59,6 +67,7 @@ export {
     UpdateProduct,
     UpdateStockProduct,
     CatalogProduct,
-    DeleteProduct
+    DeleteProduct,
+    GetProduct
 
 }

@@ -44,7 +44,9 @@ const PersonalView = (props: PersonalViewProps) => {
     permissions:[],
     dependents:0,
     createdBy:"",
-    createdAt:""
+    createdAt:"",
+    lastname1:"",
+    lastname2:"",
     })
     const [message, setMessage] = useState<ToastProps>({
       type: "info",

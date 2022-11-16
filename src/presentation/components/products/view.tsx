@@ -4,12 +4,14 @@ import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
 import { ProductsViewProps } from "presentation/container/products/view-container";
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductView = (props: ProductsViewProps) => {
 
     useTitle(props.title)
     useBreadcrumbs(props.breadcrumbs)
+
+    let navigate = useNavigate()
 
     const [products, setProducts] = React.useState<products_interface.GetProductsResponse>({
         code: 0,
@@ -57,8 +59,7 @@ const ProductView = (props: ProductsViewProps) => {
             label: "Editar",
             name: "delete",
             onClick: (item: products_interface.Product) => {
-                setShowModal(true);
-                setProduct(item);
+                navigate('/inicio/productos/' + item._id)
             }
         })
         lista_acc.push({
@@ -78,6 +79,16 @@ const ProductView = (props: ProductsViewProps) => {
 
 
     const handleDelete = (item: any) => {
+        props.onDeleteProductAsync({
+            headers:{
+                token: props.token
+            },
+            id: item._id
+        })
+        props.onGetProductsAsync({
+            token: props.token
+        })
+        setShowModal(false);
 
     }
 
@@ -98,7 +109,7 @@ const ProductView = (props: ProductsViewProps) => {
                         columns={[
                             {
                                 name: "identityCounter",
-                                label: "DNI",
+                                label: "ID",
                                 type: "text",
                             },
 
@@ -117,6 +128,18 @@ const ProductView = (props: ProductsViewProps) => {
                                 label: 'Descripción',
                                 type: 'text'
                             },
+                            {
+                                name:'stock',
+                                label:'Stock',
+                                type:'text'
+                                
+                            },
+                            {
+                                name: 'cataloged',
+                                label: 'Catalogado',
+                                type: 'boolean'
+                            },
+                            
                         ]}
                         dataLimit={5}
                         pageLimit={2}

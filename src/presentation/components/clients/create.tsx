@@ -11,6 +11,7 @@ import Select from "infrastructure/components/select";
 import { CreateClientProps } from "presentation/container/clients/create-container";
 import { clients_interface } from "infrastructure/api/clients";
 import { user_interface } from "infrastructure/api/users";
+import SelectReact from 'react-select';
 
 const CreateClient = (props: CreateClientProps) => {
   useTitle(props.title);
@@ -26,67 +27,67 @@ const CreateClient = (props: CreateClientProps) => {
   });
 
 
-  const [users,setUsers] = useState<user_interface.User[]>([])
+  const [users, setUsers] = useState<user_interface.User[]>([])
 
   const [form, setForm] = useState<clients_interface.CreateClientRequest>(
     {
-        userId: "",
-        personType: "",
-        documentType: "",
-        document: "",
-        name: "",
-        lastname: "",
-        customerType:"",
-        roadType: "",
-        direction: "",
-        postalCode: "",
-        location: "",
-        province: "",
-        country: "",
-        phone: "",
-        mobilePhone: "",
-        contact: "",
-        contact2: "",
-        email: "",
-        webpage: "",
-        contactSchedule: "",
-        discount: "0",
-        note: "",
+      userId: "",
+      personType: "",
+      documentType: "",
+      document: "",
+      name: "",
+      lastname: "",
+      customerType: "",
+      roadType: "",
+      direction: "",
+      postalCode: "",
+      location: "",
+      province: "",
+      country: "",
+      phone: "",
+      mobilePhone: "",
+      contact: "",
+      contact2: "",
+      email: "",
+      webpage: "",
+      contactSchedule: "",
+      discount: "0",
+      note: "",
     }
   );
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setUsers(props.GetUsers);
-  },[props.GetUsers])
+  }, [props.GetUsers])
 
-  useEffect(()=>{
+  useEffect(() => {
     props.onGetUsersAync({
-      token:props.token
+      token: props.token
     })
-  },[])
+  }, [])
 
-  useEffect(()=>{
-      if(props.CreateClients.status===SUCCESS_HTTP_CODE_CREATED){
-          setMessage({
-              description:"Cliente Creado correctamente",
-              title:"",
-              type:"success",
-              visible:true
-          })
-          
-          navigate('/inicio/personal/')
-      }
+  useEffect(() => {
+    if (props.CreateClients.status === SUCCESS_HTTP_CODE_CREATED) {
+      setMessage({
+        description: "Cliente Creado correctamente",
+        title: "",
+        type: "success",
+        visible: true
+      })
 
-      if(props.CreateClients.status!==0){
-        setMessage({
-            description:props.CreateClients.error,
-            title:"Error",
-            type:"danger",
-            visible:true
-        })
-      }
-  },[props.CreateClients])
+      navigate('/inicio/personal/')
+    }
+
+    if (props.CreateClients.status !== 0) {
+      setMessage({
+        description: props.CreateClients.error,
+        title: "Error",
+        type: "danger",
+        visible: true
+      })
+    }
+  }, [props.CreateClients])
 
 
   const handleChange = (
@@ -99,76 +100,86 @@ const CreateClient = (props: CreateClientProps) => {
   };
 
   const handleSubmit = () => {
-   
+
     let error = ""
 
 
-    Object.values(form).forEach(e=>{
-      if(e==""){
-        error ="Complete todos los campos"
+    Object.values(form).forEach(e => {
+      if (e == "") {
+        error = "Complete todos los campos"
         return;
       }
     })
-    
 
 
-    if(error!==""){
-        setMessage({
-            description:error,
-            title:"Error",
-            type:"danger",
-            visible:true
-        })
-        return;
+
+    if (error !== "") {
+      setMessage({
+        description: error,
+        title: "Error",
+        type: "danger",
+        visible: true
+      })
+      return;
     }
-  
+
     props.onCreateClientsAsync({
-      headers:{
-        token:props.token
+      headers: {
+        token: props.token
       },
-      body:form
+      body: form
     })
 
-    
+
   };
 
   return (
     <section id="basic-vertical-layouts">
       <div className="col-12 row bg-cover">
         <div className="row p-2 col-12">
-        <div className="col-lg-6">
-            
-            <Select
-             label="Usuario"
-             name="userId"
-             onChange={handleChange}
-             options={users.map(e=>{
-               return {label:e.email,value:e._id}
-             })}
-           />
-           <Link to="/inicio/usuarios/nuevo">crear nuevo usuario</Link>
-         </div>
-        <div className="col-lg-6">
-            
-            <Select
-             label="Tipo de Persona"
-             name="personType"
-             onChange={handleChange}
-             options={[
-                 {label:'Física',value:'fisica'},
-                 {label:'Jurídica',value:'juridica'}
-             ]}
-           />
-         </div>
           <div className="col-lg-6">
-            
-             <Select
+            <label htmlFor="userId">Usuario</label>
+            <SelectReact
+              isSearchable={true}
+              name="userId"
+              options={users.map(e => ({
+                value: e._id,
+                label: e.email
+              }))}
+              placeholder="Seleccione un usuario"
+              onChange={
+                (e: any) => {
+                  setForm({
+                    ...form,
+                    userId: e.value
+                  })
+                }
+              }
+
+            />
+
+          </div>
+          <div className="col-lg-6">
+
+            <Select
+              label="Tipo de Persona"
+              name="personType"
+              onChange={handleChange}
+              options={[
+                { label: 'Física', value: 'fisica' },
+                { label: 'Jurídica', value: 'juridica' }
+              ]}
+            />
+          </div>
+          <div className="col-lg-6">
+
+            <Select
               label="Tipo de Documento"
               name="documentType"
               onChange={handleChange}
               options={[
-                  {label:'DNI',value:'DNI'},
-                  {label:'Otro',value:'Otro'}
+                { label: 'DNI', value: 'DNI' },
+                { label: 'Otro', value: 'Otro' }
               ]}
             />
           </div>
@@ -181,7 +192,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Nombre"
               name="name"
               type={"text"}
@@ -189,7 +200,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Apellido"
               name="lastname"
               type={"text"}
@@ -202,8 +213,8 @@ const CreateClient = (props: CreateClientProps) => {
               name="customerType"
               onChange={handleChange}
               options={[
-                  {label:'propietario',value:'propietario'},
-                  {label:'invitado',value:'invitado'}
+                { label: 'propietario', value: 'propietario' },
+                { label: 'invitado', value: 'invitado' }
               ]}
             />
           </div>
@@ -213,16 +224,16 @@ const CreateClient = (props: CreateClientProps) => {
               name="roadType"
               onChange={handleChange}
               options={[
-                  {label:'Calle',value:'Calle'},
-                  {label:'Avenida',value:'Avenida'},
-                  {label:'Ctra',value:'Ctra'},
-                  {label:'Plaza',value:'Plaza'}
+                { label: 'Calle', value: 'Calle' },
+                { label: 'Avenida', value: 'Avenida' },
+                { label: 'Ctra', value: 'Ctra' },
+                { label: 'Plaza', value: 'Plaza' }
 
               ]}
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Dirección con numero y piso"
               name="direction"
               type={"text"}
@@ -230,7 +241,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Codigo Postal"
               name="postalCode"
               type={"text"}
@@ -238,7 +249,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Localidad"
               name="location"
               type={"text"}
@@ -246,7 +257,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="País"
               name="country"
               type={"text"}
@@ -254,7 +265,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Provincia"
               name="province"
               type={"text"}
@@ -262,7 +273,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Teléfono"
               name="phone"
               type={"text"}
@@ -270,7 +281,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Teléfono movil"
               name="mobilePhone"
               type={"text"}
@@ -278,7 +289,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Contacto"
               name="contact"
               type={"text"}
@@ -286,7 +297,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Contacto 2"
               name="contact2"
               type={"text"}
@@ -294,7 +305,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Correo"
               name="email"
               type={"email"}
@@ -302,7 +313,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Sitio web"
               name="webpage"
               type={"text"}
@@ -310,7 +321,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Horario de contacto"
               name="contactSchedule"
               type={"text"}
@@ -318,7 +329,7 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-          <Input
+            <Input
               label="Notas"
               name="note"
               type={"text"}

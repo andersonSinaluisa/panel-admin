@@ -8,6 +8,8 @@ import { installations_interface } from "infrastructure/api/installation";
 import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
 import Select from "infrastructure/components/select";
 import { clients_interface } from "infrastructure/api/clients";
+import SelectReact from 'react-select';
+import json from 'application/common/utils/datos.json';
 
 const CreateInstallation = (props: CreateInstallationProps) => {
   useTitle(props.title);
@@ -34,10 +36,10 @@ const CreateInstallation = (props: CreateInstallationProps) => {
     });
 
 
-    const [clients,setClients] = useState<clients_interface.GetClientsResponse>({
-        message:[],
-        status:0
-    })
+  const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
+    message: [],
+    status: 0
+  })
 
   useEffect(() => {
     if (props.CreateInstallation.status === 200) {
@@ -61,16 +63,16 @@ const CreateInstallation = (props: CreateInstallationProps) => {
     }
   }, [props.CreateInstallation]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setClients(props.GetClients);
-  },[props.GetClients])
+  }, [props.GetClients])
 
-  useEffect(()=>{
-
+  useEffect(() => {
+    
     props.onGetClientsAsync({
-        token:props.token
+      token: props.token
     })
-  },[])
+  }, [])
 
 
 
@@ -170,14 +172,26 @@ const CreateInstallation = (props: CreateInstallationProps) => {
             />
           </div>
           <div className="col-lg-5">
-            <Select
-                label="Propietario"
-                name="owner"
-                options={clients.message.map(e=>{
-                    return {label:e.name+" "+e.lastname,value:e._id}
-                })}
-                onChange={handleChange}
-                />
+          
+            <label htmlFor="userId">Propietario</label>
+            <SelectReact
+              isSearchable={true}
+              name="owner"
+              options={clients.message.map(e => ({
+                value: e._id,
+                label: e.name + " " + e.lastname
+              }))}
+              placeholder="Seleccione un propietario"
+              onChange={
+                (e: any) => {
+                  setForm({
+                    ...form,
+                    owner: e.value,
+                  })
+                }
+              }
+
+            />
           </div>
           <div className="col-lg-6">
             <Input
@@ -189,7 +203,7 @@ const CreateInstallation = (props: CreateInstallationProps) => {
           </div>
           <div className="col-lg-6">
             <Input
-              label="Ubicación"
+              label="Localidad"
               name="location"
               type={"text"}
               onChange={handleChange}
@@ -212,20 +226,20 @@ const CreateInstallation = (props: CreateInstallationProps) => {
             />
           </div>
           <div className="col-lg-6">
-          
+
             <div className="form-group row align-items-center">
-                <div className="col-sm-1 col-4">
-                    <label className="col-form-label">Notas</label>
-                </div>
-                <div className="col-sm-11 col-8">
-                    <textarea className="form-control" id="note"
-                    name="note"
-                    onChange={handleChange}
-                    rows={3} placeholder="Agrega detalles aqui"></textarea>
-                </div>
+              <div className="col-sm-1 col-4">
+                <label className="col-form-label">Notas</label>
+              </div>
+              <div className="col-sm-11 col-8">
+                <textarea className="form-control" id="note"
+                  name="note"
+                  onChange={handleChange}
+                  rows={3} placeholder="Agrega detalles aqui"></textarea>
+              </div>
             </div>
           </div>
-          
+
           <div className="col-lg-6"></div>
         </div>
         <div className="col-12 row ">

@@ -11,6 +11,8 @@ interface Personal{
     documentType: string;
     document: string;
     name: string;
+    lastname1: string;
+    lastname2: string;
     type: string;
     direction: string;
     postalCode: string;

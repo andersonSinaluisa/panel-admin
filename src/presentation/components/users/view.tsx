@@ -20,7 +20,7 @@ const UserView = (props: UsersViewProps) => {
 
   const [itemSeleted,setItemSelected] = useState<user_interface.User>({
     _id:"",
-    created_at:"",
+    createdAt:"",
     email:"",
     identityCounter:"",
     personalData:"",

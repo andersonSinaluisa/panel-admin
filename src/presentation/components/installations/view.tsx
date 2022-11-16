@@ -1,5 +1,6 @@
 import { getStatusInstallation ,status} from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { clients_interface } from "infrastructure/api/clients";
 import { installations_interface } from "infrastructure/api/installation";
 import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
@@ -27,6 +28,11 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
       state:0
     })
   
+    const [clients,setClients] = useState<clients_interface.GetClientsResponse>({
+      message: [],
+      status: 0,
+      
+    });
     
     const [message, setMessage] = useState<ToastProps>({
       type: "info",
@@ -46,7 +52,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
       location:"",
       province:"",
       country:"",
-      created_at:"",
+      createdAt:"",
       devices:"",
       state:0,
       note:"",
@@ -59,6 +65,10 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
         console.log(props.GetInstallations)
      setInstallations(props.GetInstallations)
     }, [props.GetInstallations]);
+
+    useEffect(() => {
+      setClients(props.GetClients)
+    }, [props.GetClients]);
 
     
   
@@ -124,6 +134,9 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
       props.GetInstallationsAsync({
         token: props.token,
       });
+      props.onGetClientsAsync({
+        token: props.token,
+      })
       props.ClearState()
     }, []);
   
@@ -204,11 +217,22 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
                   label: "Identificador",
                   type: "text",
                 },
-  
                 {
-                  name: "name",
-                  label: "Nombre",
-                  type: "text",
+                  name: "owner",
+                  label: "Propietario",
+                  type: "render",
+                  render(value) {
+                    return (
+                      <div>
+                        {clients.message.map((client) => {
+                          if (client._id === value) {
+                            return client.name+ " " + client.lastname+" - "+client.document;
+                          }
+                        })}
+                      </div>
+                    );
+                  },
+                  
                 },
                 {
                   name: "postalCode",
@@ -233,7 +257,24 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
                 {
                     name:'note',
                     label:'Nota',
-                    type:'text'
+                    type:'render',
+                    render:(item:any)=>{
+                        //split text with max length 20
+                        if (item.length > 20) {
+                             //see more button
+                            return (
+                                <div>{item.substring(0, 20)}...
+                                    <button className="btn btn-link" onClick={() => {}}>
+                                        Ver más
+                                    </button>
+                                </div>
+                            );
+                           
+                        } else {
+                            return item;
+                        }
+                       
+                    }
                 },
                 {
                     name:'state',
@@ -269,36 +310,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
         </Modal>
 
         {/* modal for update status*/}
-        <Modal className="modal-main" show={showModalStatus} style={{}}>
-        <div className="card">
-            <div className="card-header">
-                <h3>Actualizar estado de la instalación</h3>
-            </div>
-            <div className="card-body">
-              <Select
-                label="Seleccione el estado"
-                name="status"
-                options={status.map(x=>{
-                  return {label:x.label,value:x.id}
-                })}
-                onChange={(e:any)=>{
-                  setState({
-                    state:e.currentTarget.value
-                  })
-                }}
-              />
-            </div>
-            <div className="card-footer d-flex justify-content-md-end">
-                <button type="button" 
-                className="btn btn-secondary"
-                onClick={()=>SetShowModalStatus(false)}
-                >Cancelar</button>
-                <button type="button" 
-                onClick={()=>handleStatus(installation)}
-                className="btn btn-success ml-md-3">Actualizar</button>
-            </div>
-          </div>
-          </Modal>
+        
           <div className="toast-bs-container">
             <Toast {...message} />
           </div>

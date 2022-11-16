@@ -6,7 +6,7 @@ interface User{
         email: string,
         role: string,
         personalData: string
-        created_at: string
+        createdAt: string
     
 }
 

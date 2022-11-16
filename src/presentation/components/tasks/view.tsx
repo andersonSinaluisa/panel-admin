@@ -1,5 +1,6 @@
 import { TASK_OPEN } from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { ExportToCsv } from "export-to-csv";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { user_interface } from "infrastructure/api/users";
 import FilterLabel from "infrastructure/components/filter-label";
@@ -349,12 +350,12 @@ const TaskView = (props: TasksViewProps) => {
                             key={1}
                             items={[
                                 {
-                                    label: <>{"Abiertas"} <span className="bullet bullet-sm bullet-warning"></span></>,
+                                    label: <>{"Abiertas"} <span className="bullet bullet-sm bullet-success"></span></>,
                                     classes: "d-flex align-items-center justify-content-between",
                                     onClick: () => { }
                                 },
                                 {
-                                    label: <>{"Cerradas"} <span className="bullet bullet-sm bullet-success"></span></>,
+                                    label: <>{"Cerradas"} <span className="bullet bullet-sm bullet-danger"></span></>,
                                     classes: "d-flex align-items-center justify-content-between",
                                     onClick: () => { }
                                 },
@@ -486,7 +487,31 @@ const TaskView = (props: TasksViewProps) => {
                             <div className="todo-app-list-wrapper" >
                                 <div className="todo-app-list" >
                                     <TodoSearch
-                                        items={[]}
+                                         items={[
+                                            {
+                                                element:<button
+                                                className="btn btn-primary "
+                                                onClick={() => {
+                                                  const options = {
+                                                    fieldSeparator: ',',
+                                                    quoteStrings: '"',
+                                                    decimalSeparator: '.',
+                                                    showLabels: true,
+                                                    showTitle: true,
+                                                    title: 'Reporte',
+                                                    useTextFile: false,
+                                                    useBom: true,
+                                                    useKeysAsHeaders: true,
+                                                    filename: 'reporte',
+                                                  };
+                                                  const csvExporter = new ExportToCsv(options);
+                                                  csvExporter.generateCsv(tasks.message);
+                                                }}
+                                              >
+                                                Exportar <i className="bx bxs-download"></i>
+                                              </button>
+                                            }
+                                        ]}
                                     />
                                     <div className="todo-task-list list-group" style={{ overflow: 'auto' }}>
                                         {/* task list start */}
@@ -497,11 +522,11 @@ const TaskView = (props: TasksViewProps) => {
                                                     onClick: () => handleSelect(item),
                                                     tags: [
                                                         {
-                                                            color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "primary" : "success",
+                                                            color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "info" : "success",
                                                             label: "prioridad: "+item.priority
                                                         },
                                                         {
-                                                            color: item.state === TASK_OPEN ? "warning" : "success",
+                                                            color: item.state === TASK_OPEN ? "success" : "danger",
                                                             label: "estado: "+item.state
                                                         }
                                                     ],

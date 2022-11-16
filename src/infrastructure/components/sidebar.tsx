@@ -36,17 +36,14 @@ const Sidebar = (props: SidebarProps) => {
 
     return (
         <div className="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
-            <div className="navbar-header">
-                <ul className="nav navbar-nav flex-row">
-                    <li className="nav-item mr-auto"><a className="navbar-brand" href="/">
-                        <div className="brand-logo"><img className="logo" src={window.location.origin + "/assets/app-assets/images/logo/logo.png"}
-                            style={{
-                                WebkitFilter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
-                                filter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
-                                width: "150px",
-                                height: "50px"
-                                
-                            }} /></div>
+            <div className="navbar-header" style={{
+                        background: 'white',
+                        paddingBottom: '10px',
+                    }}>
+                <ul className="nav navbar-nav flex-row" >
+                    <li className="nav-item mr-auto"><a className="navbar-brand" href="/" >
+                        <div className="brand-logo" ><img className="logo" src={window.location.origin + "/assets/app-assets/images/logo/logo.png"}
+                             /></div>
                     </a></li>
                     <li className="nav-item nav-toggle">
                         <a className="nav-link modern-nav-toggle pr-0" data-toggle="collapse" onClick={() => hideMenu()}>

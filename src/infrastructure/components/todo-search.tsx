@@ -4,8 +4,7 @@ import React from "react";
 interface TodoSearchProps {
 
     items:Array<{
-        label:string;
-        onClick:() => void;
+        element: React.ReactNode
 
     }>
 }
@@ -25,7 +24,11 @@ const TodoSearch = (props:TodoSearchProps) => {
                     <i className="bx bx-search"></i>
                 </div>
             </fieldset>
-           
+            {
+                props.items.map((item, index) => {
+                    return item.element
+                })
+            }
         </div>
     )
 }

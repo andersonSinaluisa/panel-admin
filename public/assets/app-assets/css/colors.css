@@ -1647,7 +1647,7 @@ input:focus ~ .bg-primary {
 }
 
 .badge.badge-light-primary {
-  background-color: #E2ECFF;
+  background-color: #F24E53;
   color: #BD0409 !important;
 }
 
@@ -1660,7 +1660,7 @@ input:focus ~ .bg-primary {
 }
 
 .badge-circle-light-primary {
-  background-color: #E2ECFF;
+  background-color: #F24E53;
   color: #BD0409;
 }
 
@@ -1700,17 +1700,17 @@ input:focus ~ .bg-primary {
 }
 
 .btn-light-primary {
-  background-color: #E2ECFF;
-  color: #BD0409 !important;
+  background-color: #F24E53;
+  color: white !important;
 }
 
 .btn-light-primary:hover, .btn-light-primary.hover {
-  background-color: #FB5056 !important;
+  background-color: #BD0409 !important;
   color: #fff !important;
 }
 
 .btn-light-primary:active, .btn-light-primary.active {
-  background-color: #FB5056 !important;
+  background-color: #BD0409 !important;
   color: #fff !important;
 }
 
@@ -1775,7 +1775,7 @@ input:focus ~ .bg-primary {
 }
 
 .pagination-primary .page-item .page-link:hover {
-  background-color: #E2ECFF !important;
+  background-color: #F24E53 !important;
 }
 
 .pagination-primary .page-item.previous .page-link, .pagination-primary .page-item.next .page-link {
@@ -1878,7 +1878,7 @@ input[type="checkbox"].bg-primary + .custom-control-label:before, input[type="ra
 /* Select2 primary */
 /* ---------------*/
 select.select-light-primary ~ .select2-container .select2-selection--multiple .select2-selection__rendered .select2-selection__choice, select.select-light-primary ~ .select2-container .select2-selection--multiple .select2-selection__rendered .select2-selection__choice__remove {
-  background-color: #E2ECFF !important;
+  background-color: #F24E53 !important;
   color: #BD0409 !important;
 }
 
@@ -2371,16 +2371,16 @@ input:focus ~ .bg-primary {
 }
 
 .primary.light {
-  color: #E2ECFF !important;
+  color: #F24E53 !important;
 }
 
 .bg-primary.bg-light {
-  background-color: #E2ECFF !important;
+  background-color: #F24E53 !important;
 }
 
 .btn-primary.btn-light {
   border-color: #2c6de9 !important;
-  background-color: #E2ECFF !important;
+  background-color: #F24E53 !important;
 }
 
 .btn-primary.btn-light:hover {
@@ -2394,40 +2394,40 @@ input:focus ~ .bg-primary {
 }
 
 .btn-outline-primary.btn-outline-light {
-  border-color: #E2ECFF !important;
-  color: #E2ECFF !important;
+  border-color: #F24E53 !important;
+  color: #F24E53 !important;
 }
 
 .btn-outline-primary.btn-outline-light:hover {
-  background-color: #E2ECFF !important;
+  background-color: #F24E53 !important;
 }
 
 input:focus ~ .bg-primary {
-  box-shadow: 0 0 0 0.075rem #fff, 0 0 0 0.21rem #E2ECFF !important;
+  box-shadow: 0 0 0 0.075rem #fff, 0 0 0 0.21rem #F24E53 !important;
 }
 
 .border-primary.border-light {
-  border: 1px solid #E2ECFF !important;
+  border: 1px solid #F24E53 !important;
 }
 
 .border-top-primary.border-top-light {
-  border-top: 1px solid #E2ECFF !important;
+  border-top: 1px solid #F24E53 !important;
 }
 
 .border-bottom-primary.border-bottom-light {
-  border-bottom: 1px solid #E2ECFF !important;
+  border-bottom: 1px solid #F24E53 !important;
 }
 
 .border-left-primary.border-left-light {
-  border-left: 1px solid #E2ECFF !important;
+  border-left: 1px solid #F24E53 !important;
 }
 
 .border-right-primary.border-right-light {
-  border-right: 1px solid #E2ECFF !important;
+  border-right: 1px solid #F24E53 !important;
 }
 
 .overlay-primary.overlay-light {
-  background: #E2ECFF;
+  background: #F24E53;
   background: rgba(226, 236, 255, 0.6);
 }
 

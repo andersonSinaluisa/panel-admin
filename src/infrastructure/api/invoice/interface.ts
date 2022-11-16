@@ -1,9 +1,9 @@
 interface Invoice {
 
     _id: string;
-    identityCounter: number;
+    identityCounter: string;
     state: string;
-    billingDate: Date;
+    billingDate: string;
     clientID: string;
     NumeroIdentificacionFiscal: string;
     products: Array<
@@ -24,7 +24,7 @@ interface Invoice {
     paymentMethod: string;
     note: string;
     createdBy: string;
-    createdAt: Date;
+    createdAt: string;
 }
 
 
@@ -37,23 +37,21 @@ interface GetInvoiceResponse {
     status: number;
     message: Invoice;
 }
-
+interface ProductInvoice{
+    id: string;
+    name: string;
+    nroSerie: string;
+    note: string;
+    price: number;
+    quantity: number;
+}
 
 interface CreateInvoiceRequest {
   
-    billingDate: Date;
+    billingDate: string;
     clientID: string;
     NumeroIdentificacionFiscal: string;
-    products: Array<
-
-        {
-            id: string;
-            name: string;
-            nroSerie: string;
-            note: string;
-            price: number;
-            quantity: number;
-        }>;
+    products: ProductInvoice[];
     workReport: string;
     workDirection: string;
     clientDiscount: number;
@@ -68,5 +66,6 @@ export type {
     Invoice,
     GetInvoicesResponse,
     GetInvoiceResponse,
-    CreateInvoiceRequest
+    CreateInvoiceRequest,
+    ProductInvoice
 }

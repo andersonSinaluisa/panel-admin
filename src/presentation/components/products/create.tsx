@@ -13,16 +13,19 @@ const CreateProduct = (props: CreateProductProps) => {
 
     const navigate = useNavigate();
 
-    const [form, setForm] = useState<products_interface.CreateProductCatalogRequest|products_interface.CreateProductUncatalogRequest>({
+    const [form, setForm] = useState<products_interface.CreateProductCatalogRequest | products_interface.CreateProductUncatalogRequest>({
         name: "",
         description: "",
         note: "",
         precioVentaPublico: 0,
-        nroSerie:"",
-        assigned:false,
+        nroSerie: "",
+        assigned: false,
         createdBy: "",
+        stock: 0,
     })
 
+
+    const [type, setType] = useState("catalog");
 
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
@@ -58,6 +61,33 @@ const CreateProduct = (props: CreateProductProps) => {
 
     }, [props.CreateProductCatalog]);
 
+    useEffect(() => {
+
+        if (props.CreateProductUncatalog.status === 200) {
+            setMessage({
+                type: "success",
+                visible: true,
+                title: "Producto creado",
+                description: "El producto se ha creado correctamente",
+            });
+            navigate("/inicio/productos");
+            return;
+        }
+
+        if (props.CreateProductUncatalog.status !== 0) {
+            setMessage({
+                type: "danger",
+                visible: true,
+                title: "Error al crear el producto",
+                description: "El producto no se ha creado correctamente",
+            });
+            return;
+        }
+
+
+    }, [props.CreateProductUncatalog]);
+
+
 
     const handleChange = (
         event: React.FormEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -66,14 +96,14 @@ const CreateProduct = (props: CreateProductProps) => {
         //if precioVentaPublico is a number
         if (name === "precioVentaPublico") {
             setForm({ ...form, [name]: Number(value) });
-        }else{
+        } else {
             setForm({
                 ...form,
                 [event.currentTarget.name]: event.currentTarget.value,
             });
         }
 
-        
+
     };
 
 
@@ -91,13 +121,25 @@ const CreateProduct = (props: CreateProductProps) => {
             return;
         }
 
-        //call api
-        props.onCreateProductCatalogAsync({
-            body: form as products_interface.CreateProductCatalogRequest,
-            headers: {
-                token: props.token
-            }
-        })
+
+        if (type === "catalog") {
+
+
+            //call api
+            props.onCreateProductCatalogAsync({
+                body: form as products_interface.CreateProductCatalogRequest,
+                headers: {
+                    token: props.token
+                }
+            })
+        } else {
+            props.onCreateProductUncatalogAsync({
+                body: form as products_interface.CreateProductUncatalogRequest,
+                headers: {
+                    token: props.token
+                }
+            })
+        }
 
     }
 
@@ -106,15 +148,8 @@ const CreateProduct = (props: CreateProductProps) => {
             <div className="col-12 row bg-cover">
                 <div className="row p-2 col-12">
 
-                
-                <div className="col-lg-6">
-                        <Input
-                            label="Contador de Identidad"
-                            name="indentityCounter"
-                            type={"text"}
-                            onChange={handleChange}
-                        />
-                    </div>
+
+                    
                     <div className="col-lg-6">
                         <Input
                             label="Nombre"
@@ -123,14 +158,30 @@ const CreateProduct = (props: CreateProductProps) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="col-lg-6">
-                        <Input
-                            label="Nro de serie"
-                            name="nroSerie"
-                            type={"text"}
-                            onChange={handleChange}
-                        />
-                    </div>
+
+                    {
+                        type === "catalog" ? (
+                            <div className="col-lg-6">
+                                <Input
+                                    label="Nro de serie"
+                                    name="nroSerie"
+                                    type={"text"}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        ) :
+                            (
+                                <div className="col-lg-6">
+                                    <Input
+                                        label="Stock"
+                                        name="stock"
+                                        type={"text"}
+                                        onChange={handleChange}
+
+                                    />
+                                </div>
+                            )
+                    }
                     <div className="col-lg-6">
                         <label htmlFor="description">Descripción</label>
                         <textarea
@@ -148,6 +199,22 @@ const CreateProduct = (props: CreateProductProps) => {
                             name="note"
                             type={"text"}
                             onChange={handleChange}
+                        />
+                    </div>
+                    <div className="col-lg-6">
+                        <Select
+                            label="Tipo de producto"
+                            name="type"
+                            options={[
+                                { value: 'catalog', label: 'Catalogado' },
+                                { value: 'uncatalog', label: 'No catalogado' }
+                            ]}
+                            onChange={
+                                (event: React.FormEvent<HTMLSelectElement>) => {
+                                    setType(event.currentTarget.value)
+                                }
+                            }
+
                         />
                     </div>
                     <div className="col-lg-6">

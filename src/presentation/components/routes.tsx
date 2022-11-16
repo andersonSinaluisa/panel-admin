@@ -11,6 +11,11 @@ import TaskView from '../container/tasks/view-container';
 import ViewJobs from '../container/jobs/view-container';
 import ProductView from '../container/products/view-container';
 import CreateProduct from '../container/products/create-container';
+import DashboardView from '../container/dashboard/view-container';
+import EditProduct from  '../container/products/edit-container';
+import ViewInvoices from '../container/invoice/view-container';
+import CreateInvoice from '../container/invoice/create-container'
+import DetailInvoice from '../container/invoice/detail-container';
 
 interface RoutesProps{
     name:string;
@@ -26,6 +31,16 @@ interface RoutesProps{
 
 const routes:RoutesProps[] =[
     {
+        name:"Dashboard",
+        relative_path:"",
+        path:"",
+        element:<DashboardView title="Estadisticas" breadcrumbs={["Estadisticas"]}/>,
+        permissions:[],
+        visible_in_menu:true,
+        icon:"bx bx-home",
+        order:1
+    },
+    {   
         name:'Usuarios',
         relative_path:'usuarios',
         path:'/inicio/usuarios/',
@@ -180,7 +195,7 @@ const routes:RoutesProps[] =[
         order:1,
     },
     {
-        name:'Productos',
+        name:'Almacen',
         relative_path:'productos',
         path:'/inicio/productos',
         element:<ProductView title="Productos" breadcrumbs={["Listado de Productos"]}/>,
@@ -206,6 +221,59 @@ const routes:RoutesProps[] =[
         icon:'bx bxl-product-hunt',
         order:1,
     },
+    {
+        name:'Editar Producto',
+        relative_path:'productos/:id',
+        path:'/inicio/productos/:id',
+        element:<EditProduct title="Productos" breadcrumbs={["Editar Producto"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:false,
+        icon:'bx bxl-product-hunt',
+        order:1,
+    },
+    {
+        name:'Facturación',
+        relative_path:'facturas',
+        path:'/inicio/facturas',
+        element:<ViewInvoices title="Facturas" breadcrumbs={["Listado de Facturas"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:true,
+        icon:'bx bx-file',
+        order:1,
+    },
+    {
+        name:'Nueva Factura',
+        relative_path:'facturas/nueva',
+        path:'/inicio/facturas/nueva',
+        element:<CreateInvoice title={"Facturas"} breadcrumbs={["Nueva Factura"]} />,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:false,
+        icon:'bx bx-file',
+        order:1,
+    },
+    {
+        name: 'Detalle Factura',
+        relative_path: 'facturas/:id',
+        path: '/inicio/facturas/:id',
+        element: <DetailInvoice title={"Facturas"} breadcrumbs={["Detalle Factura"]} />,
+        permissions: [
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu: false,
+        icon: 'bx bx-file',
+        order: 1,
+
+    }
     
    
 ]

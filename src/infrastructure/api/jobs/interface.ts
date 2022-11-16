@@ -15,7 +15,7 @@ interface Job{
     technical: string;
     workReport: string;
     note: string;
-    created_at: string;
+    createdAt: string;
     state: string;
 }
 

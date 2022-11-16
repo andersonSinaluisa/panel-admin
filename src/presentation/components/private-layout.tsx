@@ -1,3 +1,5 @@
+import { search_interface } from 'infrastructure/api/search';
+import { user_interface } from 'infrastructure/api/users';
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from "../../application/common/hooks/use-auth";
@@ -14,6 +16,18 @@ import { PrivateLayoutProps } from '../container/private-layout-container';
 const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     const { token ,dataLogin, onLogout} = useAuth();
 
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [onpenSearch, setOnpenSearch] = useState(false);
+    const [userData,setUserData] = useState<user_interface.User>({
+        _id:"",
+        createdAt:"",
+        email:"",
+        identityCounter:"",
+        personalData:"",
+        role:""
+    })
+
+
     useEffect(() => {
         document.body.className = "";
         document.body.className = "vertical-layout vertical-menu-modern boxicon-layout no-card-shadow 2-columns navbar-sticky footer-static  ";
@@ -24,7 +38,13 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
 
     const [title, setTitle] = useState("");
     const [breadcrumbs, setBreadcrumbs] = useState([]);
+    const [search, setSearch] = useState<search_interface.SearchResponse>({
+        message: null,
+        status:0
+    });
 
+
+ 
     useEffect(()=>{
         if(title){
             document.title=title;
@@ -32,10 +52,53 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
         
     },[title])
 
+
+    useEffect(()=>{
+        setSearch(props.search);
+    },[props.search])
+
+
+    useEffect(()=>{
+        props.onGetUserAsync({
+            headers:{
+                token:token as string
+            },
+            id:dataLogin.message.idUser
+        })
+    },[token])
+    useEffect(()=>{
+        setUserData(props.UserData.data.message)
+    },[props.UserData])
+
+
+    useEffect(()=>{
+        props.connectToWebSocket().on("connect",()=>{    
+            props.connectToWebSocket().emit("notifications",{
+                idUser:dataLogin.message.idUser
+            })
+            props.connectToWebSocket().on("notifications",(data)=>{
+                console.log(data)
+            })
+        })
+      
+        return ()=> { props.connectToWebSocket().close()}
+    
+    },[])
+
+
     if (!token) {
         return <Navigate to="/" replace />;
     }
 
+
+    const handleSearch = (value:string)=>{
+        props.onSearchAsync({
+            headers:{
+                token:token
+            },
+            identityCounter:value
+        })
+    }
 
     //connecto to websocket
     
@@ -44,9 +107,13 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
         <>
             <div className="header-navbar-shadow"></div>
 
-            <Navbar dataLogin={dataLogin} onLogout={props.clearSession}/>
+            <Navbar dataLogin={dataLogin} onLogout={props.clearSession}
+                dataSearch={search} onSearch={handleSearch} onOpenSearch={setOnpenSearch} openSearch={onpenSearch}
+                    userData={userData}
+                />
+        
             <Sidebar dataLogin={dataLogin}/>
-            <div className="app-content content">
+            <div className={`app-content content ${onpenSearch?'show-overlay':''}`} >
                 <div className="content-overlay"></div>
                 <div className="content-wrapper">
                     <div className="content-header row">

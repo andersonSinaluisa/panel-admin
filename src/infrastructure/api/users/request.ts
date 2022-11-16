@@ -13,6 +13,16 @@ const GetUsers = (props:APIHANDLER.HeaderProps)=>{
     })
 }
 
+const GetUser = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
+    return APIHANDLER.get(Globals.GET_USERS+"/"+props.id,{
+        headers:{
+            Authorization: "Bearer "+props.headers.token
+
+        }
+    })
+}
+
+
 const CreateUser = (props:{headers:APIHANDLER.HeaderProps,body:CreateUserRequest})=>{
 
     return APIHANDLER.post(Globals.CREATE_USER,props.body,{
@@ -33,5 +43,6 @@ const DeleteUser = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
 export {
     GetUsers,
     CreateUser,
-    DeleteUser
+    DeleteUser,
+    GetUser
 }

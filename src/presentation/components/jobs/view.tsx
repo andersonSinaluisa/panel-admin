@@ -1,4 +1,5 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { ExportToCsv } from "export-to-csv";
 import { clients_interface } from "infrastructure/api/clients";
 import { jobs_interface } from "infrastructure/api/jobs";
 import FilterLabel from "infrastructure/components/filter-label";
@@ -14,6 +15,7 @@ import TodoMenu from "infrastructure/components/todo-menu";
 import TodoSearch from "infrastructure/components/todo-search";
 import { ViewJobsProps } from "presentation/container/jobs/view-container";
 import React, { useEffect, useState } from "react";
+import SelectReact from 'react-select';
 
 
 
@@ -28,16 +30,16 @@ const ViewJobs = (props: ViewJobsProps) => {
     const [showModalClose, setShowModalClose] = useState<boolean>(false)
 
 
-    const [closeJob,SetCloseJob] =  useState<jobs_interface.CloseJobRequest>({
-        material:"",
-        note:"",
-        workReport:""
+    const [closeJob, SetCloseJob] = useState<jobs_interface.CloseJobRequest>({
+        material: "",
+        note: "",
+        workReport: ""
     })
     const [job, setJob] = useState<jobs_interface.Job>({
         _id: "",
         contactName: "",
         contactPhone: "",
-        created_at: "",
+        createdAt: "",
         description: "",
         direction: "",
         idClient: "",
@@ -177,7 +179,7 @@ const ViewJobs = (props: ViewJobsProps) => {
 
 
     const handleSave = () => {
-        
+
 
         //validate fields
         if (form.contactName === "") {
@@ -294,7 +296,7 @@ const ViewJobs = (props: ViewJobsProps) => {
 
         props.onCreateJobAsync({
             body: form,
-            headers:{
+            headers: {
                 token: props.token
             }
         })
@@ -325,7 +327,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             _id: "",
             contactName: "",
             contactPhone: "",
-            created_at: "",
+            createdAt: "",
             description: "",
             direction: "",
             idClient: "",
@@ -343,7 +345,7 @@ const ViewJobs = (props: ViewJobsProps) => {
     }
 
     const handleDeleteJob = (job: any) => {
-        
+
         props.onDeleteJobAsync({
             headers: {
                 token: props.token
@@ -362,9 +364,9 @@ const ViewJobs = (props: ViewJobsProps) => {
         setJob(job)
     }
 
-    const handleSaveCloseJob = ()=>{
+    const handleSaveCloseJob = () => {
         //validate fields
-        if(closeJob.material === ""){
+        if (closeJob.material === "") {
             setMessage({
                 description: "El campo Material es requerido",
                 title: "Error",
@@ -374,7 +376,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             return;
         }
 
-        if(closeJob.note === ""){
+        if (closeJob.note === "") {
             setMessage({
                 description: "El campo Nota es requerido",
                 title: "Error",
@@ -384,7 +386,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             return;
         }
 
-        if(closeJob.workReport === ""){
+        if (closeJob.workReport === "") {
             setMessage({
                 description: "El campo Reporte de trabajo es requerido",
                 title: "Error",
@@ -396,13 +398,13 @@ const ViewJobs = (props: ViewJobsProps) => {
 
         props.onCloseJobAsync({
             body: closeJob,
-            headers:{
+            headers: {
                 token: props.token
             },
             id: job._id
         })
         setShowModalClose(false)
-            
+
     }
 
     const handleSelect = (item: any) => {
@@ -473,12 +475,12 @@ const ViewJobs = (props: ViewJobsProps) => {
                             key={1}
                             items={[
                                 {
-                                    label: <>{"Abiertas"} <span className="bullet bullet-sm bullet-warning"></span></>,
+                                    label: <>{"Abiertas"} <span className="bullet bullet-sm bullet-success"></span></>,
                                     classes: "d-flex align-items-center justify-content-between",
                                     onClick: () => { }
                                 },
                                 {
-                                    label: <>{"Cerradas"} <span className="bullet bullet-sm bullet-success"></span></>,
+                                    label: <>{"Cerradas"} <span className="bullet bullet-sm bullet-danger"></span></>,
                                     classes: "d-flex align-items-center justify-content-between",
                                     onClick: () => { }
                                 },
@@ -517,20 +519,27 @@ const ViewJobs = (props: ViewJobsProps) => {
 
                 >
                     <>
-                        <Select
-                            label="Cliente"
-                            options={clients.message.map((client) => {
-                                return {
-                                    label: client.name,
-                                    value: client._id
-                                }
-                            })
-                            }
+                            <label htmlFor="idClient">Cliente</label>
+                        <SelectReact
+                            isSearchable={true}
                             name="idClient"
-                            onChange={handleChange}
-                            selected={form.idClient}
+                            options={clients.message.map(e => ({
+                                value: e._id,
+                                label: e.name + " " + e.lastname
+                            }))}
+                            placeholder="Seleccione un Cliente"
+                            onChange={
+                                (e: any) => {
+                                    setForm({
+                                        ...form,
+                                        idClient: e.value,
+                                    })
+                                }
+                            }
+
 
                         />
+
                         <Input
                             label="Dirección"
                             placeholder="Dirección"
@@ -555,6 +564,15 @@ const ViewJobs = (props: ViewJobsProps) => {
                             onChange={handleChange}
                             value={form.contactPhone}
                         />
+                        <div className="form-group">
+                            <label htmlFor="">Observación Contacto</label>
+                            <textarea onChange={handleChange}
+                                name="obsContact"
+                                className="form-control" placeholder="Descripción" rows={3} value={
+                                    form.obsContact
+                                }></textarea>
+                        </div>
+
                         <Input
                             label="Tipo tarea"
                             placeholder="Tipo tarea"
@@ -564,14 +582,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             value={form.type}
 
                         />
-                        <div className="form-group">
-                            <label htmlFor="">Observación Contacto</label>
-                            <textarea onChange={handleChange}
-                                name="obsContact"
-                                className="form-control" placeholder="Descripción" rows={3} value={
-                                    form.obsContact
-                                }></textarea>
-                        </div>
+
 
                         <Select
                             label="Prioridad"
@@ -651,7 +662,31 @@ const ViewJobs = (props: ViewJobsProps) => {
                             <div className="todo-app-list-wrapper" >
                                 <div className="todo-app-list" >
                                     <TodoSearch
-                                        items={[]}
+                                        items={[
+                                            {
+                                                element: <button
+                                                    className="btn btn-primary "
+                                                    onClick={() => {
+                                                        const options = {
+                                                            fieldSeparator: ',',
+                                                            quoteStrings: '"',
+                                                            decimalSeparator: '.',
+                                                            showLabels: true,
+                                                            showTitle: true,
+                                                            title: 'Reporte',
+                                                            useTextFile: false,
+                                                            useBom: true,
+                                                            useKeysAsHeaders: true,
+                                                            filename: 'reporte',
+                                                        };
+                                                        const csvExporter = new ExportToCsv(options);
+                                                        csvExporter.generateCsv(jobs.message);
+                                                    }}
+                                                >
+                                                    Exportar <i className="bx bxs-download"></i>
+                                                </button>
+                                            }
+                                        ]}
                                     />
                                     <div className="todo-task-list list-group" style={{ overflow: 'auto' }}>
                                         {/* task list start */}
@@ -662,21 +697,21 @@ const ViewJobs = (props: ViewJobsProps) => {
                                                     onClick: () => handleSelect(item),
                                                     tags: [
                                                         {
-                                                            label: "prioridad: "+item.priority,
+                                                            label: "prioridad: " + item.priority,
                                                             color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "info" : "success"
                                                         },
                                                         {
-                                                            label: "tipo: " +item.type,
-                                                            color: "info"
+                                                            label: "Estado: " + item.state,
+                                                            color: item.state === "abierto" ? "success" : "danger"
                                                         },
-                                                        
+
                                                     ],
                                                     data: item,
-                                                    completed:item.state==="abierto"?false:true,
+                                                    completed: item.state === "abierto" ? false : true,
                                                     options: [
                                                         {
-                                                            element: <a className="todo-item-delete ml-75" 
-                                                            onClick={()=>handleShowModal(item)}>
+                                                            element: <a className="todo-item-delete ml-75"
+                                                                onClick={() => handleShowModal(item)}>
                                                                 <i className="bx bx-trash"></i>
                                                             </a>
                                                         }
@@ -722,7 +757,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                         <h3>¿Desea Cerrar el Trabajo ?</h3>
                     </div>
                     <div className="card-body">
-                    <Input
+                        <Input
                             label="Material"
                             placeholder="Material"
                             type="text"
@@ -731,7 +766,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             value={closeJob.material}
 
                         />
-                         <Input
+                        <Input
                             label="Notas"
                             placeholder="Notas"
                             type="text"
@@ -740,7 +775,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             value={closeJob.note}
 
                         />
-                         <Input
+                        <Input
                             label="Material"
                             placeholder="Material"
                             type="text"
