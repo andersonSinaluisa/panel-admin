@@ -161,9 +161,7 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                         <div className="card-body pt-0 mx-25">
                             <hr />
                             <div className="row">
-                                <div className="col-4 col-sm-6 mt-75">
-                                    <p>Thanks for your business.</p>
-                                </div>
+                             
                                 <div className="col-8 col-sm-6 d-flex justify-content-end mt-75">
                                     <div className="invoice-subtotal">
                                         <div className="invoice-calc d-flex justify-content-between">

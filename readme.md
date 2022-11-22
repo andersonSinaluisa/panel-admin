@@ -4,7 +4,6 @@ rutas publicas:
 -localidades-provincias-es `http://80.240.126.227:3000/public/localidades-provincias-es.csv`
 
 ## **Consultas HTTP**
-
 ## Dispositivos
 
 ### Agregar dispositivo
@@ -27,8 +26,8 @@ Response
         message: message
     }
 
-| Nombre                 | Valor  | Descripcion                     |
-| ---------------------- | ------ | ------------------------------- |
+| Nombre           | Valor  | Descripcion                   |
+| ---------------- | ------ | ----------------------------- |
 | **id**           | numero | _ID del dispositivo en micro_ |
 | **type**         | texto  | _Tipo de dispositivo_         |
 | **installation** | texto  | _ID de la instalacion_        |
@@ -83,8 +82,8 @@ Response
         },
      }
 
-| Nombre                             | Valor         | Descripcion                     |
-| ---------------------------------- | ------------- | ------------------------------- |
+| Nombre                       | Valor         | Descripcion                   |
+| ---------------------------- | ------------- | ----------------------------- |
 | **code**                     | 200-500       | _Codigo de estado_            |
 | **status**                   | error success | _Estado de la respuesta_      |
 | **\_id**                     | texto         | _ID del dispositivo_          |
@@ -93,25 +92,25 @@ Response
 | **alive.updatedAt**          | Date          | _Last alive_                  |
 | **type**                     | texto         | _tipo de dispositivo_         |
 | **puerta**                   | 1             | _Puerta abierta_              |
-|                                    | 2             | _Puerta cerrada_              |
+|                              | 2             | _Puerta cerrada_              |
 | **alarmaCelular**            | 1             | _Alarma Celular ON_           |
-|                                    | 2             | _Alarma Celular OFF_          |
+|                              | 2             | _Alarma Celular OFF_          |
 | **actuacionesEnBateria**     | numero        | _Nro. actuaciones en bateria_ |
 | **actuacionesTotales**       | numero        | _Nro. actuaciones Totales_    |
 | **alimentacion**             | 1             | _Linea_                       |
-|                                    | 2             | _Bateria_                     |
+|                              | 2             | _Bateria_                     |
 | **bateria**                  | 1             | _Nivel de bateria 75%_        |
-|                                    | 2             | _Nivel de bateria 50%_        |
-|                                    | 3             | _Nivel de bateria 30%_        |
-|                                    | 4             | _Nivel de bateria 20%_        |
+|                              | 2             | _Nivel de bateria 50%_        |
+|                              | 3             | _Nivel de bateria 30%_        |
+|                              | 4             | _Nivel de bateria 20%_        |
 | **state**                    | 1             | _Armado_                      |
-|                                    | 2             | _Desarmado_                   |
-|                                    | 3             | _Dormir_                      |
-|                                    | 4             | _Bloqueado_                   |
-|                                    | 5             | _Apagado_                     |
-|                                    | 6             | Autocierre                      |
-|                                    | 7             | _Antipánico_                 |
-|                                    | 8             | _Antibaby_                    |
+|                              | 2             | _Desarmado_                   |
+|                              | 3             | _Dormir_                      |
+|                              | 4             | _Bloqueado_                   |
+|                              | 5             | _Apagado_                     |
+|                              | 6             | Autocierre                    |
+|                              | 7             | _Antipánico_                  |
+|                              | 8             | _Antibaby_                    |
 | **stateM1**                  | numero        | _estado M1_                   |
 | **stateM2**                  | numero        | _estado M2_                   |
 | **stateSL**                  | numero        | _estado SL_                   |
@@ -129,18 +128,19 @@ Response
 | **stateGSM**                 | numero        | _estado GSM_                  |
 | **elementBuzzer**            | numero        | _De 1 a 100_                  |
 | **elementLEDEstado**         | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementWiFi**              | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementBLE**               | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementSensorTemperatura** | 0             | _De 1 a 100_                  |
 | **elementGSM**               | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementLlamada**           | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementMandoRF**           | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
+
 
 ### Obtener dispositivos por ID
 
@@ -194,8 +194,8 @@ Response
          ]
      }
 
-| Nombre                             | Valor         | Descripcion                     |
-| ---------------------------------- | ------------- | ------------------------------- |
+| Nombre                       | Valor         | Descripcion                   |
+| ---------------------------- | ------------- | ----------------------------- |
 | **code**                     | 200-500       | _Codigo de estado_            |
 | **status**                   | error success | _Estado de la respuesta_      |
 | **\_id**                     | texto         | _ID del dispositivo_          |
@@ -204,25 +204,25 @@ Response
 | **alive.updatedAt**          | Date          | _Last alive_                  |
 | **type**                     | texto         | _tipo de dispositivo_         |
 | **puerta**                   | 1             | _Puerta abierta_              |
-|                                    | 2             | _Puerta cerrada_              |
+|                              | 2             | _Puerta cerrada_              |
 | **alarmaCelular**            | 1             | _Alarma Celular ON_           |
-|                                    | 2             | _Alarma Celular OFF_          |
+|                              | 2             | _Alarma Celular OFF_          |
 | **actuacionesEnBateria**     | numero        | _Nro. actuaciones en bateria_ |
 | **actuacionesTotales**       | numero        | _Nro. actuaciones Totales_    |
 | **alimentacion**             | 1             | _Linea_                       |
-|                                    | 2             | _Bateria_                     |
+|                              | 2             | _Bateria_                     |
 | **bateria**                  | 1             | _Nivel de bateria 75%_        |
-|                                    | 2             | _Nivel de bateria 50%_        |
-|                                    | 3             | _Nivel de bateria 30%_        |
-|                                    | 4             | _Nivel de bateria 20%_        |
+|                              | 2             | _Nivel de bateria 50%_        |
+|                              | 3             | _Nivel de bateria 30%_        |
+|                              | 4             | _Nivel de bateria 20%_        |
 | **state**                    | 1             | _Armado_                      |
-|                                    | 2             | _Desarmado_                   |
-|                                    | 3             | _Dormir_                      |
-|                                    | 4             | _Bloqueado_                   |
-|                                    | 5             | _Apagado_                     |
-|                                    | 6             | Autocierre                      |
-|                                    | 7             | _Antipánico_                 |
-|                                    | 8             | _Antibaby_                    |
+|                              | 2             | _Desarmado_                   |
+|                              | 3             | _Dormir_                      |
+|                              | 4             | _Bloqueado_                   |
+|                              | 5             | _Apagado_                     |
+|                              | 6             | Autocierre                    |
+|                              | 7             | _Antipánico_                  |
+|                              | 8             | _Antibaby_                    |
 | **stateM1**                  | numero        | _estado M1_                   |
 | **stateM2**                  | numero        | _estado M2_                   |
 | **stateSL**                  | numero        | _estado SL_                   |
@@ -240,18 +240,18 @@ Response
 | **stateGSM**                 | numero        | _estado GSM_                  |
 | **elementBuzzer**            | numero        | _De 1 a 100_                  |
 | **elementLEDEstado**         | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementWiFi**              | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementBLE**               | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementSensorTemperatura** | 0             | _De 1 a 100_                  |
 | **elementGSM**               | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementLlamada**           | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 | **elementMandoRF**           | 0             | _Desactivado_                 |
-|                                    | 1             | _Activado_                    |
+|                              | 1             | _Activado_                    |
 
 ### Actualizar elemento de dispositivo
 
@@ -272,19 +272,19 @@ Response
         message: message
     }
 
-| Nombre           | Valor  | Descripcion                        |
-| ---------------- | ------ | ---------------------------------- |
+| Nombre     | Valor  | Descripcion                      |
+| ---------- | ------ | -------------------------------- |
 | **\_id**   | numero | _ID del dispositivo_             |
 | **estado** | 1      | _Buzzer_                         |
-|                  | 2      | _LED de estado_                  |
-|                  | 3      | _Conexión WiFi_                 |
-|                  | 4      | _Conexión BLE_                  |
-|                  | 5      | _Sensor de temperatura_          |
-|                  | 6      | _Conexión GSM_                  |
-|                  | 7      | _Llamada_                        |
-|                  | 8      | _Mando RF_                       |
+|            | 2      | _LED de estado_                  |
+|            | 3      | _Conexión WiFi_                  |
+|            | 4      | _Conexión BLE_                   |
+|            | 5      | _Sensor de temperatura_          |
+|            | 6      | _Conexión GSM_                   |
+|            | 7      | _Llamada_                        |
+|            | 8      | _Mando RF_                       |
 | **valor**  | numero | _1 (activado) o 0 (desactivado)_ |
-|                  |        | _1 a 100 en buzzer y ST_         |
+|            |        | _1 a 100 en buzzer y ST_         |
 
 ### Actuador M1
 
@@ -298,8 +298,8 @@ Response
         message: message
     }
 
-| Nombre          | Valor  | Descripcion            |
-| --------------- | ------ | ---------------------- |
+| Nombre    | Valor  | Descripcion          |
+| --------- | ------ | -------------------- |
 | **\_id**  | numero | _ID del dispositivo_ |
 | **valor** | 0 1    | _0 abajo, 1 arriba_  |
 
@@ -315,8 +315,8 @@ Response
         message: message
     }
 
-| Nombre          | Valor  | Descripcion            |
-| --------------- | ------ | ---------------------- |
+| Nombre    | Valor  | Descripcion          |
+| --------- | ------ | -------------------- |
 | **\_id**  | numero | _ID del dispositivo_ |
 | **valor** | 0 1    | _0 abajo, 1 arriba_  |
 
@@ -331,8 +331,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor  | Descripcion            |
-| ------------ | ------ | ---------------------- |
+| Nombre | Valor  | Descripcion          |
+| ------ | ------ | -------------------- |
 | **id** | numero | _ID del dispositivo_ |
 
 ## Instalacion
@@ -344,7 +344,6 @@ Response
 Request
 
     {
-        name: name,
         owner: owner,
         postalCode: postalCode,
         location: location,
@@ -360,15 +359,14 @@ Response
         message: message
     }
 
-| Nombre               | Valor | Descripcion                         |
-| -------------------- | ----- | ----------------------------------- |
-| **name**       | texto | _Nombre de la instalacion_        |
+| Nombre         | Valor | Descripcion                      |
+| -------------- | ----- | -------------------------------- |
 | **owner**      | texto | _ID del dueño de la instalacion_ |
-| **postalCode** | texto | _Codigo postal_                   |
-| **location**   | texto | _Localidad_                       |
-| **province**   | texto | _Provincia_                       |
-| **country**    | texto | _Pais_                            |
-| **note**       | texto | _Notas_                           |
+| **postalCode** | texto | _Codigo postal_                  |
+| **location**   | texto | _Localidad_                      |
+| **province**   | texto | _Provincia_                      |
+| **country**    | texto | _Pais_                           |
+| **note**       | texto | _Notas_                          |
 
 ### Obtener instalaciones
 
@@ -376,38 +374,37 @@ Response
 
 Response
 
-* [ ] 
-      {
-          code: code
-          status: status,
-          message: [
-              {
-                  _id: _id,
-                  identityCounter: identityCounter
-                  name: name,
-                  owner: owner,
-                  postalCode: postalCode,
-                  location: location,
-                  province: province,
-                  country: country,
-                  note: note,
-                  devices: devices,
-                  users: [
-                      {
-                          id: id, role: role
-                      }
-                  ],
-                  created_at: created_at
-              }
-          ]
-      }
+    {
+        code: code
+        status: status,
+        message: [
+            {
+                _id: _id,
+                identityCounter: identityCounter
+                name: name,
+                owner: owner,
+                postalCode: postalCode,
+                location: location,
+                province: province,
+                country: country,
+                note: note,
+                devices: devices,
+                users: [
+                    { 
+                        id: id, role: role
+                    }
+                ],
+                created_at: created_at
+            }
+        ]
+    }
 
-| Nombre                    | Valor | Descripcion                                 |
-| ------------------------- | ----- | ------------------------------------------- |
+| Nombre              | Valor | Descripcion                               |
+| ------------------- | ----- | ----------------------------------------- |
 | **\_id**            | texto | _ID de la instalacion_                    |
 | **identityCounter** | texto | _Contador de identidad_                   |
 | **name**            | texto | _Nombre de la instalacion_                |
-| **owner**           | texto | _ID del dueño de la instalacion_         |
+| **owner**           | texto | _ID del dueño de la instalacion_          |
 | **postalCode**      | texto | _Codigo postal_                           |
 | **location**        | texto | _Localidad_                               |
 | **province**        | texto | _Provincia_                               |
@@ -441,7 +438,7 @@ Response
             devices: devices,
             devices: devices,
             users: [
-                {
+                { 
                     id: id, role: role
                 }
             ],
@@ -449,13 +446,13 @@ Response
         }
     }
 
-| Nombre                    | Valor | Descripcion                                 |
-| ------------------------- | ----- | ------------------------------------------- |
+| Nombre              | Valor | Descripcion                               |
+| ------------------- | ----- | ----------------------------------------- |
 | **id**              | texto | _ID de la instalacion_                    |
 | **\_id**            | texto | _ID de la instalacion_                    |
 | **identityCounter** | texto | _Contador de identidad_                   |
 | **name**            | texto | _Nombre de la instalacion_                |
-| **owner**           | texto | _ID del dueño de la instalacion_         |
+| **owner**           | texto | _ID del dueño de la instalacion_          |
 | **postalCode**      | texto | _Codigo postal_                           |
 | **location**        | texto | _Localidad_                               |
 | **province**        | texto | _Provincia_                               |
@@ -488,7 +485,7 @@ Response
                 note: note,
                 devices: devices,
                 users: [
-                    {
+                    { 
                         id: id, role: role
                     }
                 ],
@@ -497,13 +494,13 @@ Response
         ]
     }
 
-| Nombre                    | Valor | Descripcion                                 |
-| ------------------------- | ----- | ------------------------------------------- |
+| Nombre              | Valor | Descripcion                               |
+| ------------------- | ----- | ----------------------------------------- |
 | **id**              | texto | _ID del cliente_                          |
 | **\_id**            | texto | _ID de la instalacion_                    |
 | **identityCounter** | texto | _Contador de identidad_                   |
 | **name**            | texto | _Nombre de la instalacion_                |
-| **owner**           | texto | _ID del dueño de la instalacion_         |
+| **owner**           | texto | _ID del dueño de la instalacion_          |
 | **postalCode**      | texto | _Codigo postal_                           |
 | **location**        | texto | _Localidad_                               |
 | **province**        | texto | _Provincia_                               |
@@ -528,19 +525,19 @@ Response
         }
     }
 
-| Nombre           | Valor         | Descripcion                |
-| ---------------- | ------------- | -------------------------- |
+| Nombre     | Valor         | Descripcion              |
+| ---------- | ------------- | ------------------------ |
 | **id**     | texto         | _ID de la instalacion_   |
 | **code**   | 200-500       | _Codigo de estado_       |
 | **status** | error success | _Estado de la respuesta_ |
 | **state**  | 1             | _Armado_                 |
-|                  | 2             | _Desarmado_              |
-|                  | 3             | _Dormir_                 |
-|                  | 4             | _Bloqueado_              |
-|                  | 5             | _Apagado_                |
-|                  | 6             | Autocierre                 |
-|                  | 7             | _Antipánico_            |
-|                  | 8             | _Antibaby_               |
+|            | 2             | _Desarmado_              |
+|            | 3             | _Dormir_                 |
+|            | 4             | _Bloqueado_              |
+|            | 5             | _Apagado_                |
+|            | 6             | Autocierre               |
+|            | 7             | _Antipánico_             |
+|            | 8             | _Antibaby_               |
 
 ### Actualizar estado instalacion
 
@@ -559,17 +556,17 @@ Response
         message: message
     }
 
-| Nombre          | Valor | Descripcion              |
-| --------------- | ----- | ------------------------ |
+| Nombre    | Valor | Descripcion            |
+| --------- | ----- | ---------------------- |
 | **id**    | texto | _ID de la instalacion_ |
 | **state** | 1     | _Armado_               |
-|                 | 2     | _Desarmado_            |
-|                 | 3     | _Dormir_               |
-|                 | 4     | _Bloqueado_            |
-|                 | 5     | _Apagado_              |
-|                 | 6     | Autocierre               |
-|                 | 7     | _Antipánico_          |
-|                 | 8     | _Antibaby_             |
+|           | 2     | _Desarmado_            |
+|           | 3     | _Dormir_               |
+|           | 4     | _Bloqueado_            |
+|           | 5     | _Apagado_              |
+|           | 6     | Autocierre             |
+|           | 7     | _Antipánico_           |
+|           | 8     | _Antibaby_             |
 
 ### Eliminar instalacion
 
@@ -581,8 +578,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion              |
-| ------------ | ----- | ------------------------ |
+| Nombre | Valor | Descripcion            |
+| ------ | ----- | ---------------------- |
 | **id** | texto | _ID de la instalacion_ |
 
 ## Esenarios
@@ -596,8 +593,8 @@ Request
     {
         name: name,
         timeStart: timeStart,
-        timeEnd: timeEnd,
-    actions: [
+        timeEnd: timeEnd,  
+        actions: [
             {
                 device: device,
                 state: state,
@@ -614,8 +611,8 @@ Response
         message: message
     }
 
-| Nombre                   | Valor | Descripcion                |
-| ------------------------ | ----- | -------------------------- |
+| Nombre             | Valor | Descripcion              |
+| ------------------ | ----- | ------------------------ |
 | **name**           | texto | _Nombre del esenario_    |
 | **timeStart**      | Date  | _Tiempo de inicio_       |
 | **timeEnd**        | texto | _Tiempo de final_        |
@@ -640,8 +637,8 @@ Response
                 state: state,
                 forced: forced,
                 timeStart: timeStart,
-                timeEnd: timeEnd,
-    actions: [
+                timeEnd: timeEnd,  
+                actions: [
                     {
                         device: device,
                         state: state,
@@ -654,8 +651,8 @@ Response
         ]
     }
 
-| Nombre                   | Valor  | Descripcion                |
-| ------------------------ | ------ | -------------------------- |
+| Nombre             | Valor  | Descripcion              |
+| ------------------ | ------ | ------------------------ |
 | **\_id**           | texto  | _ID de la esenario_      |
 | **name**           | texto  | _Nombre del esenario_    |
 | **state**          | Bool   | _Estado del esenario_    |
@@ -684,8 +681,8 @@ Response
             state: state,
             forced: forced,
             timeStart: timeStart,
-            timeEnd: timeEnd,
-    actions: [
+            timeEnd: timeEnd,  
+            actions: [
                 {
                     device: device,
                     state: state,
@@ -697,8 +694,8 @@ Response
         }
     }
 
-| Nombre                   | Valor  | Descripcion                |
-| ------------------------ | ------ | -------------------------- |
+| Nombre             | Valor  | Descripcion              |
+| ------------------ | ------ | ------------------------ |
 | **\_id**           | texto  | _ID de la esenario_      |
 | **name**           | texto  | _Nombre del esenario_    |
 | **state**          | Bool   | _Estado del esenario_    |
@@ -712,6 +709,7 @@ Response
 | **note**           | texto  | _Notas_                  |
 | **createdAt**      | texto  | _Fecha de creacion_      |
 
+
 ### Actualizar esenario
 
 **PUT** `http://80.240.126.227:3000/scenarios/update/:id`
@@ -721,8 +719,8 @@ Request
     {
         name: name,
         timeStart: timeStart,
-        timeEnd: timeEnd,
-    actions: [
+        timeEnd: timeEnd,  
+        actions: [
             {
                 device: device,
                 state: state,
@@ -738,8 +736,8 @@ Response
         message: message
     }
 
-| Nombre                   | Valor  | Descripcion                |
-| ------------------------ | ------ | -------------------------- |
+| Nombre             | Valor  | Descripcion              |
+| ------------------ | ------ | ------------------------ |
 | **id**             | texto  | _ID de la esenario_      |
 | **name**           | texto  | _Nombre del esenario_    |
 | **timeStart**      | Date   | _Tiempo de inicio_       |
@@ -759,8 +757,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion         |
-| ------------ | ----- | ------------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID del esenario_ |
 
 ### Desactivar esenario
@@ -773,10 +771,9 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion         |
-| ------------ | ----- | ------------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID del esenario_ |
-
 ### Forzar esenario
 
 **PUT** `http://80.240.126.227:3000/scenarios/force/:id`
@@ -787,8 +784,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion         |
-| ------------ | ----- | ------------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID del esenario_ |
 
 ### Desforzar esenario
@@ -801,8 +798,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion         |
-| ------------ | ----- | ------------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID del esenario_ |
 
 ### Eliminar esenario
@@ -815,8 +812,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion         |
-| ------------ | ----- | ------------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID del esenario_ |
 
 ## Notificaciones
@@ -827,10 +824,10 @@ Response
 
 query
 
-| Nombre         | Valor | Descripcion      |
-| -------------- | ----- | ---------------- |
+| Nombre   | Valor | Descripcion    |
+| -------- | ----- | -------------- |
 | **type** | 1     | _Notificacion_ |
-|                | 2     | _Alarma_       |
+|          | 2     | _Alarma_       |
 | **all**  |       | _Todas_        |
 
     {
@@ -847,11 +844,11 @@ query
          ]
      }
 
-| Nombre                 | Valor | Descripcion                        |
-| ---------------------- | ----- | ---------------------------------- |
+| Nombre           | Valor | Descripcion                      |
+| ---------------- | ----- | -------------------------------- |
 | **\_id**         | texto | _ID de la notificacion_          |
 | **type**         | 1     | _Notificacion_                   |
-|                        | 2     | _Alarma_                         |
+|                  | 2     | _Alarma_                         |
 | **name**         | texto | _Nombre de la notificacion_      |
 | **description**  | texto | _Descripcion de la notificacion_ |
 | **installation** | texto | _ID de la instalacion_           |
@@ -873,12 +870,12 @@ query
         },
      }
 
-| Nombre                 | Valor | Descripcion                        |
-| ---------------------- | ----- | ---------------------------------- |
+| Nombre           | Valor | Descripcion                      |
+| ---------------- | ----- | -------------------------------- |
 | **\_id**         | texto | _ID de la notificacion_          |
 | **id**           | texto | _ID de la notificacion_          |
 | **type**         | 1     | _Notificacion_                   |
-|                        | 2     | _Alarma_                         |
+|                  | 2     | _Alarma_                         |
 | **name**         | texto | _Nombre de la notificacion_      |
 | **description**  | texto | _Descripcion de la notificacion_ |
 | **installation** | texto | _ID de la instalacion_           |
@@ -890,10 +887,10 @@ query
 
 query
 
-| Nombre         | Valor | Descripcion      |
-| -------------- | ----- | ---------------- |
+| Nombre   | Valor | Descripcion    |
+| -------- | ----- | -------------- |
 | **type** | 1     | _Notificacion_ |
-|                | 2     | _Alarma_       |
+|          | 2     | _Alarma_       |
 | **all**  |       | _Todas_        |
 
     {
@@ -910,12 +907,12 @@ query
          ]
      }
 
-| Nombre                 | Valor | Descripcion                        |
-| ---------------------- | ----- | ---------------------------------- |
+| Nombre           | Valor | Descripcion                      |
+| ---------------- | ----- | -------------------------------- |
 | **\_id**         | texto | _ID de la notificacion_          |
 | **id**           | texto | _ID de la instalacion_           |
 | **type**         | 1     | _Notificacion_                   |
-|                        | 2     | _Alarma_                         |
+|                  | 2     | _Alarma_                         |
 | **name**         | texto | _Nombre de la notificacion_      |
 | **description**  | texto | _Descripcion de la notificacion_ |
 | **installation** | texto | _ID de la instalacion_           |
@@ -932,8 +929,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor  | Descripcion               |
-| ------------ | ------ | ------------------------- |
+| Nombre | Valor  | Descripcion             |
+| ------ | ------ | ----------------------- |
 | **id** | numero | _ID de la notificacion_ |
 
 ## Usuarios
@@ -957,10 +954,10 @@ Response
         message: message
     }
 
-| Nombre             | Valor | Descripcion                             |
-| ------------------ | ----- | --------------------------------------- |
+| Nombre       | Valor | Descripcion                           |
+| ------------ | ----- | ------------------------------------- |
 | **email**    | texto | _Correo electronico_                  |
-| **password** | texto | _Contraseña_                         |
+| **password** | texto | _Contraseña_                          |
 | **role**     | texto | _Rol del usuario (personal, cliente)_ |
 
 ### Login
@@ -981,10 +978,10 @@ Response
         message: token
     }
 
-| Nombre             | Valor | Descripcion            |
-| ------------------ | ----- | ---------------------- |
+| Nombre       | Valor | Descripcion          |
+| ------------ | ----- | -------------------- |
 | **email**    | texto | _Correo electronico_ |
-| **password** | texto | _Contraseña_        |
+| **password** | texto | _Contraseña_         |
 | **token**    | texto | _Token de sesion_    |
 
 ### Obtener usuarios
@@ -1007,15 +1004,14 @@ Response
         ]
     }
 
-| Nombre                    | Valor | Descripcion                            |
-| ------------------------- | ----- | -------------------------------------- |
+| Nombre              | Valor | Descripcion                          |
+| ------------------- | ----- | ------------------------------------ |
 | **\_id**            | texto | _ID de usuario_                      |
 | **identityCounter** | texto | _Contador de identidad_              |
 | **email**           | texto | _Correo electronico_                 |
 | **role**            | texto | _Rol del usuario (personal, client)_ |
 | **personalData**    | texto | _ID de los datos personales_         |
 | **createdAt**       | texto | _Fecha de creacion_                  |
-
 ### Obtener usuario por ID
 
 **GET** `http://80.240.126.227:3000/users/:_id`
@@ -1034,8 +1030,8 @@ Response
         }
     }
 
-| Nombre                    | Valor | Descripcion                            |
-| ------------------------- | ----- | -------------------------------------- |
+| Nombre              | Valor | Descripcion                          |
+| ------------------- | ----- | ------------------------------------ |
 | **\_id**            | texto | _ID de usuario_                      |
 | **identityCounter** | texto | _Contador de identidad_              |
 | **email**           | texto | _Correo electronico_                 |
@@ -1060,10 +1056,10 @@ Response
         message: message
     }
 
-| Nombre             | Valor | Descripcion       |
-| ------------------ | ----- | ----------------- |
+| Nombre       | Valor | Descripcion     |
+| ------------ | ----- | --------------- |
 | **\_id**     | texto | _ID de usuario_ |
-| **password** | texto | _Contraseña_   |
+| **password** | texto | _Contraseña_    |
 
 ### Eliminar usuario
 
@@ -1076,8 +1072,8 @@ Response
         message: message
     }
 
-| Nombre         | Valor | Descripcion       |
-| -------------- | ----- | ----------------- |
+| Nombre   | Valor | Descripcion     |
+| -------- | ----- | --------------- |
 | **\_id** | texto | _ID de usuario_ |
 
 ## Clientes
@@ -1120,30 +1116,31 @@ Response
         message: message
     }
 
-| Nombre                    | Valor  | R  | Descripcion                                              |
-| ------------------------- | ------ | -- | -------------------------------------------------------- |
-| **userId**          | texto  | \* | _ID del usuario_                                       |
-| **personType**      | texto  |    | _Tipo de persona (fisica, juridica)_                   |
-| **documentType**    | texto  |    | _Tipo de documento (DNI, pasaporte, otro)_             |
-| **document**        | texto  |    | _Documento_                                            |
-| **name**            | texto  | \* | _Nombre del cliente_                                   |
-| **lastname**        | texto  |    | _Apellido_ del cliente_                                |
-| **roadType**        | texto  |    | _Tipo de via (calle, avenida, carretera, plaza, otro)_ |
-| **direction**       | texto  |    | _Direccion_                                            |
-| **postalCode**      | texto  |    | _Codigo postal_                                        |
-| **location**        | texto  |    | _Localidad_                                            |
-| **province**        | texto  |    | _Provincia_                                            |
-| **country**         | texto  |    | _Pais_                                                 |
-| **phone**           | texto  |    | _Telefono_                                             |
-| **mobilePhone**     | texto  |    | _Telefono movil_                                       |
-| **contact**         | texto  |    | _Contacto_                                             |
-| **contact2**        | texto  |    | _Contacto 2_                                           |
-| **email**           | texto  |    | _Correo electronico_                                   |
-| **webpage**         | texto  |    | _Pagina web_                                           |
-| **contactSchedule** | texto  |    | _Horario de contacto_                                  |
-| **discount**        | numero |    | _Porcentaje de descuento_                              |
-| **note**            | texto  |    | _Notas_                                                |
-| **message**         | texto  |    | _ID del cliente creado o mensaje de error_             |
+| Nombre              | Valor  | R   | Descripcion                                            |
+| ------------------- | ------ | --- | ------------------------------------------------------ |
+| **userId**          | texto  | \*  | _ID del usuario_                                       |
+| **personType**      | texto  |     | _Tipo de persona (fisica, juridica)_                   |
+| **documentType**    | texto  |     | _Tipo de documento (DNI, pasaporte, otro)_             |
+| **document**        | texto  |     | _Documento_                                            |
+| **name**            | texto  | \*  | _Nombre del cliente_                                   |
+| **lastname**        | texto  |     | _Apellido_ del cliente_                                |
+| **roadType**        | texto  |     | _Tipo de via (calle, avenida, carretera, plaza, otro)_ |
+| **direction**       | texto  |     | _Direccion_                                            |
+| **postalCode**      | texto  |     | _Codigo postal_                                        |
+| **location**        | texto  |     | _Localidad_                                            |
+| **province**        | texto  |     | _Provincia_                                            |
+| **country**         | texto  |     | _Pais_                                                 |
+| **phone**           | texto  |     | _Telefono_                                             |
+| **mobilePhone**     | texto  |     | _Telefono movil_                                       |
+| **contact**         | texto  |     | _Contacto_                                             |
+| **contact2**        | texto  |     | _Contacto 2_                                           |
+| **email**           | texto  |     | _Correo electronico_                                   |
+| **webpage**         | texto  |     | _Pagina web_                                           |
+| **contactSchedule** | texto  |     | _Horario de contacto_                                  |
+| **discount**        | numero |     | _Porcentaje de descuento_                              |
+| **note**            | texto  |     | _Notas_                                                |
+| **message**         | texto  |     | _ID del cliente creado o mensaje de error_             |
+
 
 ### Obtener clientes
 
@@ -1193,8 +1190,8 @@ Response
         ]
     }
 
-| Nombre                                   | Valor  | Descripcion                                                 |
-| ---------------------------------------- | ------ | ----------------------------------------------------------- |
+| Nombre                             | Valor  | Descripcion                                               |
+| ---------------------------------- | ------ | --------------------------------------------------------- |
 | **\_id**                           | texto  | _ID de cliente_                                           |
 | **identityCounter**                | texto  | _Contador de identidad_                                   |
 | **userId**                         | texto  | _ID de usuario_                                           |
@@ -1272,8 +1269,8 @@ Response
         }
     }
 
-| Nombre                                   | Valor  | Descripcion                                                 |
-| ---------------------------------------- | ------ | ----------------------------------------------------------- |
+| Nombre                             | Valor  | Descripcion                                               |
+| ---------------------------------- | ------ | --------------------------------------------------------- |
 | **\_id**                           | texto  | _ID de cliente_                                           |
 | **identityCounter**                | texto  | _Contador de identidad_                                   |
 | **userId**                         | texto  | _ID de usuario_                                           |
@@ -1304,7 +1301,6 @@ Response
 | **installations.permissions.name** | texto  | _Nombre de permiso_                                       |
 | **createdBy**                      | texto  | _ID del usuario que lo creo_                              |
 | **createdAt**                      | texto  | _Fecha de creacion_                                       |
-
 ### Añadir instalacion a cliente
 
 **PUT** `http://80.240.126.227:3000/client/:id/installation`
@@ -1323,8 +1319,8 @@ Response
         message: message
     }
 
-| Nombre                 | Valor | Descripcion                     |
-| ---------------------- | ----- | ------------------------------- |
+| Nombre           | Valor | Descripcion                   |
+| ---------------- | ----- | ----------------------------- |
 | **id**           | texto | _ID del cliente_              |
 | **installation** | texto | _ID de la instalacion_        |
 | **role**         | texto | _Rol (conviviente, invitado)_ |
@@ -1340,10 +1336,11 @@ Response
         message: message
     }
 
-| Nombre                   | Valor | Descripcion              |
-| ------------------------ | ----- | ------------------------ |
+| Nombre             | Valor | Descripcion            |
+| ------------------ | ----- | ---------------------- |
 | **id**             | texto | _ID del cliente_       |
 | **Idinstallation** | texto | _ID de la instalacion_ |
+
 
 ### Actualizar permisos de instalacion de cliente
 
@@ -1367,8 +1364,8 @@ Response
         message: message
     }
 
-| Nombre                   | Valor | Descripcion              |
-| ------------------------ | ----- | ------------------------ |
+| Nombre             | Valor | Descripcion            |
+| ------------------ | ----- | ---------------------- |
 | **\_id**           | texto | _ID del cliente_       |
 | **idInstallation** | texto | _ID de la instalacion_ |
 | **id**             | texto | _ID del permiso_       |
@@ -1410,8 +1407,8 @@ Response
         message: message
     }
 
-| Nombre                    | Valor  | Descripcion                                              |
-| ------------------------- | ------ | -------------------------------------------------------- |
+| Nombre              | Valor  | Descripcion                                            |
+| ------------------- | ------ | ------------------------------------------------------ |
 | **\_id**            | texto  | _ID de cliente_                                        |
 | **personType**      | texto  | _Tipo de persona (fisica, juridica)_                   |
 | **documentType**    | texto  | _Tipo de documento (DNI, otro)_                        |
@@ -1445,8 +1442,8 @@ Response
         message: message
     }
 
-| Nombre         | Valor | Descripcion       |
-| -------------- | ----- | ----------------- |
+| Nombre   | Valor | Descripcion     |
+| -------- | ----- | --------------- |
 | **\_id** | texto | _ID de cliente_ |
 
 ### Ver permisos de usuario cliente
@@ -1465,10 +1462,11 @@ Response
         ]
     }
 
-| Nombre           | Valor | Descripcion            |
-| ---------------- | ----- | ---------------------- |
+| Nombre     | Valor | Descripcion          |
+| ---------- | ----- | -------------------- |
 | **id**     | texto | _ID del permiso_     |
 | **nombre** | texto | _Nombre del permiso_ |
+
 
 ## Personal
 
@@ -1506,25 +1504,26 @@ Response
         message: message
     }
 
-| Nombre                    | Valor | R  | Descripcion                                   |
-| ------------------------- | ----- | -- | --------------------------------------------- |
-| **userId**          | texto | \* | _ID de usuario_                             |
-| **documentType**    | texto | \* | _Tipo de documento (DNI, pasaporte, otro)_  |
-| **document**        | texto | \* | _Documento_                                 |
-| **name**            | texto | \* | _Nombre del personal_                       |
-| **type**            | texto | \* | _Tipo de personal (interno, externo)_       |
-| **direction**       | texto | \* | _Direccion_                                 |
-| **postalCode**      | texto | \* | _Codigo postal_                             |
-| **location**        | texto | \* | _Localidad_                                 |
-| **province**        | texto | \* | _Provincia_                                 |
-| **country**         | texto | \* | _Pais_                                      |
-| **phone**           | texto |    | _Telefono_                                  |
-| **mobilePhone**     | texto |    | _Telefono movil_                            |
-| **email**           | texto |    | _Correo electronico_                        |
-| **contactSchedule** | texto |    | _Horario de contacto_                       |
-| **note**            | texto |    | _Notas_                                     |
-| **createdBy**       | texto | \* | _ID del usuario que lo creo_                |
-| **message**         | texto |    | _ID del personal creado o mensaje de error_ |
+| Nombre              | Valor | R   | Descripcion                                 |
+| ------------------- | ----- | --- | ------------------------------------------- |
+| **userId**          | texto | \*  | _ID de usuario_                             |
+| **documentType**    | texto | \*  | _Tipo de documento (DNI, pasaporte, otro)_  |
+| **document**        | texto | \*  | _Documento_                                 |
+| **name**            | texto | \*  | _Nombre del personal_                       |
+| **position**        | texto | \*  | _Cargo (administrativo, tecnico)_           |
+| **type**            | texto | \*  | _Tipo de personal (interno, externo)_       |
+| **direction**       | texto | \*  | _Direccion_                                 |
+| **postalCode**      | texto | \*  | _Codigo postal_                             |
+| **location**        | texto | \*  | _Localidad_                                 |
+| **province**        | texto | \*  | _Provincia_                                 |
+| **country**         | texto | \*  | _Pais_                                      |
+| **phone**           | texto |     | _Telefono_                                  |
+| **mobilePhone**     | texto |     | _Telefono movil_                            |
+| **email**           | texto |     | _Correo electronico_                        |
+| **contactSchedule** | texto |     | _Horario de contacto_                       |
+| **note**            | texto |     | _Notas_                                     |
+| **createdBy**       | texto | \*  | _ID del usuario que lo creo_                |
+| **message**         | texto |     | _ID del personal creado o mensaje de error_ |
 
 ### Obtener personales
 
@@ -1568,14 +1567,15 @@ Response
         ]
     }
 
-| Nombre                     | Valor | Descripcion                             |
-| -------------------------- | ----- | --------------------------------------- |
+| Nombre               | Valor | Descripcion                           |
+| -------------------- | ----- | ------------------------------------- |
 | **\_id**             | texto | _ID de personal_                      |
 | **userId**           | texto | _ID de usuario_                       |
 | **identityCounter**  | texto | _Contador de identidad_               |
 | **documentType**     | texto | _Tipo de documento (DNI, otro)_       |
 | **document**         | texto | _Documento_                           |
 | **name**             | texto | _Nombre del personal_                 |
+| **position**         | texto | _Cargo (administrativo, tecnico)_     |
 | **type**             | texto | _Tipo de personal (interno, externo)_ |
 | **direction**        | texto | _Direccion_                           |
 | **postalCode**       | texto | _Codigo postal_                       |
@@ -1593,7 +1593,6 @@ Response
 | **dependents**       | Array | _Array de personas a cargo_           |
 | **createdBy**        | texto | _ID del usuario que lo creo_          |
 | **createdAt**        | texto | _Fecha de creacion_                   |
-
 ### Obtener personal por ID
 
 **GET** `http://80.240.126.227:3000/personal/:_id`
@@ -1634,14 +1633,15 @@ Response
             }
     }
 
-| Nombre                     | Valor | Descripcion                             |
-| -------------------------- | ----- | --------------------------------------- |
+| Nombre               | Valor | Descripcion                           |
+| -------------------- | ----- | ------------------------------------- |
 | **\_id**             | texto | _ID de personal_                      |
 | **userId**           | texto | _ID de usuario_                       |
 | **identityCounter**  | texto | _Contador de identidad_               |
 | **documentType**     | texto | _Tipo de documento (DNI, otro)_       |
 | **document**         | texto | _Documento_                           |
 | **name**             | texto | _Nombre del personal_                 |
+| **position**         | texto | _Cargo (administrativo, tecnico)_     |
 | **type**             | texto | _Tipo de personal (interno, externo)_ |
 | **direction**        | texto | _Direccion_                           |
 | **postalCode**       | texto | _Codigo postal_                       |
@@ -1677,8 +1677,8 @@ Response
         message: message
     }
 
-| Nombre               | Valor | Descripcion                |
-| -------------------- | ----- | -------------------------- |
+| Nombre         | Valor | Descripcion              |
+| -------------- | ----- | ------------------------ |
 | **id**         | texto | _ID del personal_        |
 | **dependents** | texto | _ID del usuario a cargo_ |
 
@@ -1699,8 +1699,8 @@ Response
         message: message
     }
 
-| Nombre               | Valor | Descripcion                |
-| -------------------- | ----- | -------------------------- |
+| Nombre         | Valor | Descripcion              |
+| -------------- | ----- | ------------------------ |
 | **id**         | texto | _ID del personal_        |
 | **dependents** | texto | _ID del usuario a cargo_ |
 
@@ -1726,8 +1726,8 @@ Response
         message: message
     }
 
-| Nombre           | Valor | Descripcion            |
-| ---------------- | ----- | ---------------------- |
+| Nombre     | Valor | Descripcion          |
+| ---------- | ----- | -------------------- |
 | **\_id**   | texto | _ID de usuario_      |
 | **id**     | texto | _ID del permiso_     |
 | **nombre** | texto | _Nombre del permiso_ |
@@ -1768,12 +1768,13 @@ Response
         message: message
     }
 
-| Nombre                    | Valor | Descripcion                             |
-| ------------------------- | ----- | --------------------------------------- |
+| Nombre              | Valor | Descripcion                           |
+| ------------------- | ----- | ------------------------------------- |
 | **\_id**            | texto | _ID de cliente_                       |
 | **documentType**    | texto | _Tipo de documento (DNI, otro)_       |
 | **document**        | texto | _Documento_                           |
 | **name**            | texto | _Nombre del personal_                 |
+| **position**        | texto | _Cargo (administrativo, tecnico)_     |
 | **type**            | texto | _Tipo de personal (interno, externo)_ |
 | **direction**       | texto | _Direccion_                           |
 | **postalCode**      | texto | _Codigo postal_                       |
@@ -1797,8 +1798,8 @@ Response
         message: message
     }
 
-| Nombre         | Valor | Descripcion        |
-| -------------- | ----- | ------------------ |
+| Nombre   | Valor | Descripcion      |
+| -------- | ----- | ---------------- |
 | **\_id** | texto | _ID de personal_ |
 
 ### Ver permisos de usuario personal
@@ -1817,8 +1818,8 @@ Response
         ]
     }
 
-| Nombre           | Valor | Descripcion            |
-| ---------------- | ----- | ---------------------- |
+| Nombre     | Valor | Descripcion          |
+| ---------- | ----- | -------------------- |
 | **id**     | texto | _ID del permiso_     |
 | **nombre** | texto | _Nombre del permiso_ |
 
@@ -1851,18 +1852,18 @@ Response
         message: message
     }
 
-| Nombre                     | Valor | Descripcion                                                            |
-| -------------------------- | ----- | ---------------------------------------------------------------------- |
-| **idClient**         | texto | _ID del cliente_                                                     |
-| **direction**        | texto | _Direccion_                                                          |
-| **contactName**      | texto | _Nombre contacto_                                                    |
-| **contactPhone**     | texto | _Numero de contacto_                                                 |
+| Nombre               | Valor | Descripcion                                                       |
+| -------------------- | ----- | ----------------------------------------------------------------- |
+| **idClient**         | texto | _ID del cliente_                                                  |
+| **direction**        | texto | _Direccion_                                                       |
+| **contactName**      | texto | _Nombre contacto_                                                 |
+| **contactPhone**     | texto | _Numero de contacto_                                              |
 | **type**             | texto | _Tipo(mantenimiento, avería, incidencias, revisión, instalación)_ |
-| **priority**         | texto | _Pioridad(alta, media, baja)_                                        |
-| **interventionDate** | texto | _Fecha de intervencion_                                              |
-| **description**      | texto | _Descripcion_                                                        |
-| **material**         | texto | _array de jsons de materiales_                                       |
-| **technical**        | texto | _ID del tecnico_                                                     |
+| **priority**         | texto | _Pioridad(alta, media, baja)_                                     |
+| **interventionDate** | texto | _Fecha de intervencion_                                           |
+| **description**      | texto | _Descripcion_                                                     |
+| **material**         | texto | _array de jsons de materiales_                                    |
+| **technical**        | texto | _ID del tecnico_                                                  |
 
 ### Obtener trabajos
 
@@ -1892,24 +1893,24 @@ Response
         }
     }
 
-| Nombre                     | Valor | Descripcion                                                            |
-| -------------------------- | ----- | ---------------------------------------------------------------------- |
-| **id**               | texto | _ID del trabajo_                                                     |
-| **\_id**             | texto | _ID del trabajo_                                                     |
-| **identityCounter**  | texto | _Contador de identidad_                                              |
-| **idClient**         | texto | _ID del cliente_                                                     |
-| **direction**        | texto | _Direccion_                                                          |
-| **contactName**      | texto | _Nombre contacto_                                                    |
-| **contactPhone**     | texto | _Numero de contacto_                                                 |
+| Nombre               | Valor | Descripcion                                                       |
+| -------------------- | ----- | ----------------------------------------------------------------- |
+| **id**               | texto | _ID del trabajo_                                                  |
+| **\_id**             | texto | _ID del trabajo_                                                  |
+| **identityCounter**  | texto | _Contador de identidad_                                           |
+| **idClient**         | texto | _ID del cliente_                                                  |
+| **direction**        | texto | _Direccion_                                                       |
+| **contactName**      | texto | _Nombre contacto_                                                 |
+| **contactPhone**     | texto | _Numero de contacto_                                              |
 | **type**             | texto | _Tipo(mantenimiento, avería, incidencias, revisión, instalación)_ |
-| **priority**         | texto | _Pioridad(alta, media, baja)_                                        |
-| **interventionDate** | texto | _Fecha de intervencion_                                              |
-| **description**      | texto | _Descripcion_                                                        |
-| **material**         | texto | _array de jsons de materiales_                                       |
-| **technical**        | texto | _ID del tecnico_                                                     |
-| **workReport**       | texto | _Reporte del trabajo ej: 123R001_                                    |
-| **note**             | texto | _Notas_                                                              |
-| **created_at**       | texto | _Fecha de creacion_                                                  |
+| **priority**         | texto | _Pioridad(alta, media, baja)_                                     |
+| **interventionDate** | texto | _Fecha de intervencion_                                           |
+| **description**      | texto | _Descripcion_                                                     |
+| **material**         | texto | _array de jsons de materiales_                                    |
+| **technical**        | texto | _ID del tecnico_                                                  |
+| **workReport**       | texto | _Reporte del trabajo ej: 123R001_                                 |
+| **note**             | texto | _Notas_                                                           |
+| **created_at**       | texto | _Fecha de creacion_                                               |
 
 ## Cerrar trabajo
 
@@ -1930,8 +1931,8 @@ Response
         message: message
     }
 
-| Nombre               | Valor | Descripcion                         |
-| -------------------- | ----- | ----------------------------------- |
+| Nombre         | Valor | Descripcion                       |
+| -------------- | ----- | --------------------------------- |
 | **id**         | texto | _ID del trabajo_                  |
 | **material**   | texto | _array de jsons de materiales_    |
 | **workReport** | texto | _Reporte del trabajo ej: 123R001_ |
@@ -1948,8 +1949,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion        |
-| ------------ | ----- | ------------------ |
+| Nombre | Valor | Descripcion      |
+| ------ | ----- | ---------------- |
 | **id** | texto | _ID del trabajo_ |
 
 ## Tareas
@@ -1977,15 +1978,15 @@ Response
         message: message
     }
 
-| Nombre                     | Valor | Descripcion                                                   |
-| -------------------------- | ----- | ------------------------------------------------------------- |
+| Nombre               | Valor | Descripcion                                                |
+| -------------------- | ----- | ---------------------------------------------------------- |
 | **name**             | texto | _nombre de la tarea (cita, facturación, baja, nueva alta)_ |
-| **type**             | texto | _tipo de tarea (llamada, otros)_                            |
-| **description**      | texto | _Descripcion de la tarea_                                   |
-| **priority**         | texto | _Pioridad(alta, media, baja)_                               |
-| **interventionDate** | texto | _Fecha a intervenir_                                        |
-| **responsible**      | texto | _ID del responsable de la tarea_                            |
-| **observation**      | texto | _Observacion de la tarea a reralizar_                       |
+| **type**             | texto | _tipo de tarea (llamada, otros)_                           |
+| **description**      | texto | _Descripcion de la tarea_                                  |
+| **priority**         | texto | _Pioridad(alta, media, baja)_                              |
+| **interventionDate** | texto | _Fecha a intervenir_                                       |
+| **responsible**      | texto | _ID del responsable de la tarea_                           |
+| **observation**      | texto | _Observacion de la tarea a reralizar_                      |
 
 ### Obtener tareas
 
@@ -2013,20 +2014,20 @@ Response
         ]
     }
 
-| Nombre                     | Valor | Descripcion                                                   |
-| -------------------------- | ----- | ------------------------------------------------------------- |
-| **\_id**             | texto | _ID de la tarea_                                            |
-| **identityCounter**  | texto | _Contador de identidad_                                     |
+| Nombre               | Valor | Descripcion                                                |
+| -------------------- | ----- | ---------------------------------------------------------- |
+| **\_id**             | texto | _ID de la tarea_                                           |
+| **identityCounter**  | texto | _Contador de identidad_                                    |
 | **name**             | texto | _nombre de la tarea (cita, facturación, baja, nueva alta)_ |
-| **type**             | texto | _tipo de tarea (llamada, otros)_                            |
-| **description**      | texto | _Descripcion de la tarea_                                   |
-| **state**            | texto | _Estado de la tarea (abierto, cerrado)_                     |
-| **priority**         | texto | _Pioridad(alta, media, baja)_                               |
-| **interventionDate** | texto | _Fecha a intervenir_                                        |
-| **responsible**      | texto | _ID del responsable de la tarea_                            |
-| **createdBy**        | texto | _ID del usuario que creo_                                   |
-| **observation**      | texto | _Observacion de la tarea a reralizar_                       |
-| **createdAt**        | texto | _Fecha de creacion_                                         |
+| **type**             | texto | _tipo de tarea (llamada, otros)_                           |
+| **description**      | texto | _Descripcion de la tarea_                                  |
+| **state**            | texto | _Estado de la tarea (abierto, cerrado)_                    |
+| **priority**         | texto | _Pioridad(alta, media, baja)_                              |
+| **interventionDate** | texto | _Fecha a intervenir_                                       |
+| **responsible**      | texto | _ID del responsable de la tarea_                           |
+| **createdBy**        | texto | _ID del usuario que creo_                                  |
+| **observation**      | texto | _Observacion de la tarea a reralizar_                      |
+| **createdAt**        | texto | _Fecha de creacion_                                        |
 
 ### Obtener tarea por ID
 
@@ -2052,21 +2053,21 @@ Response
         }
     }
 
-| Nombre                     | Valor | Descripcion                                                   |
-| -------------------------- | ----- | ------------------------------------------------------------- |
-| **id**               | texto | _ID de la tarea_                                            |
-| **\_id**             | texto | _ID de la tarea_                                            |
-| **identityCounter**  | texto | _Contador de identidad_                                     |
+| Nombre               | Valor | Descripcion                                                |
+| -------------------- | ----- | ---------------------------------------------------------- |
+| **id**               | texto | _ID de la tarea_                                           |
+| **\_id**             | texto | _ID de la tarea_                                           |
+| **identityCounter**  | texto | _Contador de identidad_                                    |
 | **name**             | texto | _nombre de la tarea (cita, facturación, baja, nueva alta)_ |
-| **type**             | texto | _tipo de tarea (llamada, otros)_                            |
-| **description**      | texto | _Descripcion de la tarea_                                   |
-| **state**            | texto | _Estado de la tarea (abierto, cerrado)_                     |
-| **priority**         | texto | _Pioridad(alta, media, baja)_                               |
-| **interventionDate** | texto | _Fecha a intervenir_                                        |
-| **responsible**      | texto | _ID del responsable de la tarea_                            |
-| **createdBy**        | texto | _ID del usuario que creo_                                   |
-| **observation**      | texto | _Observacion de la tarea a reralizar_                       |
-| **createdAt**        | texto | _Fecha de creacion_                                         |
+| **type**             | texto | _tipo de tarea (llamada, otros)_                           |
+| **description**      | texto | _Descripcion de la tarea_                                  |
+| **state**            | texto | _Estado de la tarea (abierto, cerrado)_                    |
+| **priority**         | texto | _Pioridad(alta, media, baja)_                              |
+| **interventionDate** | texto | _Fecha a intervenir_                                       |
+| **responsible**      | texto | _ID del responsable de la tarea_                           |
+| **createdBy**        | texto | _ID del usuario que creo_                                  |
+| **observation**      | texto | _Observacion de la tarea a reralizar_                      |
+| **createdAt**        | texto | _Fecha de creacion_                                        |
 
 ## Cerrar tarea
 
@@ -2085,8 +2086,8 @@ Response
         message: message
     }
 
-| Nombre                | Valor | Descripcion        |
-| --------------------- | ----- | ------------------ |
+| Nombre          | Valor | Descripcion      |
+| --------------- | ----- | ---------------- |
 | **id**          | texto | _ID de la tarea_ |
 | **observation** | texto | _Observacion_    |
 
@@ -2101,8 +2102,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion        |
-| ------------ | ----- | ------------------ |
+| Nombre | Valor | Descripcion      |
+| ------ | ----- | ---------------- |
 | **id** | texto | _ID de la tarea_ |
 
 ## Productos (almacen)
@@ -2128,8 +2129,8 @@ Response
         message: message
     }
 
-| Nombre                       | Valor  | Descripcion                    |
-| ---------------------------- | ------ | ------------------------------ |
+| Nombre                 | Valor  | Descripcion                  |
+| ---------------------- | ------ | ---------------------------- |
 | **name**               | texto  | _Nombre del producto_        |
 | **description**        | texto  | _Descripcion del producto_   |
 | **precioVentaPublico** | numero | _Precio de venta al publico_ |
@@ -2157,8 +2158,8 @@ Response
         message: message
     }
 
-| Nombre                       | Valor  | Descripcion                    |
-| ---------------------------- | ------ | ------------------------------ |
+| Nombre                 | Valor  | Descripcion                  |
+| ---------------------- | ------ | ---------------------------- |
 | **name**               | texto  | _Nombre del producto_        |
 | **nroSerie**           | texto  | _Numero de serie_            |
 | **description**        | texto  | _Descripcion del producto_   |
@@ -2190,8 +2191,8 @@ Response
         }
     }
 
-| Nombre                       | Valor   | Descripcion                    |
-| ---------------------------- | ------- | ------------------------------ |
+| Nombre                 | Valor   | Descripcion                  |
+| ---------------------- | ------- | ---------------------------- |
 | **id**                 | texto   | _ID del producto_            |
 | **\_id**               | texto   | _ID del producto_            |
 | **identityCounter**    | texto   | _Contador de identidad_      |
@@ -2231,8 +2232,8 @@ Response
         }
     }
 
-| Nombre                       | Valor   | Descripcion                    |
-| ---------------------------- | ------- | ------------------------------ |
+| Nombre                 | Valor   | Descripcion                  |
+| ---------------------- | ------- | ---------------------------- |
 | **\_id**               | texto   | _ID del producto_            |
 | **identityCounter**    | texto   | _Contador de identidad_      |
 | **name**               | texto   | _Nombre del producto_        |
@@ -2271,8 +2272,8 @@ Response
         }
     }
 
-| Nombre                       | Valor   | Descripcion                    |
-| ---------------------------- | ------- | ------------------------------ |
+| Nombre                 | Valor   | Descripcion                  |
+| ---------------------- | ------- | ---------------------------- |
 | **\_id**               | texto   | _ID del producto_            |
 | **identityCounter**    | texto   | _Contador de identidad_      |
 | **name**               | texto   | _Nombre del producto_        |
@@ -2312,8 +2313,8 @@ Response
         message: message
     }
 
-| Nombre                       | Valor   | Descripcion                    |
-| ---------------------------- | ------- | ------------------------------ |
+| Nombre                 | Valor   | Descripcion                  |
+| ---------------------- | ------- | ---------------------------- |
 | **id**                 | texto   | _ID del producto_            |
 | **name**               | texto   | _Nombre del producto_        |
 | **nroSerie**           | texto   | _Numero de serie_            |
@@ -2342,11 +2343,10 @@ Response
         message: message
     }
 
-| Nombre          | Valor | Descripcion         |
-| --------------- | ----- | ------------------- |
+| Nombre    | Valor | Descripcion       |
+| --------- | ----- | ----------------- |
 | **id**    | texto | _ID del producto_ |
 | **stock** | texto | _Stock_           |
-
 ### Catalogar producto
 
 **PUT** `http://80.240.126.227:3000/products/catalog/:id`
@@ -2364,8 +2364,8 @@ Response
         message: message
     }
 
-| Nombre             | Valor | Descripcion         |
-| ------------------ | ----- | ------------------- |
+| Nombre       | Valor | Descripcion       |
+| ------------ | ----- | ----------------- |
 | **id**       | texto | _ID del producto_ |
 | **nroSerie** | texto | _Numero de serie_ |
 
@@ -2380,8 +2380,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion         |
-| ------------ | ----- | ------------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID del producto_ |
 
 ## Contactos (posibles clientes)
@@ -2415,22 +2415,23 @@ Response
         message: message
     }
 
-| Nombre                | Valor | R  | Descripcion                                              |
-| --------------------- | ----- | -- | -------------------------------------------------------- |
-| **name**        | texto | \* | _Nombre del constacto_                                 |
-| **lastname**    | texto | \* | _Apellido del constacto_                               |
-| **roadType**    | texto | \* | _Tipo de via (calle, avenida, carretera, plaza, otro)_ |
-| **direction**   | texto | \* | _Direccion_                                            |
-| **postalCode**  | texto | \* | _Codigo postal_                                        |
-| **location**    | texto | \* | _Localidad_                                            |
-| **province**    | texto | \* | _Provincia_                                            |
-| **country**     | texto | \* | _Pais_                                                 |
-| **phone**       | texto |    | _Telefono_                                             |
-| **mobilePhone** | texto |    | _Telefono movil_                                       |
-| **email**       | texto |    | _Correo electronico_                                   |
-| **tracing**     | texto |    | _Seguimiento_                                          |
-| **note**        | texto |    | _Notas_                                                |
-| **message**     | texto |    | _ID del cliente creado o mensaje de error_             |
+| Nombre          | Valor | R   | Descripcion                                            |
+| --------------- | ----- | --- | ------------------------------------------------------ |
+| **name**        | texto | \*  | _Nombre del constacto_                                 |
+| **lastname**    | texto | \*  | _Apellido del constacto_                               |
+| **roadType**    | texto | \*  | _Tipo de via (calle, avenida, carretera, plaza, otro)_ |
+| **direction**   | texto | \*  | _Direccion_                                            |
+| **postalCode**  | texto | \*  | _Codigo postal_                                        |
+| **location**    | texto | \*  | _Localidad_                                            |
+| **province**    | texto | \*  | _Provincia_                                            |
+| **country**     | texto | \*  | _Pais_                                                 |
+| **phone**       | texto |     | _Telefono_                                             |
+| **mobilePhone** | texto |     | _Telefono movil_                                       |
+| **email**       | texto |     | _Correo electronico_                                   |
+| **tracing**     | texto |     | _Seguimiento_                                          |
+| **note**        | texto |     | _Notas_                                                |
+| **message**     | texto |     | _ID del cliente creado o mensaje de error_             |
+
 
 ### Obtener contactos
 
@@ -2463,8 +2464,8 @@ Response
         ]
     }
 
-| Nombre                    | Valor | Descripcion                                              |
-| ------------------------- | ----- | -------------------------------------------------------- |
+| Nombre              | Valor | Descripcion                                            |
+| ------------------- | ----- | ------------------------------------------------------ |
 | **\_id**            | texto | _ID de cliente_                                        |
 | **identityCounter** | texto | _Contador de identidad_                                |
 | **idCode**          | texto | _ID de contacto codificado_                            |
@@ -2514,8 +2515,8 @@ Response
         },
     }
 
-| Nombre                    | Valor | Descripcion                                              |
-| ------------------------- | ----- | -------------------------------------------------------- |
+| Nombre              | Valor | Descripcion                                            |
+| ------------------- | ----- | ------------------------------------------------------ |
 | **id**              | texto | _ID de contacto_                                       |
 | **identityCounter** | texto | _Contador de identidad_                                |
 | **name**            | texto | _Nombre del contacto_                                  |
@@ -2564,8 +2565,8 @@ Response
         message: message
     }
 
-| Nombre                 | Valor | Descripcion                                              |
-| ---------------------- | ----- | -------------------------------------------------------- |
+| Nombre           | Valor | Descripcion                                            |
+| ---------------- | ----- | ------------------------------------------------------ |
 | **id**           | texto | _ID de contacto_                                       |
 | **name**         | texto | _Nombre del contacto_                                  |
 | **lastname**     | texto | _Apellido del contacto_                                |
@@ -2593,8 +2594,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion     |
-| ------------ | ----- | --------------- |
+| Nombre | Valor | Descripcion     |
+| ------ | ----- | --------------- |
 | **id** | texto | _ID de contacto |
 
 ## Facturacion
@@ -2636,25 +2637,26 @@ Response
         message: message
     }
 
-| Nombre                               | Valor | R  | Descripcion                         |
-| ------------------------------------ | ----- | -- | ----------------------------------- |
-| **billingDate**                | texto | \* | _Fecha de facturacion_            |
-| **clientID**                   | texto | \* | _ID del cliente_                  |
-| **NumeroIdentificacionFiscal** | texto | \* | _Numero de identificacion fiscal_ |
-| **products.id**                | texto | \* | _ID del producto_                 |
-| **products.name**              | texto | \* | _Nombre del producto_             |
-| **products.nroSerie**          | texto | \* | _Numero de serie del producto_    |
-| **products.note**              | texto | \* | _Notas del producto_              |
-| **products.price**             | texto | \* | _Precio del producto_             |
-| **products.quantity**          | texto | \* | _Cantidad del producto_           |
-| **workReport**                 | texto | \* | _Parte de trabajo_                |
-| **workDirection**              | texto | \* | _Direccion de trabajo_            |
-| **clientDiscount**             | texto | \* | _Descuento del cliente_           |
-| **discount**                   | texto | \* | _Descuento de la factura_         |
-| **IVA**                        | texto | \* | _Impuesto al valor angregado_     |
-| **impuestosVariables**         | texto | \* | _Impuestos variables_             |
-| **paymentMethod**              | texto | \* | _Metodo de pago_                  |
-| **note**                       | texto |    | _Notas_                           |
+| Nombre                         | Valor | R   | Descripcion                       |
+| ------------------------------ | ----- | --- | --------------------------------- |
+| **billingDate**                | texto | \*  | _Fecha de facturacion_            |
+| **clientID**                   | texto | \*  | _ID del cliente_                  |
+| **NumeroIdentificacionFiscal** | texto | \*  | _Numero de identificacion fiscal_ |
+| **products.id**                | texto | \*  | _ID del producto_                 |
+| **products.name**              | texto | \*  | _Nombre del producto_             |
+| **products.nroSerie**          | texto | \*  | _Numero de serie del producto_    |
+| **products.note**              | texto | \*  | _Notas del producto_              |
+| **products.price**             | texto | \*  | _Precio del producto_             |
+| **products.quantity**          | texto | \*  | _Cantidad del producto_           |
+| **workReport**                 | texto | \*  | _Parte de trabajo_                |
+| **workDirection**              | texto | \*  | _Direccion de trabajo_            |
+| **clientDiscount**             | texto | \*  | _Descuento del cliente_           |
+| **discount**                   | texto | \*  | _Descuento de la factura_         |
+| **IVA**                        | texto | \*  | _Impuesto al valor angregado_     |
+| **impuestosVariables**         | texto | \*  | _Impuestos variables_             |
+| **paymentMethod**              | texto | \*  | _Metodo de pago_                  |
+| **note**                       | texto |     | _Notas_                           |
+
 
 ### Obtener factura
 
@@ -2696,8 +2698,8 @@ Response
         ]
     }
 
-| Nombre                               | Valor | Descripcion                         |
-| ------------------------------------ | ----- | ----------------------------------- |
+| Nombre                         | Valor | Descripcion                       |
+| ------------------------------ | ----- | --------------------------------- |
 | **\_id**                       | texto | _ID de la factura_                |
 | **identityCounter**            | texto | _Contador de identidad_           |
 | **state**                      | texto | _Estado de la factura_            |
@@ -2720,7 +2722,6 @@ Response
 | **note**                       | texto | _Notas_                           |
 | **createdBy**                  | texto | _ID del usuario que lo creo_      |
 | **createdAt**                  | texto | _Fecha de creacion_               |
-
 ### Obtener factura por ID
 
 **GET** `http://80.240.126.227:3000/billing/:id`
@@ -2759,8 +2760,8 @@ Response
         }
     }
 
-| Nombre                               | Valor | Descripcion                         |
-| ------------------------------------ | ----- | ----------------------------------- |
+| Nombre                         | Valor | Descripcion                       |
+| ------------------------------ | ----- | --------------------------------- |
 | **\_id**                       | texto | _ID de la factura_                |
 | **identityCounter**            | texto | _Contador de identidad_           |
 | **state**                      | texto | _Estado de la factura_            |
@@ -2795,15 +2796,21 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion       |
-| ------------ | ----- | ----------------- |
+| Nombre | Valor | Descripcion       |
+| ------ | ----- | ----------------- |
 | **id** | texto | _ID de la factura |
 
 ## Buscardor
-
 ### Buscar
 
-**GET** `http://80.240.126.227:3000/searcher/identityCounter`
+**GET** `http://80.240.126.227:3000/searcher`
+
+Request
+
+    {
+        type: type,
+        search: search
+    }
 
 Response
 
@@ -2812,9 +2819,19 @@ Response
         message: message
     }
 
-| Nombre                    | Valor | Descripcion               |
-| ------------------------- | ----- | ------------------------- |
-| **identityCounter** | texto | _Contador de identidad_ |
+| Nombre     | Valor         | Descripcion                                 |
+| ---------- | ------------- | ------------------------------------------- |
+| **type**   | identitycode  | _Contador de identidad_                     |
+|            | billing       | _Facturas_                                  |
+|            | clients       | _Clientes                                   |
+|            | contacts      | _Contactos_                                 |
+|            | installations | _Instalaciones_                             |
+|            | jobs          | _Trabajos_                                  |
+|            | personal      | _Personal_                                  |
+|            | products      | _Productos_                                 |
+|            | tasks         | _Tareas_                                    |
+|            | users         | _Usuarios_                                  |
+| **search** | texto         | _parametro (sole en contador de identidad)_ |
 
 ## Codigos de intervencion
 
@@ -2836,10 +2853,12 @@ Response
         message: message
     }
 
-| Nombre                 | Valor | Descripcion              |
-| ---------------------- | ----- | ------------------------ |
+| Nombre           | Valor | Descripcion            |
+| ---------------- | ----- | ---------------------- |
 | **client**       | texto | _ID del cliente_       |
 | **installation** | texto | _ID de la instalacion_ |
+
+
 
 ### Obtener codigos de intervencion
 
@@ -2862,8 +2881,8 @@ Response
         ]
     }
 
-| Nombre              | Valor | Descripcion                   |
-| ------------------- | ----- | ----------------------------- |
+| Nombre        | Valor | Descripcion                 |
+| ------------- | ----- | --------------------------- |
 | **\_id**      | texto | _ID del codigo_             |
 | **code**      | texto | _Codigo_                    |
 | **status**    | texto | _estado (abierto, cerrado)_ |
@@ -2889,9 +2908,8 @@ Response
             createdAt: createdAt,
         },
     }
-
-| Nombre              | Valor | Descripcion                   |
-| ------------------- | ----- | ----------------------------- |
+| Nombre        | Valor | Descripcion                 |
+| ------------- | ----- | --------------------------- |
 | **id**        | texto | _ID del codigo_             |
 | **\_id**      | texto | _ID del codigo_             |
 | **code**      | texto | _Codigo_                    |
@@ -2911,8 +2929,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion       |
-| ------------ | ----- | ----------------- |
+| Nombre | Valor | Descripcion     |
+| ------ | ----- | --------------- |
 | **id** | texto | _ID del codigo_ |
 
 ### Cerrar codigo de intervencion
@@ -2926,9 +2944,10 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion       |
-| ------------ | ----- | ----------------- |
+| Nombre | Valor | Descripcion     |
+| ------ | ----- | --------------- |
 | **id** | texto | _ID del codigo_ |
+
 
 ### Eliminar codigo de intervencion
 
@@ -2941,8 +2960,8 @@ Response
         message: message
     }
 
-| Nombre       | Valor | Descripcion       |
-| ------------ | ----- | ----------------- |
+| Nombre | Valor | Descripcion     |
+| ------ | ----- | --------------- |
 | **id** | texto | _ID del codigo_ |
 
 ## **Topicos WebSockets**
@@ -2959,11 +2978,11 @@ Response
         description: description,
     }
 
-| Nombre                | Valor | Descripcion                  |
-| --------------------- | ----- | ---------------------------- |
+| Nombre          | Valor | Descripcion                |
+| --------------- | ----- | -------------------------- |
 | **name**        | texto | _Dispositivo de la alarma_ |
 | **type**        | 1     | _Notificacion_             |
-|                       | 2     | _Alarma_                   |
+|                 | 2     | _Alarma_                   |
 | **description** | texto | _descripcion de la alarma_ |
 
 ## Estado de la instalacion
@@ -2974,16 +2993,16 @@ Response
 
     state
 
-| Nombre          | Valor | Descripcion     |
-| --------------- | ----- | --------------- |
-| **state** | 1     | _Armado_      |
-|                 | 2     | _Desarmado_   |
-|                 | 3     | _Dormir_      |
-|                 | 4     | _Bloqueado_   |
-|                 | 5     | _Apagado_     |
-|                 | 6     | Autocierre      |
-|                 | 7     | _Antipánico_ |
-|                 | 8     | _Antibaby_    |
+| Nombre    | Valor | Descripcion  |
+| --------- | ----- | ------------ |
+| **state** | 1     | _Armado_     |
+|           | 2     | _Desarmado_  |
+|           | 3     | _Dormir_     |
+|           | 4     | _Bloqueado_  |
+|           | 5     | _Apagado_    |
+|           | 6     | Autocierre   |
+|           | 7     | _Antipánico_ |
+|           | 8     | _Antibaby_   |
 
 ## Estado del dispositivo
 
@@ -2993,16 +3012,17 @@ Response
 
     state
 
-| Nombre          | Valor | Descripcion     |
-| --------------- | ----- | --------------- |
-| **state** | 1     | _Armado_      |
-|                 | 2     | _Desarmado_   |
-|                 | 3     | _Dormir_      |
-|                 | 4     | _Bloqueado_   |
-|                 | 5     | _Apagado_     |
-|                 | 6     | Autocierre      |
-|                 | 7     | _Antipánico_ |
-|                 | 8     | _Antibaby_    |
+| Nombre    | Valor | Descripcion  |
+| --------- | ----- | ------------ |
+| **state** | 1     | _Armado_     |
+|           | 2     | _Desarmado_  |
+|           | 3     | _Dormir_     |
+|           | 4     | _Bloqueado_  |
+|           | 5     | _Apagado_    |
+|           | 6     | Autocierre   |
+|           | 7     | _Antipánico_ |
+|           | 8     | _Antibaby_   |
+
 
 ## Notificaciones del dispositivos general
 
@@ -3016,11 +3036,11 @@ Response
         description: description,
     }
 
-| Nombre                | Valor | Descripcion                           |
-| --------------------- | ----- | ------------------------------------- |
+| Nombre          | Valor | Descripcion                         |
+| --------------- | ----- | ----------------------------------- |
 | **name**        | texto | _Dispositivo de la de notificacion_ |
 | **type**        | 1     | _Notificacion_                      |
-|                       | 2     | _Alarma_                            |
+|                 | 2     | _Alarma_                            |
 | **description** | texto | _descripcion de la notificacion_    |
 
 ## Notificaciones del dispositivo
@@ -3031,8 +3051,8 @@ Response
 
     description
 
-| Nombre                | Valor | Descripcion                     |
-| --------------------- | ----- | ------------------------------- |
+| Nombre          | Valor | Descripcion                   |
+| --------------- | ----- | ----------------------------- |
 | **description** | texto | _descripcion de notificacion_ |
 
 ## Alarmas del dispositivos general
@@ -3047,24 +3067,26 @@ Response
         description: description,
     }
 
-| Nombre                | Valor | Descripcion                  |
-| --------------------- | ----- | ---------------------------- |
+| Nombre          | Valor | Descripcion                |
+| --------------- | ----- | -------------------------- |
 | **name**        | texto | _Dispositivo de la alarma_ |
 | **type**        | 1     | _Notificacion_             |
-|                       | 2     | _Alarma_                   |
+|                 | 2     | _Alarma_                   |
 | **description** | texto | _descripcion de la alarma_ |
 
 ## Alarmas del dispositivo
 
 `device-${id}-alarm`
 
+
 Response
 
     description
 
-| Nombre                | Valor | Descripcion                  |
-| --------------------- | ----- | ---------------------------- |
+| Nombre          | Valor | Descripcion                |
+| --------------- | ----- | -------------------------- |
 | **description** | texto | _descripcion de la alarma_ |
+
 
 ## **Permisos cliente**
 
@@ -3072,7 +3094,7 @@ Agregar el header "installation" con el ID de la instalacion en cada consulta de
 
 | id                             | name                           |
 | ------------------------------ | ------------------------------ |
-| client-users-add               | Añadir usuarios               |
+| client-users-add               | Añadir usuarios                |
 | client-users-view              | Visualizar usuarios            |
 | client-users-edit              | Editar usuarios                |
 | client-users-delete'           | Eliminar usuarios              |
@@ -3081,17 +3103,17 @@ Agregar el header "installation" con el ID de la instalacion en cada consulta de
 | client-notifications-view      | Visualizar notificationes      |
 | client-notifications-delete    | Borrar notificationes          |
 | client-installations-view      | Visualizar instalacion         |
-| client-installations-add       | Añadir instalacion            |
+| client-installations-add       | Añadir instalacion             |
 | client-installations-edit      | Editar instalacion             |
 | client-installations-state     | Cambiar estado instalacion     |
 | client-installations-delete    | Eliminar instalacion           |
 | client-devices-view            | Visualizar dispositivos        |
-| client-devices-add             | Añadir dispositivos           |
+| client-devices-add             | Añadir dispositivos            |
 | client-devices-state           | Cambiar estado dispositivos    |
 | client-devices-actuate         | Actuar dispositivos            |
 | client-devices-delete          | Eliminar dispositivos          |
 | client-scenarios-view          | Visualizar esenario            |
-| client-scenarios-add           | Añadir esenario               |
+| client-scenarios-add           | Añadir esenario                |
 | client-scenarios-edit          | Editar esenario                |
 | client-scenarios-state         | Cambiar estado esenario        |
 | client-scenarios-delete        | Eliminar esenario              |
@@ -3105,47 +3127,47 @@ Agregar el header "installation" con el ID de la instalacion en cada consulta de
 | id                              | name                          |
 | ------------------------------- | ----------------------------- |
 | personal-users-view             | Visualizar usuarios           |
-| personal-users-add              | Añadir usuarios              |
+| personal-users-add              | Añadir usuarios               |
 | personal-users-edit             | Editar usuarios               |
 | personal-users-permissions-view | Ver permisos de usuario       |
 | personal-users-permissions-edit | Editar permisos de usuario    |
 | personal-users-delete           | Eliminar usuarios             |
 | personal-clients-view           | Visualizar clientes           |
-| personal-clients-add            | Añadir clientes              |
+| personal-clients-add            | Añadir clientes               |
 | personal-clients-edit           | Editar clientes               |
 | personal-clients-delete         | Eliminar clientes             |
 | personal-personal-view          | Visualizar personal           |
-| personal-personal-add           | Añadir personal              |
+| personal-personal-add           | Añadir personal               |
 | personal-personal-edit          | Editar personal               |
 | personal-personal-delete        | Eliminar personal             |
 | personal-notifications-view     | Visualizar notificationes     |
 | personal-notifications-delete   | Eliminar notificationes       |
 | personal-installations-view     | Visualizar instalacion        |
-| personal-installations-add      | Añadir instalacion           |
+| personal-installations-add      | Añadir instalacion            |
 | personal-installations-edit     | Editar instalacion            |
 | personal-installations-delete   | Eliminar instalacion          |
 | personal-devices-view           | Visualizar dispositivos       |
-| personal-devices-add            | Añadir dispositivos          |
+| personal-devices-add            | Añadir dispositivos           |
 | personal-devices-state          | Cambiar estado dispositivos   |
 | personal-devices-actuate        | Actuar dispositivos           |
 | personal-devices-delete         | Eliminar dispositivos         |
 | personal-tasks-view             | Visualizar tareas             |
-| personal-tasks-add              | Añadir tareas                |
+| personal-tasks-add              | Añadir tareas                 |
 | personal-tasks-close            | Cerrar tareas                 |
 | personal-tasks-delete           | Eliminar tareas               |
 | personal-jobs-view              | Visualizar trabajos           |
-| personal-jobs-add               | Añadir trabajos              |
+| personal-jobs-add               | Añadir trabajos               |
 | personal-jobs-close             | Cerrar trabajos               |
 | personal-jobs-delete            | Eliminar trabajos             |
 | personal-products-view          | Visualizar productos          |
-| personal-products-add           | Añadir productos             |
+| personal-products-add           | Añadir productos              |
 | personal-products-edit          | Editar productos              |
 | personal-products-delete        | Eliminar productos            |
 | personal-billing-view           | Visualizar facturas           |
-| personal-billing-add            | Añadir facturas              |
+| personal-billing-add            | Añadir facturas               |
 | personal-billing-delete         | Eliminar facturas             |
 | personal-contacts-view          | Visualizar contactos          |
-| personal-contacts-add           | Añadir contactos             |
+| personal-contacts-add           | Añadir contactos              |
 | personal-contacts-edit          | Editar contactos              |
 | personal-contacts-delete        | Eliminar contactos            |
 | client-intervencioncode-close   | Cerrar codigo de intervencion |

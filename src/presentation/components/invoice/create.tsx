@@ -33,8 +33,8 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
         documentType: "",
         document: "",
         name: "",
-        lastname:"",
-        customerType:"",
+        lastname: "",
+        customerType: "",
         roadType: "",
         direction: "",
         postalCode: "",
@@ -52,7 +52,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
         note: "",
         installations: [],
         createdAt: "",
-            
+
     })
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
@@ -304,14 +304,14 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
     };
 
 
-    const handleSelectClient = (event:any)=>{
-        const client = clients.message.find((client)=>client._id === event.value)
-        if(client){
+    const handleSelectClient = (event: any) => {
+        const client = clients.message.find((client) => client._id === event.value)
+        if (client) {
             setForm({
                 ...form,
                 clientID: client._id,
                 NumeroIdentificacionFiscal: client.document,
-                workDirection:client.direction
+                workDirection: client.direction
             })
         }
     }
@@ -355,7 +355,17 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             onChange={handleSelectClient}
 
                                         />
-                                        
+
+                                        <p>
+                                            <strong>Numero de identificación fiscal:</strong>{" "}
+                                            {form.NumeroIdentificacionFiscal}
+
+                                            <br />
+                                            <strong>Dirección de trabajo:</strong>{" "}
+                                            {form.workDirection}
+
+                                            <br />
+                                        </p>
 
                                     </div>
                                 </div>
@@ -365,19 +375,21 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             <div data-repeater-list="group-a">
                                                 <div data-repeater-item>
                                                     <div className="row mb-50">
-                                                        <div className="col-3 col-md-4 invoice-item-title">Producto</div>
+                                                        <div className="col-2 col-md-2 invoice-item-title">Producto</div>
                                                         <div className="col-3 invoice-item-title"># Serie</div>
                                                         <div className="col-3 invoice-item-title">Cantidad</div>
-                                                        <div className="col-3 col-md-2 invoice-item-title">Precio</div>
+                                                        <div className="col-2 col-md-1 invoice-item-title">Precio</div>
+                                                        <div className="col-2 col-md-1 invoice-item-title">Total</div>
+
                                                     </div>
                                                     <div className="invoice-item d-flex border rounded mb-1">
-                                                        <div className="invoice-item-filed row  px-1">
+                                                        <div className="invoice-item-filed row  ">
 
                                                             {
                                                                 itemProduct.map((item, index) => (
                                                                     <>
 
-                                                                        <div className="col-12 col-md-4 mt-1">
+                                                                        <div className="col-12 col-md-2 mt-1">
                                                                             <Select
                                                                                 label=""
                                                                                 name="productID"
@@ -413,10 +425,12 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                                                 value={item.quantity + ""}
                                                                             />
                                                                         </div>
-                                                                        <div className="col-md-2 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ {
-                                                                                item.price
+                                                                        <div className="col-md-1 col-12 form-group mt-2">
+                                                                            <strong className="text-primary align-middle">$ {item.price
                                                                             }</strong>
+                                                                        </div>
+                                                                        <div className="col-md-1 col-12 form-group mt-2">
+                                                                            <strong className="text-primary align-middle">$ {item.quantity * item.price}</strong>
                                                                         </div>
                                                                         <div className="row col-12">
                                                                             <div className="col-md-4 col-12 form-group">
@@ -456,7 +470,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                 <div className="col p-0">
                                                     <button
                                                         type="button"
-                                                        className="btn btn-light-primary btn-sm"
+                                                        className="btn btn-success btn-sm"
                                                         onClick={() => handleAddProduct()}
                                                     >
                                                         <i className="bx bx-plus"></i>
@@ -465,6 +479,71 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                                <div className="card-body pt-0 mx-25">
+                                    <hr />
+                                    <div className="row">
+                                        <div className="col-4 col-sm-6">
+                                            <p>Metodo de pago</p>
+                                            <select className="form-control">
+                                                <option>Choose Bank</option>
+                                                <option>Bank of America</option>
+                                                <option>Barclays Bank</option>
+                                                <option>HSBC</option>
+                                                <option>Standard Chartered</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-10 d-flex justify-content-end ">
+                                            <div className="invoice-subtotal">
+                                                <div className="invoice-calc d-flex justify-content-between">
+                                                    <span className="invoice-title">Subtotal</span>
+                                                    <span className="invoice-value">{
+                                                        itemProduct.reduce((total, item) => {
+                                                            return total + item.quantity * item.price
+                                                        }, 0)
+                                                    }</span>
+                                                </div>
+                                                <div className="d-flex justify-content-between">
+                                                    <span className="invoice-title mt-2">Descuento</span>
+                                                    <span className="invoice-value col-4">
+                                                        <Input
+                                                            label=""
+                                                            name="discount"
+                                                            type="number"
+                                                            onChange={handleChange}
+                                                            value={form.discount + ""}
+                                                        />
+                                                    </span>
+                                                </div>
+                                                <div className="invoice-calc d-flex justify-content-between">
+                                                    <span className="invoice-title">Descuento Cliente</span>
+                                                    <span className="invoice-value">{
+                                                        form.clientDiscount
+                                                    }</span>
+                                                </div>
+                                                <div className="invoice-calc d-flex justify-content-between">
+                                                    <span className="invoice-title">IVA</span>
+                                                    <span className="invoice-value">21%</span>
+                                                </div>
+                                                <hr />
+                                                <div className="invoice-calc d-flex justify-content-between">
+                                                    <span className="invoice-title">Total</span>
+                                                    <span className="invoice-value">$ {
+                                                        itemProduct.reduce((total, item) => {
+                                                            return total + item.quantity * item.price
+                                                        }, 0) - form.discount - form.clientDiscount
+                                                    }</span>
+                                                </div>
+                                                <div className="invoice-calc d-flex mt-3 justify-content-between">
+                                                    <button className="btn btn-primary btn-block" onClick={handleSubmit}>
+                                                        <i className="bx bx-send"></i>
+                                                        <span className="invoice-send-btn">Enviar</span>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
