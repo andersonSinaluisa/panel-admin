@@ -70,15 +70,28 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
         setUserData(props.UserData.data.message)
     },[props.UserData])
 
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(()=>{
         props.connectToWebSocket().on("connect",()=>{    
             props.connectToWebSocket().emit("notifications",{
                 idUser:dataLogin.message.idUser
             })
-            props.connectToWebSocket().on("notifications",(data)=>{
-                console.log(data)
-            })
+            props.connectToWebSocket().onAny((event, ...args) => {
+                console.log(event, args);
+                //event start with installation-
+                if(event.startsWith("installation-")){
+                   let id = event.split("-")[1];
+                   let state = args[0];
+                    setNotifications([
+                        ...notifications,
+                        {
+                            
+                        }
+                    ])
+
+                }
+            });
         })
       
         return ()=> { props.connectToWebSocket().close()}

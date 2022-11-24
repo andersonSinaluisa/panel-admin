@@ -1,7 +1,11 @@
+import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
+import Input from "infrastructure/components/input";
+import Toast, { ToastProps } from "infrastructure/components/toast";
 import { DetailInvoiceProps } from "presentation/container/invoice/detail-container";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import SelectReact from 'react-select';
 
 
 const DetailInvoice = (props:DetailInvoiceProps) => {
@@ -31,7 +35,40 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
         status:0
     });
 
-
+    const [client,setClient] = React.useState<clients_interface.Client>({
+        personType: "",
+        documentType: "",
+        document: "",
+        name: "",
+        customerType:"",
+        roadType: "",
+        direction: "",
+        postalCode: "",
+        location: "",
+        province: "",
+        country: "",
+        phone: "",
+        mobilePhone: "",
+        contact: "",
+        contact2: "",
+        email: "",
+        webpage: "",
+        contactSchedule: "",
+        discount: "0",
+        note: "",
+        _id:"",
+        createdAt:"",
+        identityCounter:"",
+        installations:[],
+        userId:"",
+        lastname:""
+    });
+    const [message, setMessage] = useState<ToastProps>({
+        type: "info",
+        visible: false,
+        title: "",
+        description: "",
+    });
 
     useEffect(() => {
         props.onGetInvoiceAsync({
@@ -42,152 +79,220 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
         })
     }, [id])
 
+
+    useEffect(() => {
+        props.onGetClientByIdAsync(
+            {
+                headers:{
+                    token:props.token,
+                },
+                id:invoice.message.clientID
+            }
+        )
+
+    }, [
+        invoice
+
+    ])
+
     useEffect(() => {
         setInvoice(props.GetInvoice)
     }, [props.GetInvoice])
 
 
+    useEffect(() => {
+        setClient(props.GetClientById)
+    }, [props.GetClientById])
 
-    return (<section className="invoice-view-wrapper">
+
+    return (
+        <section className="invoice-edit-wrapper">
         <div className="row">
             {/* invoice view page */}
-            <div className="col-xl-9 col-md-8 col-12">
-                <div className="card invoice-print-area">
+            <div className="col-12">
+                <div className="card">
                     <div className="card-content">
                         <div className="card-body pb-0 mx-25">
                             {/* header section */}
-                            <div className="row">
-                                <div className="col-xl-4 col-md-12">
-                                    <span className="invoice-number mr-50">Invoice#</span>
-                                    <span>000756</span>
-                                </div>
-                                <div className="col-xl-8 col-md-12">
-                                    <div className="d-flex align-items-center justify-content-xl-end flex-wrap">
-                                        <div className="mr-3">
-                                            <small className="text-muted">Date Issue:</small>
-                                            <span>08/10/2019</span>
-                                        </div>
-                                        <div>
-                                            <small className="text-muted">Date Due:</small>
-                                            <span>08/10/2019</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* logo and title */}
-                            <div className="row my-3">
-                                <div className="col-6">
-                                    <h4 className="text-primary">Invoice</h4>
-                                    <span>Software Development</span>
-                                </div>
-                                <div className="col-6 d-flex justify-content-end">
-                                </div>
-                            </div>
-                            <hr />
-                            {/* invoice address and contact */}
-                            <div className="row invoice-info">
-                                <div className="col-6 mt-1">
-                                    <h6 className="invoice-from">Bill From</h6>
-                                    <div className="mb-1">
-                                        <span>Clevision PVT. LTD.</span>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span>9205 Whitemarsh Street New York, NY 10002</span>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span>hello@clevision.net</span>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span>601-678-8022</span>
-                                    </div>
-                                </div>
-                                <div className="col-6 mt-1">
-                                    <h6 className="invoice-to">Bill To</h6>
-                                    <div className="mb-1">
-                                        <span>Pixinvent PVT. LTD.</span>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span>203 Sussex St. Suite B Waukegan, IL 60085</span>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span>pixinvent@gmail.com</span>
-                                    </div>
-                                    <div className="mb-1">
-                                        <span>987-352-5603</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                        </div>
-                        {/* product details table*/}
-                        <div className="invoice-product-details table-responsive mx-md-25">
-                            <table className="table table-borderless mb-0">
-                                <thead>
-                                    <tr className="border-0">
-                                        <th scope="col">Item</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Cost</th>
-                                        <th scope="col">Qty</th>
-                                        <th scope="col" className="text-right">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Frest Admin</td>
-                                        <td>HTML Admin Template</td>
-                                        <td>28</td>
-                                        <td>1</td>
-                                        <td className="text-primary text-right font-weight-bold">$28.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Apex Admin</td>
-                                        <td>Anguler Admin Template</td>
-                                        <td>24</td>
-                                        <td>1</td>
-                                        <td className="text-primary text-right font-weight-bold">$24.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Stack Admin</td>
-                                        <td>HTML Admin Template</td>
-                                        <td>24</td>
-                                        <td>1</td>
-                                        <td className="text-primary text-right font-weight-bold">$24.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
 
-                        {/* invoice subtotal */}
-                        <div className="card-body pt-0 mx-25">
+                            <div className="row">
+                                <div className="col-4">
+                                    <h4>N° Factura</h4>
+                                    {
+                                        invoice.message.identityCounter
+                                    }
+                                    <h6>Fecha de facturación</h6>
+                                    <p>
+                                        {
+                                            invoice.message.billingDate
+                                        }
+                                    </p>
+                                </div>
+                                <div className="col-3"></div>
+                                <div className="col-4">
+                                    <h4>Datos Fiscales</h4>
+                                    <label htmlFor="clientID">Cliente</label>
+                                    <p>
+                                        {client.name} {client.lastname}
+                                    </p>
+                                    
+
+                                    <p>
+                                        <strong>Numero de identificación fiscal:</strong>{" "}
+                                        {
+                                            invoice.message.NumeroIdentificacionFiscal
+                                        }
+
+                                        <br />
+                                        <strong>Dirección de trabajo:</strong>{" "}
+                                        {
+                                            invoice.message.workDirection 
+                                        }
+
+                                        <br />
+                                    </p>
+
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                
+                                        <h5>Reporte de trabajo</h5>
+                                        <p>
+                                        {invoice.message.workReport}
+                                        </p>
+                                </div>
+                            </div>
                             <hr />
                             <div className="row">
-                             
-                                <div className="col-8 col-sm-6 d-flex justify-content-end mt-75">
-                                    <div className="invoice-subtotal">
-                                        <div className="invoice-calc d-flex justify-content-between">
-                                            <span className="invoice-title">Subtotal</span>
-                                            <span className="invoice-value">$ 76.00</span>
+
+                                <div className="col-12">
+                                    <h4>Productos</h4>
+                                </div>
+                            </div>
+                            <div className="row m-2">
+                                <div className="invoice-product-details col-12">
+                                    <form className="form col-12">
+                                        <div data-repeater-list="col-12">
+                                            <div data-repeater-item>
+                                                <div className="row mb-50 col-12">
+                                                    <div className="col-3 invoice-item-title">Producto</div>
+                                                    <div className="col-2 invoice-item-title"># Serie</div>
+                                                    <div className="col-3 invoice-item-title">Cantidad</div>
+                                                    <div className="col-2  invoice-item-title">Precio</div>
+                                                    <div className="col-2  invoice-item-title">Total</div>
+
+                                                </div>
+                                                <div className="invoice-item d-flex border rounded mb-1 col-12">
+                                                    <div className="invoice-item-filed row col-12 ">
+
+                                                        {
+                                                            invoice.message.products.map((item, index) => (
+                                                                <div className="col-12 row">
+
+                                                                    <div className="col-12 col-md-3 mt-2">
+                                                                        <p className="invoice-item-title align-middle">{item.name}</p>
+                                                                    </div>
+                                                                    <div className="col-md-3 col-12 form-group mt-2">
+                                                                        <p className="invoice-item-title align-middle">
+                                                                            {item.nroSerie}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
+                                                                            <p className="invoice-item-title align-middle">
+                                                                                {item.quantity}
+                                                                            </p>
+                                                                    </div>
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
+                                                                        <strong className="text-primary align-middle">$ {item.price
+                                                                        }</strong>
+                                                                    </div>
+                                                                    <div className="col-md-1 col-12 form-group mt-2">
+                                                                        <strong className="text-primary align-middle">$ {item.quantity * item.price}</strong>
+                                                                    </div>
+                                                                    <div className="row col-12">
+                                                                        <div className="col-md-4 col-12 form-group">
+                                                                            <h6>Notas del producto</h6>
+                                                                            {
+                                                                                item.note
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-12">
+                                                                        <hr />
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            ))
+
+                                                        }
+                                                    </div>
+                                                    <div className="invoice-icon d-flex flex-column justify-content-between border-left p-25">
+                                                     
+
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="invoice-calc d-flex justify-content-between">
-                                            <span className="invoice-title">Discount</span>
-                                            <span className="invoice-value">- $ 09.60</span>
-                                        </div>
-                                        <div className="invoice-calc d-flex justify-content-between">
-                                            <span className="invoice-title">Tax</span>
-                                            <span className="invoice-value">21%</span>
-                                        </div>
-                                        <hr />
-                                        <div className="invoice-calc d-flex justify-content-between">
-                                            <span className="invoice-title">Invoice Total</span>
-                                            <span className="invoice-value">$ 66.40</span>
-                                        </div>
-                                        <div className="invoice-calc d-flex justify-content-between">
-                                            <span className="invoice-title">Paid to date</span>
-                                            <span className="invoice-value">- $ 00.00</span>
-                                        </div>
-                                        <div className="invoice-calc d-flex justify-content-between">
-                                            <span className="invoice-title">Balance (USD)</span>
-                                            <span className="invoice-value">$ 10,953</span>
+                                       
+                                    </form>
+                                </div>
+                            </div>
+                            <div className="card-body pt-0 mx-25">
+                                <hr />
+                                <div className="row">
+                                    <div className="col-8">
+                                        <h6>Metodo de pago</h6>
+                                        <p>
+                                            {
+                                                invoice.message.paymentMethod
+                                            }
+                                        </p>
+                                        <h6>Notas de la factura</h6>
+                                        <p>
+                                        {invoice.message.note}
+                                        </p>
+                                    </div>
+                                    <div className="col-4 mt-2">
+                                        <div className="invoice-subtotal">
+                                            <div className="invoice-calc d-flex justify-content-between">
+                                                <span className="invoice-title">Subtotal</span>
+                                                <span className="invoice-value">{
+                                                    invoice.message.products.reduce((total, item) => {
+                                                        return total + item.quantity * item.price
+                                                    }, 0)
+                                                }</span>
+                                            </div>
+                                            <div className="d-flex justify-content-between">
+                                                <span className="invoice-title">Descuento</span>
+                                                <span className="invoice-value">
+                                                    {
+                                                        invoice.message.discount
+                                                    }
+                                                </span>
+                                            </div>
+                                            <div className="invoice-calc d-flex justify-content-between">
+                                                <span className="invoice-title">Descuento Cliente</span>
+                                                <span className="invoice-value">{
+                                                    invoice.message.clientDiscount
+                                                }</span>
+                                            </div>
+                                            <div className="invoice-calc d-flex justify-content-between">
+                                                <span className="invoice-title">IVA</span>
+                                                <span className="invoice-value">21%</span>
+                                            </div>
+                                            <hr />
+                                            <div className="invoice-calc d-flex justify-content-between">
+                                                <span className="invoice-title">Total</span>
+                                                <span className="invoice-value">$ {
+                                                     invoice.message.products.reduce((total, item) => {
+                                                        return total + item.quantity * item.price
+                                                    }, 0) - invoice.message.discount - invoice.message.clientDiscount
+                                                }</span>
+                                            </div>
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -196,35 +301,9 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                     </div>
                 </div>
             </div>
-            {/* invoice action  */}
-            <div className="col-xl-3 col-md-4 col-12">
-                <div className="card invoice-action-wrapper shadow-none border">
-                    <div className="card-body">
-                        <div className="invoice-action-btn">
-                            <button className="btn btn-primary btn-block invoice-send-btn">
-                                <i className="bx bx-send"></i>
-                                <span>Send Invoice</span>
-                            </button>
-                        </div>
-                        <div className="invoice-action-btn">
-                            <button className="btn btn-light-primary btn-block invoice-print">
-                                <span>print</span>
-                            </button>
-                        </div>
-                        <div className="invoice-action-btn">
-                            <a href="app-invoice-edit.html" className="btn btn-light-primary btn-block">
-                                <span>Edit Invoice</span>
-                            </a>
-                        </div>
-                        <div className="invoice-action-btn">
-                            <button className="btn btn-success btn-block">
-                                <i className='bx bx-dollar'></i>
-                                <span>Add Payment</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+        <div className="toast-bs-container">
+            <Toast {...message} />
         </div>
     </section>
     )

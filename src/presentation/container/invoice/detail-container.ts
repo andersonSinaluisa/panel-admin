@@ -15,9 +15,10 @@ export interface DetailInvoiceProps {
     token: string;
     title: string;
     breadcrumbs: string[];
-    GetClients: clients_interface.GetClientsResponse;
     GetInvoice: invoice_interface.GetInvoiceResponse;
     onGetClientsAsync:(props:HeaderProps)=>void;
+    onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> void;
+    GetClientById:clients_interface.Client;
 }
 
 const mapStateToProps = ({ INVOICE , AUTH,CLIENTS}: any, ownProps:any) => {
@@ -26,8 +27,7 @@ const mapStateToProps = ({ INVOICE , AUTH,CLIENTS}: any, ownProps:any) => {
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetInvoice: INVOICE.GetInvoice.data,
-        GetClients: CLIENTS.GetClients.data
-
+        GetClientById: CLIENTS.GetClientById.data.message
     };
 }
 
@@ -40,8 +40,7 @@ const mapDispatchToProps = ({ INVOICE,CLIENTS }: any) => {
             id:string;
             headers:HeaderProps;
         })=>INVOICE.onGetInvoiceAsync(props),
-        onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props)
-
+        onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> CLIENTS.onGetClientByIdAsync(props)
     };
 }
 

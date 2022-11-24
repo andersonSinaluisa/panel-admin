@@ -143,7 +143,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
 
 
     const handleChange = (
-        event: React.FormEvent<HTMLInputElement | HTMLSelectElement>
+        event: React.FormEvent<HTMLInputElement | HTMLSelectElement|HTMLTextAreaElement>
     ) => {
         setForm({
             ...form,
@@ -311,7 +311,8 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                 ...form,
                 clientID: client._id,
                 NumeroIdentificacionFiscal: client.document,
-                workDirection: client.direction
+                workDirection: client.direction,
+                clientDiscount: parseFloat(client.discount),
             })
         }
     }
@@ -333,12 +334,15 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             label="Numero de factura"
                                             type="text"
                                             name="numeroFactura"
+                                            onChange={handleChange}
                                         />
                                         <Input
                                             label="Fecha de facturación"
                                             type="date"
                                             name="billingDate"
                                             value={form.billingDate}
+                                            onChange={handleChange}
+
                                         />
 
                                     </div>
@@ -370,6 +374,25 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                     </div>
                                 </div>
                                 <div className="row">
+                                    <div className="col-12">
+                                    
+                                            <Input
+                                                label="Reporte de trabajo"
+                                                type="text"
+                                                name="workReport"
+                                                value={form.workReport}
+                                                onChange={handleChange}
+                                            />
+                                    </div>
+                                </div>
+                                <hr />
+                                <div className="row">
+
+                                    <div className="col-12">
+                                        <h4>Productos</h4>
+                                    </div>
+                                </div>
+                                <div className="row m-2">
                                     <div className="invoice-product-details ">
                                         <form className="form invoice-item-repeater">
                                             <div data-repeater-list="group-a">
@@ -484,17 +507,32 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                 <div className="card-body pt-0 mx-25">
                                     <hr />
                                     <div className="row">
-                                        <div className="col-4 col-sm-6">
+                                        <div className="col-8">
                                             <p>Metodo de pago</p>
-                                            <select className="form-control">
-                                                <option>Choose Bank</option>
-                                                <option>Bank of America</option>
-                                                <option>Barclays Bank</option>
-                                                <option>HSBC</option>
-                                                <option>Standard Chartered</option>
-                                            </select>
+                                            <Select
+                                                label=""
+                                                name="paymentMethod"
+                                                options={[
+                                                    {
+                                                        value: "Efectivo",
+                                                        label: "Efectivo",
+                                                    },
+                                                    {
+                                                        value: "Tarjeta",
+                                                        label: "Tarjeta",
+                                                    },
+                                                ]}
+                                                onChange={handleChange}
+                                                selected={
+                                                    form.paymentMethod
+                                                }
+                                            />
+                                            <textarea name="note" id="note" cols={30} rows={10}
+                                                className="form-control mt-1" placeholder="Nota" 
+                                                onChange={handleChange}
+                                                />
                                         </div>
-                                        <div className="col-10 d-flex justify-content-end ">
+                                        <div className="col-4 mt-2">
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Subtotal</span>

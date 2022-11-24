@@ -212,11 +212,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
               dataTable={installations.message}
               actions={getActions()}
               columns={[
-                {
-                  name: "identityCounter",
-                  label: "Identificador",
-                  type: "text",
-                },
+               
                 {
                   name: "owner",
                   label: "Propietario",
@@ -308,7 +304,36 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
             </div>
           </div>
         </Modal>
-
+        <Modal className="modal-main" show={showModalStatus} style={{}}>
+        <div className="card">
+            <div className="card-header">
+                <h3>Actualizar estado de la instalación</h3>
+            </div>
+            <div className="card-body">
+              <Select
+                label="Seleccione el estado"
+                name="status"
+                options={status.map(x=>{
+                  return {label:x.label,value:x.id}
+                })}
+                onChange={(e:any)=>{
+                  setState({
+                    state:e.currentTarget.value
+                  })
+                }}
+              />
+            </div>
+            <div className="card-footer d-flex justify-content-md-end">
+                <button type="button" 
+                className="btn btn-secondary"
+                onClick={()=>SetShowModalStatus(false)}
+                >Cancelar</button>
+                <button type="button" 
+                onClick={()=>handleStatus(installation)}
+                className="btn btn-success ml-md-3">Actualizar</button>
+            </div>
+          </div>
+          </Modal>
         {/* modal for update status*/}
         
           <div className="toast-bs-container">

@@ -131,11 +131,7 @@ const PersonalView = (props: PersonalViewProps) => {
               dataTable={personal.message}
               actions={getActions()}
               columns={[
-                {
-                  name: "identityCounter",
-                  label: "DNI",
-                  type: "text",
-                },
+               
   
                 {
                   name: "document",

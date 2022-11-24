@@ -25,7 +25,12 @@ const Navbar = (props: NavbarProps) => {
     message: null,
     status:0
 });
-  useEffect(() => {
+const [showDrop,setShowDrop]= useState(false);
+
+
+const [showNotification,setShowNotification]= useState(false);
+
+useEffect(() => {
     if (open) {
       openMenu();
     } else {
@@ -189,13 +194,21 @@ const Navbar = (props: NavbarProps) => {
                   className="nav-link nav-link-label"
                   href="#"
                   data-toggle="dropdown"
+
+                  onClick={
+                    (e) => {
+                      setShowNotification(!showNotification);
+                    }
+                  }
                 >
                   <i className="ficon bx bx-bell"></i>
                   <span className="badge badge-pill badge-primary badge-up">
                     5
                   </span>
                 </a>
-                <ul className="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${
+                  showNotification ? "show" : ""
+                }`}>
                   <li className="dropdown-menu-header">
                     <div className="dropdown-header px-1 py-75 d-flex justify-content-between">
                       <span className="notification-title">
@@ -434,6 +447,9 @@ const Navbar = (props: NavbarProps) => {
                   className="dropdown-toggle nav-link dropdown-user-link"
                   href="#"
                   data-toggle="dropdown"
+                  onClick={
+                    (e) => setShowDrop(!showDrop)
+                  }
                 >
                   <div className="user-nav d-sm-flex d-none">
                     <span className="user-name">{props.userData.email}</span>
@@ -449,7 +465,9 @@ const Navbar = (props: NavbarProps) => {
                     />
                   </span>
                 </a>
-                <div className="dropdown-menu dropdown-menu-right">
+                <div className={`dropdown-menu dropdown-menu-right ${
+                  showDrop ? "show" : ""
+                }`}>
                  
                   <Link className="dropdown-item" to="/inicio/tareas">
                     <i className="bx bx-check-square mr-50"></i> Tareas

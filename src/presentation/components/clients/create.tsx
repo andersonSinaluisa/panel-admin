@@ -228,7 +228,6 @@ const CreateClient = (props: CreateClientProps) => {
                 { label: 'Avenida', value: 'Avenida' },
                 { label: 'Ctra', value: 'Ctra' },
                 { label: 'Plaza', value: 'Plaza' }
-
               ]}
             />
           </div>
@@ -317,6 +316,14 @@ const CreateClient = (props: CreateClientProps) => {
               label="Sitio web"
               name="webpage"
               type={"text"}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-lg-6">
+            <Input
+              label="Descuento"
+              name="discount"
+              type={"number"}
               onChange={handleChange}
             />
           </div>

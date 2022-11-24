@@ -359,6 +359,14 @@ const UpdateClient = (props: UpdateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
+            <Input
+              label="Descuento"
+              name="discount"
+              type={"number"}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-lg-6">
           <Input
               label="Sitio web"
               name="webpage"
