@@ -24,7 +24,7 @@ const EditInstallation = (props: CreateInstallationProps) => {
   });
 
   const [form, setForm] =
-    useState<installations_interface.CreateInstallationRequest>({
+    useState<installations_interface.Installation>({
       name: "",
       owner: "",
       postalCode: "",
@@ -32,6 +32,12 @@ const EditInstallation = (props: CreateInstallationProps) => {
       province: "",
       country: "",
       note: "",
+      _id:"",
+      createdAt:"",
+      devices:"",
+      identityCounter:"",
+      state:0,
+      users:[]
     });
 
 
@@ -168,6 +174,7 @@ const EditInstallation = (props: CreateInstallationProps) => {
               name="name"
               type={"text"}
               onChange={handleChange}
+              
             />
           </div>
           <div className="col-lg-5">

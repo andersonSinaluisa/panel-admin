@@ -43,7 +43,7 @@ interface UpdateStateInstallationsRequest{
 
 
 
-export  type{
+export type{
     GetInstallationsResponse,
     Installation,
     CreateInstallationRequest,

@@ -1,3 +1,5 @@
+import { getStatusInstallation } from 'application/common';
+import { notification } from 'application/models/notifications';
 import { search_interface } from 'infrastructure/api/search';
 import { user_interface } from 'infrastructure/api/users';
 import { useEffect, useState } from 'react';
@@ -70,7 +72,6 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
         setUserData(props.UserData.data.message)
     },[props.UserData])
 
-    const [notifications, setNotifications] = useState([]);
 
     useEffect(()=>{
         props.connectToWebSocket().on("connect",()=>{    
@@ -83,12 +84,19 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
                 if(event.startsWith("installation-")){
                    let id = event.split("-")[1];
                    let state = args[0];
-                    setNotifications([
-                        ...notifications,
+                    props.addNotification(
                         {
-                            
+                            title: 'Instalación',
+                            description: `La instalación ${id} ha cambiado de estado a ${getStatusInstallation(state).label}`,
+                            type: 'info',
+                            duration: 5000,
+                            onSee:()=>{
+                               
+                            },
+                            see:false,
+                            datetime: new Date()
                         }
-                    ])
+                    )
 
                 }
             });
@@ -123,6 +131,7 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
             <Navbar dataLogin={dataLogin} onLogout={props.clearSession}
                 dataSearch={search} onSearch={handleSearch} onOpenSearch={setOnpenSearch} openSearch={onpenSearch}
                     userData={userData}
+                    notifications={props.notifications}
                 />
         
             <Sidebar dataLogin={dataLogin}/>

@@ -1,4 +1,5 @@
 import { isClient, isInstallation, isJob, isPersonal, isTask, isUser } from "application/common/utils/is";
+import { notification } from "application/models/notifications";
 import { search_interface } from "infrastructure/api/search";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { user_interface } from "infrastructure/api/users";
@@ -15,22 +16,27 @@ interface NavbarProps {
   openSearch: boolean;
   onOpenSearch: (value: boolean) => void;
   userData: user_interface.User;
+  notifications: notification[];
 }
 
 const Navbar = (props: NavbarProps) => {
   const [open, setOpen] = useState(false);
 
-  const [openSearch,setOpenSearch] = useState(false);
+
+
+  const [openSearch, setOpenSearch] = useState(false);
   const [search, setSearch] = useState<search_interface.SearchResponse>({
     message: null,
-    status:0
-});
-const [showDrop,setShowDrop]= useState(false);
+    status: 0
+  });
+  const [showDrop, setShowDrop] = useState(false);
+
+  const [showNotification, setShowNotification] = useState(false);
+
+  const [not, setNot] = useState<notification[]>([]);
 
 
-const [showNotification,setShowNotification]= useState(false);
-
-useEffect(() => {
+  useEffect(() => {
     if (open) {
       openMenu();
     } else {
@@ -38,11 +44,15 @@ useEffect(() => {
     }
   }, [open]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setSearch(props.dataSearch);
     setOpenSearch(props.openSearch);
-},[props.dataSearch,props.openSearch])
+  }, [props.dataSearch, props.openSearch])
 
+
+  useEffect(() => {
+    setNot(props.notifications)
+  }, [props.notifications])
 
 
   const openMenu = () => {
@@ -69,45 +79,45 @@ useEffect(() => {
 
 
   const validateSearch = (search: search_interface.SearchResponse) => {
-    
 
-        //obtener la interface de search.message
-        const data = search.message as search_interface.SearchResponse["message"];
-        
-        if (data) {
-          
-          if(isClient(data)){
-            return data.name +" "+data.lastname+"/"+data.document;
-          }
 
-          if(isInstallation(data)){
-            return data.name+"/"+data.location;
-          }
+    //obtener la interface de search.message
+    const data = search.message as search_interface.SearchResponse["message"];
 
-          if(isUser(data)){
-            return data.email;
-          }
-          if(isJob(data)){
-            return data.type+"/"+data.description;
-          }
+    if (data) {
 
-          if(isPersonal(data)){
-            return data.name+" "+data.document;
-          }
+      if (isClient(data)) {
+        return data.name + " " + data.lastname + "/" + data.document;
+      }
 
-          if(isTask(data)){
-            return data.description;
-          }
+      if (isInstallation(data)) {
+        return data.name + "/" + data.location;
+      }
 
-          console.log(data);
-          
-        }
-       
-        
-      
-      
+      if (isUser(data)) {
+        return data.email;
+      }
+      if (isJob(data)) {
+        return data.type + "/" + data.description;
+      }
 
-     return "no";
+      if (isPersonal(data)) {
+        return data.name + " " + data.document;
+      }
+
+      if (isTask(data)) {
+        return data.description;
+      }
+
+      console.log(data);
+
+    }
+
+
+
+
+
+    return "no";
   }
 
 
@@ -148,22 +158,22 @@ useEffect(() => {
                 </li>
               </ul>
             </div>
-           
+
             <ul className="nav navbar-nav float-right">
-              <li className="nav-item nav-search"><a className="nav-link nav-link-search" 
-              onClick={()=>props.onOpenSearch(!openSearch)}>
+              <li className="nav-item nav-search"><a className="nav-link nav-link-search"
+                onClick={() => props.onOpenSearch(!openSearch)}>
                 <i className="ficon bx bx-search"></i></a>
-                <div className={openSearch?"search-input open":"search-input"}>
+                <div className={openSearch ? "search-input open" : "search-input"}>
                   <div className="search-input-icon" ><i className="bx bx-search primary"></i></div>
                   <input className="input" type="text" placeholder="Buscar..."
-                    data-search="template-search" onChange={handleChange}/>
-                  <div className="search-input-close"><i className="bx bx-x" onClick={()=>props.onOpenSearch(!openSearch)}></i></div>
-                  <ul className={openSearch?'search-list show':'search-list'}>
+                    data-search="template-search" onChange={handleChange} />
+                  <div className="search-input-close"><i className="bx bx-x" onClick={() => props.onOpenSearch(!openSearch)}></i></div>
+                  <ul className={openSearch ? 'search-list show' : 'search-list'}>
 
-                 
-                      {
-                       search.status===200?
-                          <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
+
+                    {
+                      search.status === 200 ?
+                        <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
                           <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
                             <div className="d-flex justify-content-start">
                               <span className="mr-75 bx bx-help-circle" data-icon="bx bx-help-circle"></span>
@@ -173,18 +183,18 @@ useEffect(() => {
                                 }
 
                               </span>
-                              </div>
-                              </a>
-                            </li>:<li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
+                            </div>
+                          </a>
+                        </li> : <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
                           <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
                             <div className="d-flex justify-content-start">
                               <span className="mr-75 bx bx-help-circle" data-icon="bx bx-help-circle"></span>
                               <span>Sin Resultados</span>
-                              </div>
-                              </a>
-                            </li>
-                        
-                      }
+                            </div>
+                          </a>
+                        </li>
+
+                    }
 
                   </ul>
                 </div>
@@ -203,234 +213,51 @@ useEffect(() => {
                 >
                   <i className="ficon bx bx-bell"></i>
                   <span className="badge badge-pill badge-primary badge-up">
-                    5
+                    {not.length}
                   </span>
                 </a>
-                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${
-                  showNotification ? "show" : ""
-                }`}>
+                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${showNotification ? "show" : ""
+                  }`}>
                   <li className="dropdown-menu-header">
                     <div className="dropdown-header px-1 py-75 d-flex justify-content-between">
                       <span className="notification-title">
-                        7 new Notification
+                        {not.length} Nuevas Notificaciones
                       </span>
                       <span className="text-bold-400 cursor-pointer">
-                        Mark all as read
+                        Marcar como leidas
                       </span>
                     </div>
                   </li>
                   <li className="scrollable-container media-list">
-                    <a
-                      className="d-flex justify-content-between"
-                      href="javascript:void(0)"
-                    >
-                      <div className="media d-flex align-items-center">
-                        <div className="media-left pr-0">
-                          <div className="avatar mr-1 m-0">
-                            <img
-                              src="../../../app-assets/images/portrait/small/avatar-s-11.jpg"
-                              alt="avatar"
-                              height="39"
-                              width="39"
-                            />
-                          </div>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">
-                              Congratulate Socrates Itumay
-                            </span>{" "}
-                            for work anniversaries
-                          </h6>
-                          <small className="notification-text">
-                            Mar 15 12:32pm
-                          </small>
-                        </div>
-                      </div>
-                    </a>
-                    <div className="d-flex justify-content-between read-notification cursor-pointer">
-                      <div className="media d-flex align-items-center">
-                        <div className="media-left pr-0">
-                          <div className="avatar mr-1 m-0">
-                            <img
-                              src="../../../app-assets/images/portrait/small/avatar-s-16.jpg"
-                              alt="avatar"
-                              height="39"
-                              width="39"
-                            />
-                          </div>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">New Message</span>{" "}
-                            received
-                          </h6>
-                          <small className="notification-text">
-                            You have 18 unread messages
-                          </small>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between cursor-pointer">
-                      <div className="media d-flex align-items-center py-0">
-                        <div className="media-left pr-0">
-                          <img
-                            className="mr-1"
-                            src="../../../app-assets/images/icon/sketch-mac-icon.png"
-                            alt="avatar"
-                            height="39"
-                            width="39"
-                          />
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">
-                              Updates Available
-                            </span>
-                          </h6>
-                          <small className="notification-text">
-                            Sketch 50.2 is currently newly added
-                          </small>
-                        </div>
-                        <div className="media-right pl-0">
-                          <div className="row border-left text-center">
-                            <div className="col-12 px-50 py-75 border-bottom">
-                              <h6 className="media-heading text-bold-500 mb-0">
-                                Update
+                    {
+                      not.map((item, index) => {
+                        return <div className="d-flex justify-content-between cursor-pointer">
+                          <div className="media d-flex align-items-center">
+                            <div className="media-left pr-0">
+                              <div className="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25">
+                                <span className="avatar-content text-primary font-medium-2">
+                                  <i className="bx bxs-briefcase-alt-2"></i>
+                                </span>
+                              </div>
+                            </div>
+                            <div className="media-body">
+                              <h6 className="media-heading">
+                                <span className="text-bold-500">{item.title}</span>{" "}
+                                <br />
+                                {item.description}
                               </h6>
-                            </div>
-                            <div className="col-12 px-50 py-75">
-                              <h6 className="media-heading mb-0">Close</h6>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between cursor-pointer">
-                      <div className="media d-flex align-items-center">
-                        <div className="media-left pr-0">
-                          <div className="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25">
-                            <span className="avatar-content text-primary font-medium-2">
-                              LD
-                            </span>
-                          </div>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">New customer</span>{" "}
-                            is registered
-                          </h6>
-                          <small className="notification-text">1 hrs ago</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="cursor-pointer">
-                      <div className="media d-flex align-items-center justify-content-between">
-                        <div className="media-left pr-0">
-                          <div className="media-body">
-                            <h6 className="media-heading">New Offers</h6>
-                          </div>
-                        </div>
-                        <div className="media-right">
-                          <div className="custom-control custom-switch">
-                            <input
-                              className="custom-control-input"
-                              type="checkbox"
-                              checked
-                              id="notificationSwtich"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="notificationSwtich"
-                            ></label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between cursor-pointer">
-                      <div className="media d-flex align-items-center">
-                        <div className="media-left pr-0">
-                          <div className="avatar bg-danger bg-lighten-5 mr-1 m-0 p-25">
-                            <span className="avatar-content">
-                              <i className="bx bxs-heart text-danger"></i>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">Application</span>{" "}
-                            has been approved
-                          </h6>
-                          <small className="notification-text">6 hrs ago</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between read-notification cursor-pointer">
-                      <div className="media d-flex align-items-center">
-                        <div className="media-left pr-0">
-                          <div className="avatar mr-1 m-0">
-                            <img
-                              src="../../../app-assets/images/portrait/small/avatar-s-4.jpg"
-                              alt="avatar"
-                              height="39"
-                              width="39"
-                            />
-                          </div>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">New file</span> has
-                            been uploaded
-                          </h6>
-                          <small className="notification-text">4 hrs ago</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between cursor-pointer">
-                      <div className="media d-flex align-items-center">
-                        <div className="media-left pr-0">
-                          <div className="avatar bg-rgba-danger m-0 mr-1 p-25">
-                            <div className="avatar-content">
-                              <i className="bx bx-detail text-danger"></i>
+                              <small className="notification-text">{
+                                item.datetime.toDateString()
+                              }</small>
                             </div>
                           </div>
                         </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">
-                              Finance report
-                            </span>{" "}
-                            has been generated
-                          </h6>
-                          <small className="notification-text">
-                            25 hrs ago
-                          </small>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between cursor-pointer">
-                      <div className="media d-flex align-items-center border-0">
-                        <div className="media-left pr-0">
-                          <div className="avatar mr-1 m-0">
-                            <img
-                              src="../../../app-assets/images/portrait/small/avatar-s-16.jpg"
-                              alt="avatar"
-                              height="39"
-                              width="39"
-                            />
-                          </div>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="media-heading">
-                            <span className="text-bold-500">New customer</span>{" "}
-                            comment recieved
-                          </h6>
-                          <small className="notification-text">
-                            2 days ago
-                          </small>
-                        </div>
-                      </div>
-                    </div>
+                      })
+                    }
+
+
+
+
                   </li>
                   <li className="dropdown-menu-footer">
                     <a
@@ -465,14 +292,13 @@ useEffect(() => {
                     />
                   </span>
                 </a>
-                <div className={`dropdown-menu dropdown-menu-right ${
-                  showDrop ? "show" : ""
-                }`}>
-                 
+                <div className={`dropdown-menu dropdown-menu-right ${showDrop ? "show" : ""
+                  }`}>
+
                   <Link className="dropdown-item" to="/inicio/tareas">
                     <i className="bx bx-check-square mr-50"></i> Tareas
                   </Link>
-                  <Link className="dropdown-item"  to="/inicio/trabajos">
+                  <Link className="dropdown-item" to="/inicio/trabajos">
                     <i className="bx bx-briefcase-alt-2 mr-50"></i> Trabajos
                   </Link>
                   <div className="dropdown-divider"></div>

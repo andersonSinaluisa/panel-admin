@@ -233,6 +233,9 @@ const TaskView = (props: TasksViewProps) => {
 
     const handleCloseTask = (item: tasks_interface.Task) => {
 
+
+        
+
         props.onCloseTaskAsync({
             body: {
                 note: item.observation,

@@ -33,10 +33,21 @@ const UpdateStateInstallation = (props:{headers:APIHANDLER.HeaderProps,id:string
     })
 }
 
+const GetInstallation = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{	
+    return APIHANDLER.get(Globals.GET_INSTALLATIONS+props.id,{	
+        headers:{	
+            Authorization: "Bearer "+props.headers.token	
+        }	
+    })	
+}
+
+
+
 
 export {
     GetInstallations,
     CreateInstallation,
     UpdateStateInstallation,
-    DeleteInstallation
+    DeleteInstallation,
+    GetInstallation
 }
