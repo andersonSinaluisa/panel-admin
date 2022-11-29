@@ -4,14 +4,14 @@ import { search_interface } from "infrastructure/api/search";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { user_interface } from "infrastructure/api/users";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { URLAPI } from "../../application/common";
 import { LoginResponse } from "../api/auth/interface";
 
 interface NavbarProps {
   dataLogin: LoginResponse;
   onLogout: Function;
-  onSearch: (value: string) => void;
+  onSearch: (value: string, type: string) => void;
   dataSearch: search_interface.SearchResponse;
   openSearch: boolean;
   onOpenSearch: (value: boolean) => void;
@@ -22,7 +22,7 @@ interface NavbarProps {
 const Navbar = (props: NavbarProps) => {
   const [open, setOpen] = useState(false);
 
-
+  const navigate = useNavigate();
 
   const [openSearch, setOpenSearch] = useState(false);
   const [search, setSearch] = useState<search_interface.SearchResponse>({
@@ -34,6 +34,12 @@ const Navbar = (props: NavbarProps) => {
   const [showNotification, setShowNotification] = useState(false);
 
   const [not, setNot] = useState<notification[]>([]);
+
+
+  const [seachParam, setSearchParam] = useState({
+    identityCounter: "",
+    type: "",
+  });
 
 
   useEffect(() => {
@@ -73,7 +79,21 @@ const Navbar = (props: NavbarProps) => {
   };
 
   const handleChange = (e: any) => {
-    props.onSearch(e.currentTarget.value);
+
+
+
+    props.onSearch(
+      e.currentTarget.value,
+      seachParam.type
+    );
+  }
+
+
+  const handleChangeType = (e: any) => {
+    setSearchParam({
+      ...seachParam,
+      type: e.currentTarget.value
+    })
   }
 
 
@@ -121,6 +141,38 @@ const Navbar = (props: NavbarProps) => {
   }
 
 
+  const handleSelectItem = (item:any) => {
+    
+    if (seachParam.type === "clients") {
+      navigate(`/clientes/${item.id}`);
+    }
+
+    if (seachParam.type === "installations") {
+      navigate(`/instalaciones/${item.id}`);
+    }
+
+    if (seachParam.type === "jobs") {
+      navigate(`/trabajos/${item.id}`);
+    }
+
+    if (seachParam.type === "personals") {
+      navigate(`/personal/${item.id}`);
+    }
+
+    if (seachParam.type === "tasks") {
+      navigate(`/tareas/${item.id}`);
+    }
+
+    if (seachParam.type === "users") {
+      navigate(`/usuarios/${item.id}`);
+    }
+
+    
+
+    
+  }
+
+
   return (
     <nav className="header-navbar main-header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top ">
       <div className="navbar-wrapper">
@@ -160,31 +212,94 @@ const Navbar = (props: NavbarProps) => {
             </div>
 
             <ul className="nav navbar-nav float-right">
-              <li className="nav-item nav-search"><a className="nav-link nav-link-search"
+              <li className="nav-item nav-search "><a className="nav-link nav-link-search"
                 onClick={() => props.onOpenSearch(!openSearch)}>
                 <i className="ficon bx bx-search"></i></a>
-                <div className={openSearch ? "search-input open" : "search-input"}>
-                  <div className="search-input-icon" ><i className="bx bx-search primary"></i></div>
-                  <input className="input" type="text" placeholder="Buscar..."
-                    data-search="template-search" onChange={handleChange} />
-                  <div className="search-input-close"><i className="bx bx-x" onClick={() => props.onOpenSearch(!openSearch)}></i></div>
+                <div className={openSearch ? "search-input  open" : "search-input"}>
+                  <div className="row">
+                    <div className="search-input-icon col-1 mr-5" ><i className="bx bx-search primary"></i></div>
+                    <div className="col-1"></div>
+                    <select className="form-control col-3  mt-1" onChange={handleChangeType}>
+                      <option value="clients">Cliente</option>
+                      <option value="installations">Instalación</option>
+                      <option value="jobs">Trabajo</option>
+                      <option value="personal">Personal</option>
+                      <option value="tasks">Tarea</option>
+                      <option value="users">Usuario</option>
+                      <option value="billing">Factura</option>
+                      <option value="products">Productos</option>
+                    </select>
+                    <input className="input col-6 " type="text" placeholder="Buscar..."
+                      data-search="template-search" onChange={handleChange} />
+
+                    <div className="search-input-close col-1">
+                      <i className="bx bx-x" onClick={() => props.onOpenSearch(!openSearch)}></i></div>
+                  </div>
+
                   <ul className={openSearch ? 'search-list show' : 'search-list'}>
 
 
                     {
                       search.status === 200 ?
-                        <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
-                          <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                            <div className="d-flex justify-content-start">
-                              <span className="mr-75 bx bx-help-circle" data-icon="bx bx-help-circle"></span>
-                              <span>
-                                {
-                                  validateSearch(search)
-                                }
+                        <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+                          
+                              <div className="row m-2">
 
-                              </span>
-                            </div>
-                          </a>
+                              
+                                {
+                                  search.message?.map((item: any, index) => {
+                                    if (seachParam.type === "clients") {
+                                      return <a className="d-flex align-items-center justify-content-between w-100 col-12" href="content-helper-classes.html">
+                                        <div className="d-flex justify-content-start">
+                                          <span>
+                                            {item.name} {item.lastname} / {item.document}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    } else if (seachParam.type === "installations") {
+                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                        <div className="d-flex justify-content-start">
+                                          <span>
+                                            {item.name} / {item.location}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    } else if (seachParam.type === "jobs") {
+                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                        <div className="d-flex justify-content-start">
+                                          <span>
+                                            {item.type} / {item.description}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    } else if (seachParam.type === "personal") {
+                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                        <div className="d-flex justify-content-start">
+                                          <span>
+                                            {item.name} / {item.document}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    } else if (seachParam.type === "tasks") {
+                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                        <div className="d-flex justify-content-start">
+                                          <span>
+                                            {item.name} / {item.description}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    } else if (seachParam.type === "users") {
+                                      return <div key={index}>{item.email}</div>
+                                    } else if (seachParam.type === "billing") {
+                                      return <div key={index}>{item.description}</div>
+                                    } else if (seachParam.type === "products") {
+                                      return <div key={index}>{item.description}</div>
+                                    }
+
+                                  })
+                                }
+</div>
+                              
                         </li> : <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
                           <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
                             <div className="d-flex justify-content-start">

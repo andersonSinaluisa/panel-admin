@@ -393,25 +393,33 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                     </div>
                                 </div>
                                 <div className="row m-2">
-                                    <div className="invoice-product-details ">
-                                        <form className="form invoice-item-repeater">
+                                    <div className="invoice-product-details col-12">
+                                        <form className="form col-12">
                                             <div data-repeater-list="group-a">
                                                 <div data-repeater-item>
                                                     <div className="row mb-50">
+                                                        <div className="col-1 col-md-1 invoice-item-title">Ref</div>
                                                         <div className="col-2 col-md-2 invoice-item-title">Producto</div>
-                                                        <div className="col-3 invoice-item-title"># Serie</div>
-                                                        <div className="col-3 invoice-item-title">Cantidad</div>
+
+                                                        <div className="col-2 invoice-item-title">Nº Serie</div>
+                                                        <div className="col-2 invoice-item-title">Descripcion</div>
+                                                        <div className="col-2 invoice-item-title">Cantidad</div>
                                                         <div className="col-2 col-md-1 invoice-item-title">Precio</div>
                                                         <div className="col-2 col-md-1 invoice-item-title">Total</div>
 
                                                     </div>
-                                                    <div className="invoice-item d-flex border rounded mb-1">
-                                                        <div className="invoice-item-filed row  ">
+                                                    <div className="invoice-item d-flex border rounded mb-1  col-12 ">
+                                                        <div className="invoice-item-filed row col-12 ">
 
                                                             {
                                                                 itemProduct.map((item, index) => (
                                                                     <>
 
+                                                                        <div className="col-md-1 col-12  form-group mt-2">
+                                                                        {products.message.find((product) => product._id === item.id) && (
+                                                                               products.message.find((product) => product._id === item.id)?.identityCounter
+                                                                            )}
+                                                                        </div>
                                                                         <div className="col-12 col-md-2 mt-1">
                                                                             <Select
                                                                                 label=""
@@ -429,16 +437,17 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                                                 }
                                                                             />
                                                                         </div>
-                                                                        <div className="col-md-3 col-12 ">
-                                                                            <Input
-                                                                                label=""
-                                                                                name="nroSerie"
-                                                                                type="text"
-                                                                                value={
+                                                                        <div className="col-md-2 col-12  form-group mt-2">
+                                                                        {
                                                                                     item.nroSerie
-                                                                                }
-                                                                            />
+                                                                        }
                                                                         </div>
+                                                                        <div className="col-md-2 col-12 form-group mt-2">
+                                                                            {products.message.find((product) => product._id === item.id) && (
+                                                                               products.message.find((product) => product._id === item.id)?.description
+                                                                            )}
+                                                                        </div>
+                                                                       
                                                                         <div className="col-md-3 col-12 form-group">
                                                                             <Input
                                                                                 label=""
@@ -455,18 +464,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                                         <div className="col-md-1 col-12 form-group mt-2">
                                                                             <strong className="text-primary align-middle">$ {item.quantity * item.price}</strong>
                                                                         </div>
-                                                                        <div className="row col-12">
-                                                                            <div className="col-md-4 col-12 form-group">
-                                                                                <Input
-                                                                                    label="Nota"
-                                                                                    name="note"
-                                                                                    type={"text"}
-                                                                                    placeholder="Nota"
-                                                                                    onChange={(event) => handleItemValue(event, index)}
-                                                                                    value={item.note}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
+                                                                        
                                                                         <div className="col-12">
                                                                             <hr />
 

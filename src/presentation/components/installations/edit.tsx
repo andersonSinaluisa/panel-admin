@@ -3,14 +3,15 @@ import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import Input from "infrastructure/components/input";
 import Toast, { ToastProps } from "infrastructure/components/toast";
 import { CreateInstallationProps } from "presentation/container/installations/create-container";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { installations_interface } from "infrastructure/api/installation";
 import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
 import Select from "infrastructure/components/select";
 import { clients_interface } from "infrastructure/api/clients";
 import SelectReact from 'react-select';
+import { EditInstallationProps } from "presentation/container/installations/edit-container";
 
-const EditInstallation = (props: CreateInstallationProps) => {
+const EditInstallation = (props: EditInstallationProps) => {
   useTitle(props.title);
   useBreadcrumbs(props.breadcrumbs);
 
@@ -23,6 +24,8 @@ const EditInstallation = (props: CreateInstallationProps) => {
     description: "",
   });
 
+  const { id } = useParams();
+
   const [form, setForm] =
     useState<installations_interface.Installation>({
       name: "",
@@ -32,12 +35,12 @@ const EditInstallation = (props: CreateInstallationProps) => {
       province: "",
       country: "",
       note: "",
-      _id:"",
-      createdAt:"",
-      devices:"",
-      identityCounter:"",
-      state:0,
-      users:[]
+      _id: "",
+      createdAt: "",
+      devices: "",
+      identityCounter: "",
+      state: 0,
+      users: []
     });
 
 
@@ -47,26 +50,18 @@ const EditInstallation = (props: CreateInstallationProps) => {
   })
 
   useEffect(() => {
-    if (props.CreateInstallation.status === 200) {
-      setMessage({
-        description: "Proveedor Creado correctamente",
-        title: "",
-        type: "success",
-        visible: true,
-      });
+    setForm(props.GetInstallation.message);
+  }, [props.GetInstallation]);
 
-      navigate("/inicio/instalaciones/");
-    }
 
-    if (props.CreateInstallation.status !== 0) {
-      setMessage({
-        description: props.CreateInstallation.error,
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-    }
-  }, [props.CreateInstallation]);
+  useEffect(() => {
+    props.GetInstallationAsync({
+      headers: {
+        token: props.token
+      },
+      id: id as string
+    });
+  }, []);
 
   useEffect(() => {
     setClients(props.GetClients);
@@ -82,137 +77,42 @@ const EditInstallation = (props: CreateInstallationProps) => {
 
 
 
-  const handleChange = (
-    event: React.FormEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    setForm({
-      ...form,
-      [event.currentTarget.name]: event.currentTarget.value,
-    });
-  };
 
-  const handleSubmit = () => {
-    //validate form fields
-    if (form.country == "") {
-      setMessage({
-        description: "El campo pais es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.location == "") {
-      setMessage({
-        description: "El campo localidad es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.name == "") {
-      setMessage({
-        description: "El campo nombre es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.owner == "") {
-      setMessage({
-        description: "El campo propietario es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.postalCode == "") {
-      setMessage({
-        description: "El campo codigo postal es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-
-      return;
-    }
-
-    if (form.province == "") {
-      setMessage({
-        description: "El campo provincia es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    props.CreateInstallationAsync({
-      headers: {
-        token: props.token,
-      },
-      body: form,
-    });
-  };
 
   return (
     <section id="basic-vertical-layouts">
       <div className="col-12 row bg-cover">
         <div className="row p-2 col-12">
-          <div className="col-lg-6">
-            <Input
-              label="Nombre"
-              name="name"
-              type={"text"}
-              onChange={handleChange}
-              
-            />
-          </div>
-          <div className="col-lg-5">
-          
-            <label htmlFor="userId">Propietario</label>
-            <SelectReact
-              isSearchable={true}
-              name="owner"
-              options={clients.message.map(e => ({
-                value: e._id,
-                label: e.name + " " + e.lastname
-              }))}
-              placeholder="Seleccione un propietario"
-              onChange={
-                (e: any) => {
-                  setForm({
-                    ...form,
-                    owner: e.value,
-                  })
-                }
-              }
 
-            />
+          <div className="col-lg-6">
+
+            <label htmlFor="userId">Propietario</label>
+            <p>
+              {clients.message.map((client) => {
+                if (client._id === form.owner) {
+                  return <div>{client.name + " " + client.lastname} <br /> <Link to={"/inicio/clientes/" + client._id}>ver</Link></div>
+                }
+              })
+              }
+            </p>
           </div>
           <div className="col-lg-6">
             <Input
               label="Código Postal"
               name="postalCode"
               type={"text"}
-              onChange={handleChange}
+              value={form.postalCode}
+              enabled={true}
             />
           </div>
           <div className="col-lg-6">
             <Input
-              label="Ubicación"
+              label="Locación"
               name="location"
               type={"text"}
-              onChange={handleChange}
+              enabled={true}
+
+              value={form.location}
             />
           </div>
           <div className="col-lg-6">
@@ -220,7 +120,9 @@ const EditInstallation = (props: CreateInstallationProps) => {
               label="Provincia"
               name="province"
               type={"text"}
-              onChange={handleChange}
+              enabled={true}
+
+              value={form.province}
             />
           </div>
           <div className="col-lg-6">
@@ -228,21 +130,20 @@ const EditInstallation = (props: CreateInstallationProps) => {
               label="País"
               name="country"
               type={"text"}
-              onChange={handleChange}
+              enabled={true}
+
+              value={form.country}
             />
           </div>
           <div className="col-lg-6">
 
-            <div className="form-group row align-items-center">
-              <div className="col-sm-1 col-4">
+            <div className="form-group ">
                 <label className="col-form-label">Notas</label>
-              </div>
-              <div className="col-sm-11 col-8">
                 <textarea className="form-control" id="note"
                   name="note"
-                  onChange={handleChange}
-                  rows={3} placeholder="Agrega detalles aqui"></textarea>
-              </div>
+                  disabled={true}
+                  value={form.note}
+                  rows={3}></textarea>
             </div>
           </div>
 
@@ -261,7 +162,6 @@ const EditInstallation = (props: CreateInstallationProps) => {
               type="submit"
               className="btn btn-lg btn-primary m-2"
               value={"Agregar"}
-              onClick={handleSubmit}
             >
               Guardar
             </button>

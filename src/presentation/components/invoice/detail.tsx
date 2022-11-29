@@ -1,10 +1,11 @@
 import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
+import { products_interface } from "infrastructure/api/products";
 import Input from "infrastructure/components/input";
 import Toast, { ToastProps } from "infrastructure/components/toast";
 import { DetailInvoiceProps } from "presentation/container/invoice/detail-container";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SelectReact from 'react-select';
 
 
@@ -33,6 +34,11 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
             createdAt: ""
         },
         status:0
+    });
+    const [products, setProducts] = useState<products_interface.GetProductsResponse>({
+        message: [],
+        status: 0,
+        code: 0
     });
 
     const [client,setClient] = React.useState<clients_interface.Client>({
@@ -70,6 +76,13 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
         description: "",
     });
 
+
+    useEffect(()=>{
+        props.onGetProductsAsync({
+            token: props.token,
+        })
+    },[])
+
     useEffect(() => {
         props.onGetInvoiceAsync({
             headers:{
@@ -99,6 +112,9 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
         setInvoice(props.GetInvoice)
     }, [props.GetInvoice])
 
+    useEffect(() => {
+        setProducts(props.GetProducts)
+    }, [props.GetProducts])
 
     useEffect(() => {
         setClient(props.GetClientById)
@@ -176,11 +192,15 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                                         <div data-repeater-list="col-12">
                                             <div data-repeater-item>
                                                 <div className="row mb-50 col-12">
-                                                    <div className="col-3 invoice-item-title">Producto</div>
-                                                    <div className="col-2 invoice-item-title"># Serie</div>
-                                                    <div className="col-3 invoice-item-title">Cantidad</div>
-                                                    <div className="col-2  invoice-item-title">Precio</div>
-                                                    <div className="col-2  invoice-item-title">Total</div>
+                                                <div className="col-1 col-md-1 invoice-item-title">Ref</div>
+                                                        <div className="col-2 col-md-2 invoice-item-title">Producto</div>
+
+                                                        <div className="col-2 invoice-item-title">Nº Serie</div>
+                                                        <div className="col-2 invoice-item-title">Descripcion</div>
+                                                        <div className="col-2 invoice-item-title">Cantidad</div>
+                                                        <div className="col-2 col-md-1 invoice-item-title">Precio</div>
+                                                        <div className="col-2 col-md-1 invoice-item-title">Total</div>
+
 
                                                 </div>
                                                 <div className="invoice-item d-flex border rounded mb-1 col-12">
@@ -190,34 +210,37 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                                                             invoice.message.products.map((item, index) => (
                                                                 <div className="col-12 row">
 
-                                                                    <div className="col-12 col-md-3 mt-2">
+                                                                    <div className="col-md-1 col-12  form-group mt-2">
+                                                                        {products.message.find((product) => product._id === item.id) && (
+                                                                               products.message.find((product) => product._id === item.id)?.identityCounter
+                                                                            )}
+                                                                    </div>
+                                                                    <div className="col-12 col-md-2 mt-2">
                                                                         <p className="invoice-item-title align-middle">{item.name}</p>
                                                                     </div>
-                                                                    <div className="col-md-3 col-12 form-group mt-2">
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
                                                                         <p className="invoice-item-title align-middle">
                                                                             {item.nroSerie}
                                                                         </p>
                                                                     </div>
                                                                     <div className="col-md-2 col-12 form-group mt-2">
+                                                                            {products.message.find((product) => product._id === item.id) && (
+                                                                               products.message.find((product) => product._id === item.id)?.description
+                                                                            )}
+                                                                        </div>
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
                                                                             <p className="invoice-item-title align-middle">
                                                                                 {item.quantity}
                                                                             </p>
                                                                     </div>
-                                                                    <div className="col-md-2 col-12 form-group mt-2">
+                                                                    <div className="col-md-1 col-12 form-group mt-2">
                                                                         <strong className="text-primary align-middle">$ {item.price
                                                                         }</strong>
                                                                     </div>
                                                                     <div className="col-md-1 col-12 form-group mt-2">
                                                                         <strong className="text-primary align-middle">$ {item.quantity * item.price}</strong>
                                                                     </div>
-                                                                    <div className="row col-12">
-                                                                        <div className="col-md-4 col-12 form-group">
-                                                                            <h6>Notas del producto</h6>
-                                                                            {
-                                                                                item.note
-                                                                            }
-                                                                        </div>
-                                                                    </div>
+                                                                   
                                                                     <div className="col-12">
                                                                         <hr />
 
@@ -301,6 +324,18 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                     </div>
                 </div>
             </div>
+            <div className="col-12 row ">
+          <div className="col-12 justify-content-end d-md-flex ">
+            <Link
+              type="button"
+              className="btn btn-lg btn-outline-dark m-2"
+              to={`/inicio/instalaciones/`}
+            >
+              Atrás
+            </Link>
+            
+          </div>
+        </div>
         </div>
         <div className="toast-bs-container">
             <Toast {...message} />

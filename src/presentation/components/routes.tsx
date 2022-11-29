@@ -16,7 +16,7 @@ import EditProduct from  '../container/products/edit-container';
 import ViewInvoices from '../container/invoice/view-container';
 import CreateInvoice from '../container/invoice/create-container'
 import DetailInvoice from '../container/invoice/detail-container';
-
+import EditInstallation from '../container/installations/edit-container';
 interface RoutesProps{
     name:string;
     relative_path:string;
@@ -124,6 +124,20 @@ const routes:RoutesProps[] =[
         icon:'bx bxs-briefcase-alt-2',
         order:1,
         
+    },
+    //EditInstallation
+    {
+        name:'Ver Instalacion',
+        relative_path:'instalaciones/:id',
+        path:'/inicio/instalaciones/:id',
+        element:<EditInstallation title="Instalaciones" breadcrumbs={['Ver Instalacion']} />,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:false,
+        icon:'bx bxs-briefcase-alt-2',
+        order:1,
     },
     {
         name:'Instalaciones',

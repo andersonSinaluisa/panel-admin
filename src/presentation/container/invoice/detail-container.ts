@@ -4,6 +4,7 @@ import DetailInvoice from 'presentation/components/invoice/detail';
 import { GetInvoiceStateProps } from 'application/models/invoice';
 import { clients_interface } from 'infrastructure/api/clients';
 import { invoice_interface } from 'infrastructure/api/invoice';
+import { GetProductsResponse } from 'infrastructure/api/products/interface';
 
 
 export interface DetailInvoiceProps {
@@ -19,28 +20,33 @@ export interface DetailInvoiceProps {
     onGetClientsAsync:(props:HeaderProps)=>void;
     onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> void;
     GetClientById:clients_interface.Client;
+    onGetProductsAsync:(props:HeaderProps)=>void;
+    GetProducts:GetProductsResponse;
 }
 
-const mapStateToProps = ({ INVOICE , AUTH,CLIENTS}: any, ownProps:any) => {
+const mapStateToProps = ({ INVOICE , AUTH,CLIENTS,PRODUCTS}: any, ownProps:any) => {
     return {
         token: AUTH.Session.data.message.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetInvoice: INVOICE.GetInvoice.data,
-        GetClientById: CLIENTS.GetClientById.data.message
+        GetClientById: CLIENTS.GetClientById.data.message,
+        GetProducts: PRODUCTS.GetProducts.data,
+
     };
 }
 
 
 
 //connect to redux
-const mapDispatchToProps = ({ INVOICE,CLIENTS }: any) => {
+const mapDispatchToProps = ({ INVOICE,CLIENTS,PRODUCTS }: any) => {
     return {
         onGetInvoiceAsync:(props:{
             id:string;
             headers:HeaderProps;
         })=>INVOICE.onGetInvoiceAsync(props),
-        onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> CLIENTS.onGetClientByIdAsync(props)
+        onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> CLIENTS.onGetClientByIdAsync(props),
+        onGetProductsAsync:(props:HeaderProps)=>PRODUCTS.onGetProductsAsync(props),
     };
 }
 

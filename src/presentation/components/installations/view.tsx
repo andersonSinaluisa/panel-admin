@@ -164,7 +164,16 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
 
               setInstallation(item)
           },
-        },)
+        },{
+          color: "primary",
+          icon: "bx bx-edit",
+          label: "Editar",
+          name: "edit",
+          onClick: (item: any) => {
+              navigate(`/inicio/instalaciones/${item._id}`)
+          }
+          
+        })
   
         return actions;
     }

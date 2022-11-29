@@ -16,7 +16,8 @@ export interface PrivateLayoutProps{
     connectToWebSocket:()=>Socket;
     onSearchAsync:(props:{
         headers:HeaderProps,
-        identityCounter:string
+        identityCounter:string,
+        type:string
     })=>void;
     search:SearchResponse;
     onGetUserAsync:(props:{

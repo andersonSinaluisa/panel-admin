@@ -75,19 +75,19 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
 
     useEffect(()=>{
         props.connectToWebSocket().on("connect",()=>{    
-            props.connectToWebSocket().emit("notifications",{
-                idUser:dataLogin.message.idUser
-            })
+            
             props.connectToWebSocket().onAny((event, ...args) => {
                 console.log(event, args);
                 //event start with installation-
                 if(event.startsWith("installation-")){
                    let id = event.split("-")[1];
                    let state = args[0];
+                   //parseInt
+                     let status = parseInt(state);
                     props.addNotification(
                         {
                             title: 'Instalación',
-                            description: `La instalación ${id} ha cambiado de estado a ${getStatusInstallation(state).label}`,
+                            description: `La instalación ${id} ha cambiado de estado a ${getStatusInstallation(status).label}`,
                             type: 'info',
                             duration: 5000,
                             onSee:()=>{
@@ -112,12 +112,13 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     }
 
 
-    const handleSearch = (value:string)=>{
+    const handleSearch = (value:string,type:string)=>{
         props.onSearchAsync({
             headers:{
                 token:token
             },
-            identityCounter:value
+            identityCounter:value,
+            type:type
         })
     }
 

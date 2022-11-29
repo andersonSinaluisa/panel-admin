@@ -52,6 +52,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
     props.onGetClientsAsync({
       token: props.token
     })
+    props.clear();
   }, [])
 
   React.useEffect(() => {

@@ -19,6 +19,7 @@ export interface ViewInvoicesProps {
     DeleteInvoice:DeleteInvoiceStateProps;
     GetClients: clients_interface.GetClientsResponse;
     onGetClientsAsync:(props:HeaderProps)=>void;
+    clear: () => void;
 
 }
 
@@ -46,8 +47,8 @@ const mapDispatchToProps = ({ INVOICE,CLIENTS }: any) => {
             id:string;
             headers:HeaderProps;
         })=>INVOICE.onDeleteInvoiceAsync(props),
-        onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props)
-
+        onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props),
+        clear: () => INVOICE.clear(),
     };
 }
 

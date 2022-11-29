@@ -31,7 +31,8 @@ export const SEARCH = createModel<RootModel>()({
     effects: (dispatch) => ({
         async onSearchAsync(props:{
             headers:HeaderProps,
-            identityCounter:string
+            identityCounter:string,
+            type:string,
         }){
             try{
                 const res = await search_request.Search(props).toPromise()

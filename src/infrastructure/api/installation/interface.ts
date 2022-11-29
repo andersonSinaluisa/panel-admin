@@ -35,6 +35,11 @@ interface GetInstallationsResponse{
     status: number;
     message: Array<Installation>
 }
+interface GetInstallationResponse{
+    code: string;
+    status: number;
+    message: Installation
+}
 
 
 interface UpdateStateInstallationsRequest{
@@ -47,5 +52,6 @@ export type{
     GetInstallationsResponse,
     Installation,
     CreateInstallationRequest,
-    UpdateStateInstallationsRequest
+    UpdateStateInstallationsRequest,
+    GetInstallationResponse
 }
