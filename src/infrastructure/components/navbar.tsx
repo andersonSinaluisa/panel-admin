@@ -1,4 +1,5 @@
 import { isClient, isInstallation, isJob, isPersonal, isTask, isUser } from "application/common/utils/is";
+import { similarity } from "application/common/utils/similarity";
 import { notification } from "application/models/notifications";
 import { search_interface } from "infrastructure/api/search";
 import { tasks_interface } from "infrastructure/api/tasks";
@@ -40,6 +41,11 @@ const Navbar = (props: NavbarProps) => {
     identityCounter: "",
     type: "",
   });
+
+  const [selectFilter, SetSelectFilter] = useState<{
+    type: string,
+    label: string
+  }[]>([])
 
 
   useEffect(() => {
@@ -90,10 +96,46 @@ const Navbar = (props: NavbarProps) => {
 
 
   const handleChangeType = (e: any) => {
-    setSearchParam({
-      ...seachParam,
-      type: e.currentTarget.value
-    })
+
+    //obtener la similitud de la palabra escrita en el input
+    let client = similarity(e.currentTarget.value, "Clientes");
+    let type = "";
+    let label = "";
+    if (client > 0.5) {
+      type = "clients";
+      label = "Clientes";
+    }
+
+    let installation = similarity(e.currentTarget.value, "Instalaciones");
+    if (installation > 0.5) {
+      type = "installations";
+      label = "Instalaciones";
+    }
+
+
+    seachParam.type = type;
+
+    if (type != "") {
+
+      //si el tipo de busqueda no se encuentra en selectFilter
+      if (selectFilter.findIndex((item) => item.type == type) == -1) {
+
+        SetSelectFilter([{
+          type: type,
+          label: label
+        }])
+      }
+      console.log(selectFilter)
+
+    }
+    props.onSearch(
+      "",
+      type
+    );
+
+
+
+
   }
 
 
@@ -141,8 +183,8 @@ const Navbar = (props: NavbarProps) => {
   }
 
 
-  const handleSelectItem = (item:any) => {
-    
+  const handleSelectItem = (item: any) => {
+
     if (seachParam.type === "clients") {
       navigate(`/clientes/${item.id}`);
     }
@@ -167,9 +209,9 @@ const Navbar = (props: NavbarProps) => {
       navigate(`/usuarios/${item.id}`);
     }
 
-    
 
-    
+
+
   }
 
 
@@ -218,89 +260,187 @@ const Navbar = (props: NavbarProps) => {
                 <div className={openSearch ? "search-input  open" : "search-input"}>
                   <div className="row">
                     <div className="search-input-icon col-1 mr-5" ><i className="bx bx-search primary"></i></div>
-                    <div className="col-1"></div>
-                    <select className="form-control col-3  mt-1" onChange={handleChangeType}>
-                      <option value="clients">Cliente</option>
-                      <option value="installations">Instalación</option>
-                      <option value="jobs">Trabajo</option>
-                      <option value="personal">Personal</option>
-                      <option value="tasks">Tarea</option>
-                      <option value="users">Usuario</option>
-                      <option value="billing">Factura</option>
-                      <option value="products">Productos</option>
-                    </select>
-                    <input className="input col-6 " type="text" placeholder="Buscar..."
-                      data-search="template-search" onChange={handleChange} />
 
+                    <input className="input col-6 ml-5" type="text" placeholder="Buscar..."
+                      data-search="template-search" onChange={handleChangeType} />
+                    {
+                      seachParam.type !== "" ?
+                        <div>
+
+                          <div className="d-flex align-items-center justify-content--between w-100 col-12">
+                            <div className="d-flex align-items-center">
+                              <div className="list-item-heading w-100 row">
+
+                                <label htmlFor="" className="col-6 mt-2">
+                                  Filtrar por:
+                                </label>
+                                <select name="" id="" className="mt-1 form-control col-6">
+
+                                  {
+                                    seachParam.type == "clients" ?
+                                      (<>
+                                        <option value="">Seleccione una opcion</option>
+                                        <option value="">Nombre</option>
+                                        <option value="">Apellido</option>
+                                        <option value="">Documento</option>
+                                        <option value="personType">
+                                          Tipo de persona
+                                        </option>
+                                        <option value="documentType">
+                                          Tipo de documento
+                                        </option>
+                                        <option value="customerType">
+                                          Tipo de cliente
+                                        </option>
+                                        <option value="roadType">
+                                          Tipo de vía
+                                        </option>
+                                        <option value="province">
+                                          Provincia
+                                        </option>
+                                        <option value="country">
+                                          País
+                                        </option>
+                                        <option value="contactSchedule">
+                                          Horario de contacto
+                                        </option>
+                                        <option value="email">Correo</option>
+                                        <option value="webpage">Página web</option>
+                                      </>) : seachParam.type == "installations" ?
+                                        (<>
+                                          <option value="">Seleccione una opcion</option>
+                                          <option value="">Nombre</option>
+                                          <option value="">Localización</option>
+                                          <option value="installationType">
+                                            Tipo de instalación
+                                          </option>
+                                          <option value="province">
+                                            Provincia
+                                          </option>
+                                          <option value="country">
+                                            País
+                                          </option>
+                                        </>) : null
+                                  }
+
+
+                                </select>
+
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+
+                        : null
+                    }
                     <div className="search-input-close col-1">
-                      <i className="bx bx-x" onClick={() => props.onOpenSearch(!openSearch)}></i></div>
+                      <i className="bx bx-x" onClick={() => props.onOpenSearch(!openSearch)}></i>
+                    </div>
                   </div>
 
                   <ul className={openSearch ? 'search-list show' : 'search-list'}>
+                    <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+                      {
+                        //add badge to search list
+                        selectFilter.map(item => {
+                          return (
+                            <a className="d-flex align-items-center justify-content-between w-100 col-12" href="content-helper-classes.html">
+
+                              <div className="chip chip-success chip-closeable">
+                                <div className="chip-body">
+                                  <span className="chip-text">{item.label}</span>
+                                </div>
+                                <button type="button" className="close" aria-label="Close">
+                                  <i className="bx bx-x"></i>
+                                </button>
+                              </div>
+
+                            </a>
+
+                          )
+                        })
+
+                      }
+                    </li>
 
 
                     {
                       search.status === 200 ?
-                        <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-                          
-                              <div className="row m-2">
 
-                              
-                                {
-                                  search.message?.map((item: any, index) => {
-                                    if (seachParam.type === "clients") {
-                                      return <a className="d-flex align-items-center justify-content-between w-100 col-12" href="content-helper-classes.html">
-                                        <div className="d-flex justify-content-start">
-                                          <span>
-                                            {item.name} {item.lastname} / {item.document}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    } else if (seachParam.type === "installations") {
-                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                                        <div className="d-flex justify-content-start">
-                                          <span>
-                                            {item.name} / {item.location}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    } else if (seachParam.type === "jobs") {
-                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                                        <div className="d-flex justify-content-start">
-                                          <span>
-                                            {item.type} / {item.description}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    } else if (seachParam.type === "personal") {
-                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                                        <div className="d-flex justify-content-start">
-                                          <span>
-                                            {item.name} / {item.document}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    } else if (seachParam.type === "tasks") {
-                                      return <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                                        <div className="d-flex justify-content-start">
-                                          <span>
-                                            {item.name} / {item.description}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    } else if (seachParam.type === "users") {
-                                      return <div key={index}>{item.email}</div>
-                                    } else if (seachParam.type === "billing") {
-                                      return <div key={index}>{item.description}</div>
-                                    } else if (seachParam.type === "products") {
-                                      return <div key={index}>{item.description}</div>
-                                    }
 
-                                  })
-                                }
-</div>
-                              
-                        </li> : <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
+                        search.message?.map((item: any, index) => {
+
+                          if (seachParam.type === "clients") {
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+
+                                <a className="d-flex align-items-center justify-content-between w-100 col-12" href="content-helper-classes.html">
+                                  <div className="d-flex justify-content-start">
+                                    <span>
+                                      {item.name} {item.lastname} / {item.document}
+                                    </span>
+                                  </div>
+                                </a>
+
+                            </li>
+                          } else if (seachParam.type === "installations") {
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+
+                                <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                  <div className="d-flex justify-content-start">
+                                    <span>
+                                      {item.name} / {item.location}
+                                    </span>
+                                  </div>
+                                </a>
+
+                            </li>
+                          } else if (seachParam.type === "jobs") {
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+ <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.type} / {item.description}
+                                  </span>
+                                </div>
+                              </a>
+
+                            </li>
+                          } else if (seachParam.type === "personal") {
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+
+                              <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.name} / {item.document}
+                                  </span>
+                                </div>
+                              </a>
+
+                            </li>
+                          } else if (seachParam.type === "tasks") {
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+
+                            <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.name} / {item.description}
+                                  </span>
+                                </div>
+                              </a>
+
+                            </li>
+                          } else if (seachParam.type === "users") {
+                            return <div key={index}>{item.email}</div>
+                          } else if (seachParam.type === "billing") {
+                            return <div key={index}>{item.description}</div>
+                          } else if (seachParam.type === "products") {
+                            return <div key={index}>{item.description}</div>
+                          }
+
+                        })
+                        : <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
                           <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
                             <div className="d-flex justify-content-start">
                               <span className="mr-75 bx bx-help-circle" data-icon="bx bx-help-circle"></span>
