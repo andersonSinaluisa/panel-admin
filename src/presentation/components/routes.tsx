@@ -1,4 +1,5 @@
 import UserView from '../container/users/view-container';
+import DetailUser from '../container/users/detail-container';
 import CreateUser from '../container/users/create-container'
 import ClientsView from '../container/clients/view-container';
 import CreateClient from '../container/clients/create-container';
@@ -53,6 +54,21 @@ const routes:RoutesProps[] =[
         icon:'bx bx-user',
         order:1,
         
+    },
+    //DetailUser
+    {
+        name:'Detalle de Usuario',
+        relative_path:'usuarios/:id',
+        path:'/inicio/usuarios/:id',
+        element:<DetailUser title="Detalle de Usuario" breadcrumbs={['Detalle de Usuario']} />,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:false,
+        icon:'bx bx-user',
+        order:1,
+
     },
     {
         name:'Nuevo Usuario',

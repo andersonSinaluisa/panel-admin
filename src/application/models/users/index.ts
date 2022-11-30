@@ -25,6 +25,15 @@ export interface DeleteUserStateProps extends ResponseServer{
     }
 }
 
+
+export interface GetUserProps{
+    data:{
+        status:number;
+        message:user_interface.User
+    }
+}
+
+
 export const USERS  = createModel<RootModel>()({
     state:{
         GetUsers:{
@@ -50,7 +59,23 @@ export const USERS  = createModel<RootModel>()({
             },
             error:"",
             status:0
-        } as DeleteUserStateProps
+        } as DeleteUserStateProps,
+        GetUser:{
+            data:{
+                message:{
+                    _id:"",
+                    identityCounter:"",
+                    email:"",
+                    role:"",
+                    personalData:"",
+                    createdAt:""
+                },
+                status:0
+            },
+            error:"",
+            status:0
+
+        }   as GetUserProps
     },
     effects:(dispatch:any)=>({
         async onGetUsersAync(props:APIHANDLER.HeaderProps){
@@ -130,6 +155,32 @@ export const USERS  = createModel<RootModel>()({
                 error:"",
                 status:0
             })
+        },
+        async onGetUserAsync(props:{headers:APIHANDLER.HeaderProps,id:string}){
+            try{
+                const res = await user_request.GetUser(props).toPromise();
+                dispatch.USERS.onGetUser({
+                    data:res.data,
+                    status:res.status,
+                    error:""
+                })
+            }catch(e:any){
+                dispatch.USERS.onGetUser({
+                    data:{
+                        message:{
+                            _id:"",
+                            identityCounter:"",
+                            email:"",
+                            role:"",
+                            personalData:"",
+                            createdAt:""
+                        },
+                        status:0
+                    },
+                    status:e.response.status??400,
+                    error:e.response.data.message??"Ocurrio un error"
+                })
+            }
         }
     }),
     reducers:{
@@ -141,6 +192,9 @@ export const USERS  = createModel<RootModel>()({
         },
         onDelete(state:any,payload:any){
             return {...state,DeleteUser:payload}
+        },
+        onGetUser(state:any,payload:any){
+            return {...state,GetUser:payload}
         }
     }
 })
