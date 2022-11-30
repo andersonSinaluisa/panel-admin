@@ -373,18 +373,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
 
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-12">
-                                    
-                                            <Input
-                                                label="Reporte de trabajo"
-                                                type="text"
-                                                name="workReport"
-                                                value={form.workReport}
-                                                onChange={handleChange}
-                                            />
-                                    </div>
-                                </div>
+                               
                                 <hr />
                                 <div className="row">
 

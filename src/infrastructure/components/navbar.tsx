@@ -1,6 +1,7 @@
 import { isClient, isInstallation, isJob, isPersonal, isTask, isUser } from "application/common/utils/is";
 import { similarity } from "application/common/utils/similarity";
 import { notification } from "application/models/notifications";
+import { clients_interface } from "infrastructure/api/clients";
 import { search_interface } from "infrastructure/api/search";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { user_interface } from "infrastructure/api/users";
@@ -41,6 +42,8 @@ const Navbar = (props: NavbarProps) => {
     identityCounter: "",
     type: "",
   });
+
+  const [selectedFilter, setSelectedFilter] = useState("0");
 
   const [selectFilter, SetSelectFilter] = useState<{
     type: string,
@@ -111,6 +114,37 @@ const Navbar = (props: NavbarProps) => {
       type = "installations";
       label = "Instalaciones";
     }
+
+    let job = similarity(e.currentTarget.value, "Trabajos");
+    if (job > 0.5) {
+      type = "jobs";
+      label = "Trabajos";
+    }
+
+    let task = similarity(e.currentTarget.value, "Tareas");
+    if (task > 0.5) {
+      type = "tasks";
+      label = "Tareas";
+    }
+
+    let user = similarity(e.currentTarget.value, "Usuarios");
+    if (user > 0.5) {
+      type = "users";
+      label = "Usuarios";
+    }
+
+    let personal = similarity(e.currentTarget.value, "Personal");
+    if (personal > 0.5) {
+      type = "personal";
+      label = "Personal";
+    }
+
+    let billing = similarity(e.currentTarget.value, "Facturas");
+    if (billing > 0.5) {
+      type = "billing";
+      label = "Facturas";
+    }
+    
 
 
     seachParam.type = type;
@@ -184,33 +218,58 @@ const Navbar = (props: NavbarProps) => {
 
 
   const handleSelectItem = (item: any) => {
-
+    console.log(item)
     if (seachParam.type === "clients") {
-      navigate(`/clientes/${item.id}`);
+      navigate(`/inicio/clientes/${item._id}`);
     }
 
     if (seachParam.type === "installations") {
-      navigate(`/instalaciones/${item.id}`);
+      navigate(`/inicio/instalaciones/${item._id}`);
     }
 
     if (seachParam.type === "jobs") {
-      navigate(`/trabajos/${item.id}`);
+      navigate(`/inicio/trabajos/${item._id}`);
     }
 
     if (seachParam.type === "personals") {
-      navigate(`/personal/${item.id}`);
+      navigate(`/inicio/personal/${item._id}`);
     }
 
     if (seachParam.type === "tasks") {
-      navigate(`/tareas/${item.id}`);
+      navigate(`/inicio/tareas/${item._id}`);
     }
 
     if (seachParam.type === "users") {
-      navigate(`/usuarios/${item.id}`);
+      navigate(`/inicio/usuarios/${item._id}`);
     }
 
+    if (seachParam.type === "billing") {
+      navigate(`/inicio/facturas/${item._id}`);
+    }
+    props.onOpenSearch(false);
+  }
 
 
+
+  const handleFilterData = (e: any) => {
+    let value = e.currentTarget.value;
+
+    console.log(e.currentTarget)
+    let data = selectFilter;
+    //get selected
+
+    //if value and name no exist in selectFilter
+    if (data.findIndex((item) => item.label == value) == -1) {
+
+      data.push({
+        label: value,
+        type: value
+      })
+
+      SetSelectFilter(data);
+
+    }
+    setSelectedFilter(value);
 
   }
 
@@ -267,60 +326,37 @@ const Navbar = (props: NavbarProps) => {
                       seachParam.type !== "" ?
                         <div>
 
-                          <div className="d-flex align-items-center justify-content--between w-100 col-12">
+                          <div className="d-flex align-items-center justify-content--between w-100 col-12"
+
+                          >
                             <div className="d-flex align-items-center">
-                              <div className="list-item-heading w-100 row">
+                              <div className="list-item-heading w-100 row" style={
+                                {
+                                  display: openSearch ? "flex" : "none"
+                                }
+                              }>
 
                                 <label htmlFor="" className="col-6 mt-2">
                                   Filtrar por:
                                 </label>
-                                <select name="" id="" className="mt-1 form-control col-6">
-
+                                <select name="filter" id="" className="mt-1 form-control col-6" onChange={handleFilterData}>
+                                  <option value="0">Seleccione una opcion</option>
                                   {
-                                    seachParam.type == "clients" ?
-                                      (<>
-                                        <option value="">Seleccione una opcion</option>
-                                        <option value="">Nombre</option>
-                                        <option value="">Apellido</option>
-                                        <option value="">Documento</option>
-                                        <option value="personType">
-                                          Tipo de persona
-                                        </option>
-                                        <option value="documentType">
-                                          Tipo de documento
-                                        </option>
-                                        <option value="customerType">
-                                          Tipo de cliente
-                                        </option>
-                                        <option value="roadType">
-                                          Tipo de vía
-                                        </option>
-                                        <option value="province">
-                                          Provincia
-                                        </option>
-                                        <option value="country">
-                                          País
-                                        </option>
-                                        <option value="contactSchedule">
-                                          Horario de contacto
-                                        </option>
-                                        <option value="email">Correo</option>
-                                        <option value="webpage">Página web</option>
-                                      </>) : seachParam.type == "installations" ?
-                                        (<>
-                                          <option value="">Seleccione una opcion</option>
-                                          <option value="">Nombre</option>
-                                          <option value="">Localización</option>
-                                          <option value="installationType">
-                                            Tipo de instalación
-                                          </option>
-                                          <option value="province">
-                                            Provincia
-                                          </option>
-                                          <option value="country">
-                                            País
-                                          </option>
-                                        </>) : null
+                                    search.message !== null ?
+                                      (
+                                        <>
+                                          {
+                                            Object.keys(search.message[0] != undefined ? search.message[0] : {}).map((item, index) => {
+                                              return (
+                                                <option key={index} value={item}
+
+
+                                                >{item}</option>
+                                              )
+                                            })
+                                          }
+                                        </>
+                                      ) : null
                                   }
 
 
@@ -341,13 +377,12 @@ const Navbar = (props: NavbarProps) => {
                   </div>
 
                   <ul className={openSearch ? 'search-list show' : 'search-list'}>
-                    <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+                    <li className="d-flex cursor-pointer">
                       {
                         //add badge to search list
                         selectFilter.map(item => {
                           return (
-                            <a className="d-flex align-items-center justify-content-between w-100 col-12" href="content-helper-classes.html">
-
+                            <a className="d-flex" href="content-helper-classes.html">
                               <div className="chip chip-success chip-closeable">
                                 <div className="chip-body">
                                   <span className="chip-text">{item.label}</span>
@@ -375,30 +410,31 @@ const Navbar = (props: NavbarProps) => {
                           if (seachParam.type === "clients") {
                             return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
 
-                                <a className="d-flex align-items-center justify-content-between w-100 col-12" href="content-helper-classes.html">
-                                  <div className="d-flex justify-content-start">
-                                    <span>
-                                      {item.name} {item.lastname} / {item.document}
-                                    </span>
-                                  </div>
-                                </a>
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
+                                href="#" onClick={() => handleSelectItem(item)}>
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.name} {item.lastname} / {item.document}
+                                  </span>
+                                </div>
+                              </a>
 
                             </li>
                           } else if (seachParam.type === "installations") {
                             return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-
-                                <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                                  <div className="d-flex justify-content-start">
-                                    <span>
-                                      {item.name} / {item.location}
-                                    </span>
-                                  </div>
-                                </a>
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
+                                href="#" onClick={() => handleSelectItem(item)}>
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.name} / {item.location}
+                                  </span>
+                                </div>
+                              </a>
 
                             </li>
                           } else if (seachParam.type === "jobs") {
                             return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
- <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                              <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
                                 <div className="d-flex justify-content-start">
                                   <span>
                                     {item.type} / {item.description}
@@ -410,7 +446,8 @@ const Navbar = (props: NavbarProps) => {
                           } else if (seachParam.type === "personal") {
                             return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
 
-                              <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
+                                href="#" onClick={() => handleSelectItem(item)}>                                
                                 <div className="d-flex justify-content-start">
                                   <span>
                                     {item.name} / {item.document}
@@ -422,7 +459,8 @@ const Navbar = (props: NavbarProps) => {
                           } else if (seachParam.type === "tasks") {
                             return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
 
-                            <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
+                                href="#" onClick={() => handleSelectItem(item)}>                                
                                 <div className="d-flex justify-content-start">
                                   <span>
                                     {item.name} / {item.description}
@@ -432,11 +470,46 @@ const Navbar = (props: NavbarProps) => {
 
                             </li>
                           } else if (seachParam.type === "users") {
-                            return <div key={index}>{item.email}</div>
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
+                                
+                                href="#" onClick={() => handleSelectItem(item)}>
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.email}
+
+                                  </span>
+                                </div>
+                              </a>
+
+                            </li>
                           } else if (seachParam.type === "billing") {
-                            return <div key={index}>{item.description}</div>
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
+
+                                href="#" onClick={() => handleSelectItem(item)}>
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    Fecha: {item.billingDate} - NIF:{item.NumeroIdentificacionFiscal}
+
+                                  </span>
+                                </div>
+                              </a>
+                            
+                            </li>
                           } else if (seachParam.type === "products") {
-                            return <div key={index}>{item.description}</div>
+                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
+                              <a className="d-flex align-items-center justify-content-between w-100 col-12" 
+                                href="#" onClick={() => handleSelectItem(item)}>
+                                <div className="d-flex justify-content-start">
+                                  <span>
+                                    {item.name} / {item.description}
+                                  
+                                  </span>
+                                </div>
+                              </a>
+                            
+                            </li>
                           }
 
                         })
