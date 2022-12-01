@@ -12,6 +12,8 @@ import { CreateClientProps } from "presentation/container/clients/create-contain
 import { clients_interface } from "infrastructure/api/clients";
 import { user_interface } from "infrastructure/api/users";
 import SelectReact from 'react-select';
+import json from 'application/common/utils/datos.json';
+
 
 const CreateClient = (props: CreateClientProps) => {
   useTitle(props.title);
@@ -240,11 +242,24 @@ const CreateClient = (props: CreateClientProps) => {
             />
           </div>
           <div className="col-lg-6">
-            <Input
-              label="Codigo Postal"
+              <label htmlFor="">Codigo Postal</label>
+            <SelectReact
+              isSearchable={true}
               name="postalCode"
-              type={"text"}
-              onChange={handleChange}
+              options={json.map(e => ({
+                value: e.codigo_postal,
+                label: e.municipio_nombre+ " "+ e.codigo_postal
+              }))}
+              
+              placeholder="Seleccione el codigo postal"
+              onChange={
+                (e: any) => {
+                  setForm({
+                    ...form,
+                    postalCode: e.value
+                  })
+                }
+              }
             />
           </div>
           <div className="col-lg-6">

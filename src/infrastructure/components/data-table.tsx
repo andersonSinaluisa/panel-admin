@@ -11,7 +11,7 @@ export interface DataTableProps {
   columns: Array<{
     name: string;
     label: string;
-    type: 'date' | 'boolean' | 'avatar' | 'array' | 'text' | 'object' | 'render',
+    type: 'date' | 'boolean' | 'avatar' | 'array' | 'text' | 'object' | 'render'| string,
     field_show?: string;
     render?: (value: any) => any;
   }>;

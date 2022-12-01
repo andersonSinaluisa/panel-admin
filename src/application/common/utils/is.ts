@@ -1,7 +1,9 @@
 import { clients_interface } from "infrastructure/api/clients";
 import { installations_interface } from "infrastructure/api/installation";
+import { invoice_interface } from "infrastructure/api/invoice";
 import { jobs_interface } from "infrastructure/api/jobs";
 import { personal_interface } from "infrastructure/api/personal";
+import { products_interface } from "infrastructure/api/products";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { user_interface } from "infrastructure/api/users";
 
@@ -56,11 +58,37 @@ function isPersonal(value: any): value is personal_interface.Personal {
     && 'lastname2' in value;
 }
 
+
+function isInvoice(value: any): value is invoice_interface.Invoice {
+
+    return  '_id' in value && 'identityCounter' in value && 'state' in value && 'billingDate' in value && 'clientID' in value && 'NumeroIdentificacionFiscal' in value && 'products' in value && 'workReport' in value && 'workDirection' in value && 'clientDiscount' in value && 'discount' in value && 'IVA' in value && 'impuestosVariables' in value && 'paymentMethod' in value && 'note' in value && 'createdBy' in value && 'createdAt' in value;
+}
+
+function isProduct(value: any): value is products_interface.Product {
+
+   /* _id: string;
+    identityCounter: string;
+    name: string;
+    nroSerie: string;
+    description: string;
+    precioVentaPublico: number;
+    cataloged: boolean;
+    stock: number;
+    assigned: boolean;
+    assignedTo: string;
+    note: string;
+    createdAt: string;*/
+    return '_id' in value && 'identityCounter' in value && 'name' in value && 'nroSerie' in value && 'description' in value && 'precioVentaPublico' in value && 'cataloged' in value && 'stock' in value && 'assigned' in value && 'assignedTo' in value && 'note' in value && 'createdAt' in value;
+
+}
+
 export {
     isTask,
     isJob,
     isUser,
     isClient,
     isInstallation,
-    isPersonal
+    isPersonal,
+    isInvoice,
+    isProduct
 }

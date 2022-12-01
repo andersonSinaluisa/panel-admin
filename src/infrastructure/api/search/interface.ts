@@ -9,7 +9,8 @@ import { user_interface } from "../users";
 interface SearchResponse{
     status:number;
     message:clients_interface.Client[]|installations_interface.Installation[]
-    |jobs_interface.Job[]|personal_interface.Personal[]|products_interface.Product[]|tasks_interface.Task[]|user_interface.User[]|null
+    |jobs_interface.Job[]|personal_interface.Personal[]|products_interface.Product[]
+    |tasks_interface.Task[]|user_interface.User[]|any[];
 }
 
 export type {

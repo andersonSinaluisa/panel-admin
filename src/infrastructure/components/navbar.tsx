@@ -28,7 +28,7 @@ const Navbar = (props: NavbarProps) => {
 
   const [openSearch, setOpenSearch] = useState(false);
   const [search, setSearch] = useState<search_interface.SearchResponse>({
-    message: null,
+    message: [],
     status: 0
   });
   const [showDrop, setShowDrop] = useState(false);
@@ -335,33 +335,6 @@ const Navbar = (props: NavbarProps) => {
                                   display: openSearch ? "flex" : "none"
                                 }
                               }>
-
-                                <label htmlFor="" className="col-6 mt-2">
-                                  Filtrar por:
-                                </label>
-                                <select name="filter" id="" className="mt-1 form-control col-6" onChange={handleFilterData}>
-                                  <option value="0">Seleccione una opcion</option>
-                                  {
-                                    search.message !== null ?
-                                      (
-                                        <>
-                                          {
-                                            Object.keys(search.message[0] != undefined ? search.message[0] : {}).map((item, index) => {
-                                              return (
-                                                <option key={index} value={item}
-
-
-                                                >{item}</option>
-                                              )
-                                            })
-                                          }
-                                        </>
-                                      ) : null
-                                  }
-
-
-                                </select>
-
                               </div>
 
 

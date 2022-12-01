@@ -41,7 +41,7 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     const [title, setTitle] = useState("");
     const [breadcrumbs, setBreadcrumbs] = useState([]);
     const [search, setSearch] = useState<search_interface.SearchResponse>({
-        message: null,
+        message: [],
         status:0
     });
 

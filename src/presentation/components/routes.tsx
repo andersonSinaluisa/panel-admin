@@ -18,6 +18,7 @@ import ViewInvoices from '../container/invoice/view-container';
 import CreateInvoice from '../container/invoice/create-container'
 import DetailInvoice from '../container/invoice/detail-container';
 import EditInstallation from '../container/installations/edit-container';
+import SearchView from '../container/search/view-container';
 interface RoutesProps{
     name:string;
     relative_path:string;
@@ -31,6 +32,20 @@ interface RoutesProps{
 
 
 const routes:RoutesProps[] =[
+    //SearchView
+    {
+        name:'Buscar Todo',
+        relative_path:'buscar',
+        path:'/inicio/buscar',
+        element:<SearchView title="Buscar" breadcrumbs={["Buscar"]}/>,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:true,
+        icon:'bx bx-search',
+        order:1,
+    },
     {
         name:"Dashboard",
         relative_path:"",
@@ -303,7 +318,8 @@ const routes:RoutesProps[] =[
         icon: 'bx bx-file',
         order: 1,
 
-    }
+    },
+    
     
    
 ]
