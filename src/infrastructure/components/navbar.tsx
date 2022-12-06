@@ -43,6 +43,8 @@ const Navbar = (props: NavbarProps) => {
     type: "",
   });
 
+  const [showNotTask, setShowNotTask] = useState(false);
+
   const [selectedFilter, setSelectedFilter] = useState("0");
 
   const [selectFilter, SetSelectFilter] = useState<{
@@ -290,6 +292,82 @@ const Navbar = (props: NavbarProps) => {
                     <i className="ficon bx bx-menu"></i>
                   </a>
                 </li>
+                <li className="dropdown dropdown-notification nav-item">
+                <a
+                  className="nav-link nav-link-label"
+                  href="#"
+                  data-toggle="dropdown"
+
+                  onClick={
+                    (e) => {
+                      setShowNotTask(!showNotTask);
+                    }
+                  }
+                >
+                  <i className="ficon bx bx-check-square"></i>
+                  <span className="badge badge-pill badge-warning badge-up">
+                    { not.filter(x=>x.title=="Tareas").length}
+                  </span>
+                </a>
+                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-left ${showNotTask ? "show" : ""
+                  }`}>
+                  <li className="dropdown-menu-header bg-warning">
+                    <div className="dropdown-header px-1 py-75 d-flex justify-content-between">
+                      <span className="notification-title">
+                        { not.filter(x=>x.title=="Tareas").length} Nuevas Notificaciones
+                      </span>
+                      <span className="text-bold-400 cursor-pointer">
+                        Marcar como leidas
+                      </span>
+                    </div>
+                  </li>
+                  <li className="scrollable-container media-list" style={{
+                    overflowY: "scroll",
+                  }}>
+                    {
+                       not.filter(x=>x.title=="Tareas").map((item, index) => {
+                        return <div className="d-flex justify-content-between cursor-pointer" onClick={
+                          () => {
+                            navigate(`/inicio/tareas/?task=${item.data._id}`);
+                          }
+                        }>
+                          <div className="media d-flex align-items-center">
+                            <div className="media-left pr-0">
+                              <div className="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25">
+                                <span className="avatar-content text-primary font-medium-2">
+                                  <i className="bx bxs-briefcase-alt-2"></i>
+                                </span>
+                              </div>
+                            </div>
+                            <div className="media-body">
+                              <h6 className="media-heading">
+                                <span className="text-bold-500">{item.title}</span>{" "}
+                                <br />
+                                {item.description}
+                              </h6>
+                              <small className="notification-text">{
+                                item.datetime.toDateString()
+                              }</small>
+                            </div>
+                          </div>
+                        </div>
+                      })
+                    }
+
+
+
+
+                  </li>
+                  <li className="dropdown-menu-footer">
+                    <a
+                      className="dropdown-item p-50 text-primary justify-content-center"
+                      href="javascript:void(0)"
+                    >
+                      Read all notifications
+                    </a>
+                  </li>
+                </ul>
+              </li>
               </ul>
 
               <ul className="nav navbar-nav">
@@ -514,7 +592,7 @@ const Navbar = (props: NavbarProps) => {
                 >
                   <i className="ficon bx bx-bell"></i>
                   <span className="badge badge-pill badge-primary badge-up">
-                    {not.length}
+                    {not.filter(x=>x.title=='Instalación').length}
                   </span>
                 </a>
                 <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${showNotification ? "show" : ""
@@ -529,9 +607,11 @@ const Navbar = (props: NavbarProps) => {
                       </span>
                     </div>
                   </li>
-                  <li className="scrollable-container media-list">
+                  <li className="scrollable-container media-list" style={{
+                    overflowY: "scroll",
+                  }}>
                     {
-                      not.map((item, index) => {
+                      not.filter(x=>x.title=="Instalación").map((item, index) => {
                         return <div className="d-flex justify-content-between cursor-pointer">
                           <div className="media d-flex align-items-center">
                             <div className="media-left pr-0">

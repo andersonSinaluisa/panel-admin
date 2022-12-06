@@ -1,6 +1,6 @@
 import { createModel } from "@rematch/core";
 import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
-import { CreatePersonalRequest, GetPersonalByIdResponse, GetPersonalResponse } from "infrastructure/api/personal/interface";
+import { CreatePersonalRequest, GetPersonalByIdResponse, GetPersonalResponse, Personal } from "infrastructure/api/personal/interface";
 import { CreatePersonal, DeletePersonal, GetPersonal, GetPersonalById } from "infrastructure/api/personal/request";
 import { RootModel } from "..";
 
@@ -21,6 +21,13 @@ export interface GetPersonalByIdStateProps extends ResponseServer{
 export interface DeletePersonalStateProps extends ResponseServer{
     data:{
         message:string;
+        status:number;
+    }
+}
+
+export interface PersonalStateProps extends ResponseServer{
+    data:{
+        message:Personal;
         status:number;
     }
 }
@@ -51,7 +58,43 @@ export const PERSONAL = createModel<RootModel>()({
             },
             status:0,
             error:""
-        } as DeletePersonalStateProps
+        } as DeletePersonalStateProps,
+        GetPersonalById:{
+            data:{
+                message:{
+                    _id : "",
+                    identityCounter : "",
+                    userId : "",
+                    documentType : "",
+                    document : "",
+                    name : "",
+                    lastname1 : "",
+                    lastname2 : "",
+                    type : "",
+                    direction : "",
+                    postalCode : "",
+
+                    location : "",
+                    province : "",
+                    country : "",
+                    phone : "",
+                    mobilePhone : "",
+                    contact : "",
+                    contact2 : "",
+                    email : "",
+                    contactSchedule : "",
+                    note : "",
+                    permissions : [],
+                    dependents : 0,
+                    createdBy : "",
+                    createdAt : "",
+                },
+                status:0
+            },
+            error:"",
+            status:0
+        } as GetPersonalByIdStateProps,
+                        
     },
     reducers: {
         onGetPersonal(state:any,payload:any){
@@ -77,7 +120,8 @@ export const PERSONAL = createModel<RootModel>()({
                 ...state,
                 DeletePersonal:payload
             }
-        }
+        },
+        
     },
     effects: (dispatch) => ({
         async onGetPersonalAsync(payload: HeaderProps){
@@ -134,7 +178,33 @@ export const PERSONAL = createModel<RootModel>()({
             }catch(e:any){
                 dispatch.PERSONAL.onGetPersonalById({
                     data:{
-                        message:[],
+                        message:{
+                            _id : "",
+                            identityCounter : "",
+                            userId : "",
+                            documentType : "",
+                            document : "",
+                            name : "",
+                            lastname1 : "",
+                            lastname2 : "",
+                            type : "",
+                            direction : "",
+                            postalCode : "",
+                            location : "",
+                            province : "",
+                            country : "",
+                            phone : "",
+                            mobilePhone : "",
+                            contact : "",
+                            contact2 : "",
+                            email : "",
+                            contactSchedule : "",
+                            note : "",
+                            permissions : [],
+                            dependents : 0,
+                            createdBy : "",
+                            createdAt : "",
+                        },
                         status:0
                     },
                     status:0,
@@ -164,6 +234,7 @@ export const PERSONAL = createModel<RootModel>()({
                 })
             }
         },
+        
         clear(){
             
             dispatch.PERSONAL.onCreatePersonal({

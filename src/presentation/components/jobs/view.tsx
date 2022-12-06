@@ -1,3 +1,4 @@
+import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { ExportToCsv } from "export-to-csv";
 import { clients_interface } from "infrastructure/api/clients";
@@ -15,6 +16,7 @@ import TodoMenu from "infrastructure/components/todo-menu";
 import TodoSearch from "infrastructure/components/todo-search";
 import { ViewJobsProps } from "presentation/container/jobs/view-container";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import SelectReact from 'react-select';
 
 
@@ -28,6 +30,10 @@ const ViewJobs = (props: ViewJobsProps) => {
     const [show, setShow] = useState(false)
     const [showModal, setShowModal] = useState<boolean>(false)
     const [showModalClose, setShowModalClose] = useState<boolean>(false)
+
+    //get query params
+    const query = useQuery();
+
 
 
     const [closeJob, SetCloseJob] = useState<jobs_interface.CloseJobRequest>({
@@ -94,6 +100,33 @@ const ViewJobs = (props: ViewJobsProps) => {
             token: props.token
         })
     }, [])
+
+
+    useEffect(() => {
+        if(query.get("job")){
+            jobs.message.filter((job) => {
+                if(job._id === query.get("job")){
+                    setForm({
+                        contactName: job.contactName,
+                        contactPhone: job.contactPhone,
+                        description: job.description,
+                        direction: job.direction,
+                        idClient: job.idClient,
+                        interventionDate: job.interventionDate,
+                        material: job.material,
+                        obsContact: job.obsContact,
+                        priority: job.priority,
+                        technical: job.technical,
+                        type: job.type
+                    })
+                    setJob(job)
+                    setShow(true)
+                }
+            }
+            )
+        }
+    }, [jobs.message])
+
 
     useEffect(() => {
         if (props.CreateJob.status === 200) {

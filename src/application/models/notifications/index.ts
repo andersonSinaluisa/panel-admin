@@ -9,6 +9,7 @@ interface notification{
     see:boolean;
     onSee:()=>void;
     datetime: Date;
+    data:any;
 }
 
 

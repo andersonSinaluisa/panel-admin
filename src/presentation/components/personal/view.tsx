@@ -102,7 +102,15 @@ const PersonalView = (props: PersonalViewProps) => {
               setItemSelected(item);
               setShowModal(true)
           },
-        },)
+        },{
+          color: "primary",
+          icon: "bx bx-edit-alt",
+          label: "Editar",
+          name: "edit",
+          onClick: (item: any) => {
+            navigate(`/inicio/personal/${item._id}`);
+          }
+        })
   
         return actions;
     }

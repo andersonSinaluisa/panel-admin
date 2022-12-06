@@ -153,11 +153,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
                 label: "IVA",
                 type: "text",
               },
-              {
-                name: "impuestosVariables",
-                label: "Impuestos Variables",
-                type: "text",
-              },
+              
             ]}
             dataLimit={5}
             pageLimit={2}

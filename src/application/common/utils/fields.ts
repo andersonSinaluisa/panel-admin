@@ -30,28 +30,28 @@ const getFieldsByType = (object: any): Field[] => {
         fields.push({
             name: 'document',
             type: 'text',
-            label: 'Document'
+            label: 'Documento'
 
         }, {
             name: 'lastname',
             type: 'text',
-            label: 'Lastname'
+            label: 'Apellido'
         }, {
             name: 'customerType',
             type: 'text',
-            label: 'Customer Type'
+            label: 'Tipo de cliente'
         }, {
             name: 'roadType',
             type: 'text',
-            label: 'Road Type'
+            label:  'Tipo de vía'
         }, {
             name: 'direction',
             type: 'text',
-            label: 'Direction'
+            label: 'Dirección'
         }, {
             name: 'postalCode',
             type: 'text',
-            label: 'Postal Code'
+            label: 'Código postal'
 
         });
 
@@ -62,15 +62,15 @@ const getFieldsByType = (object: any): Field[] => {
         fields.push({
             name: 'address',
             type: 'text',
-            label: 'Address'
+            label: 'Dirección'
         }, {
             name: 'billingDate',
             type: 'text',
-            label: 'Billing Date'
+            label: 'Fecha de facturación'
         }, {
             name: 'clientID',
             type: 'text',
-            label: 'Client ID'
+            label: 'Cliente'
         }, {
             name: 'NumeroIdentificacionFiscal',
             type: 'text',
@@ -88,27 +88,27 @@ const getFieldsByType = (object: any): Field[] => {
         }, {
             name: 'owner',
             type: 'text',
-            label: 'Owner'
+            label: 'propietario'
         }, {
             name: 'postalCode',
             type: 'text',
-            label: 'Postal Code'
+            label: 'Código postal'
         }, {
             name: 'location',
             type: 'text',
-            label: 'Location'
+            label: 'Localización'
         }, {
             name: 'province',
             type: 'text',
-            label: 'Province'
+            label: 'Provincia'
         }, {
             name: 'country',
             type: 'text',
-            label: 'Country'
+            label: 'País'
         }, {
             name: 'note',
             type: 'text',
-            label: 'Note'
+            label: 'Nota'
         });
     }
 
@@ -122,23 +122,23 @@ const getFieldsByType = (object: any): Field[] => {
         }, {
             name: 'idClient',
             type: 'text',
-            label: 'Id Client'
+            label: 'Cliente'
         }, {
             name: 'direction',
             type: 'text',
-            label: 'Direction'
+            label: 'Dirección'
         }, {
             name: 'contactName',
             type: 'text',
-            label: 'Contact Name'
+            label: 'Nombre de contacto'
         }, {
             name: 'contactPhone',
             type: 'text',
-            label: 'Contact Phone'
+            label: 'Teléfono de contacto'
         }, {
             name: 'obsContact',
             type: 'text',
-            label: 'Obs Contact'
+            label: 'Observaciones de contacto'
         })
     }
 
@@ -216,8 +216,8 @@ const getFieldsByType = (object: any): Field[] => {
             label: 'Precio Venta Publico'
         }, {
             name: 'cataloged',
-            type: 'text',
-            label: 'Cataloged'
+            type: 'boolean',
+            label: 'Catalogado'
         });
     
     

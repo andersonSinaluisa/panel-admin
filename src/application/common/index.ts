@@ -70,9 +70,9 @@ export const APP_NAME = "Panel"
 export const getStatusInstallation = (id: number) => {
     switch (id) {
         case 1:
-            return { color: 'primary', label: "Armado" };
+            return { color: 'primary', label: "ACTIVO" };
         case 2:
-            return { color: 'info', label: "Desarmado" };
+            return { color: 'primary', label: "ACTIVO" };
         case 3:
             return { color: 'warning', label: "Dormir" };
         case 4:
@@ -92,8 +92,8 @@ export const getStatusInstallation = (id: number) => {
 
 
 export const status = [
-    { color: 'primary', label: "Armado",id:1 },
-    { color: 'info', label: "Desarmado",id:2 },
+    { color: 'primary', label: "ACTIVO",id:1 },
+    { color: 'primary', label: "ACTIVO",id:2 },
     { color: 'warning', label: "Dormir",id:3 },
     { color: 'secondary', label: "Bloqueado",id:4 },
 

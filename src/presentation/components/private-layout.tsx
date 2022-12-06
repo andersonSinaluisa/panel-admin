@@ -3,7 +3,7 @@ import { notification } from 'application/models/notifications';
 import { search_interface } from 'infrastructure/api/search';
 import { user_interface } from 'infrastructure/api/users';
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../application/common/hooks/use-auth";
 import Navbar from '../../infrastructure/components/navbar';
 import Sidebar from '../../infrastructure/components/sidebar';
@@ -18,6 +18,7 @@ import { PrivateLayoutProps } from '../container/private-layout-container';
 const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     const { token ,dataLogin, onLogout} = useAuth();
 
+    let navigate = useNavigate();
     const [showOverlay, setShowOverlay] = useState(false);
     const [onpenSearch, setOnpenSearch] = useState(false);
     const [userData,setUserData] = useState<user_interface.User>({
@@ -87,19 +88,42 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
                     props.addNotification(
                         {
                             title: 'Instalación',
-                            description: `La instalación ${id} ha cambiado de estado a ${getStatusInstallation(status).label}`,
+                            description: `La instalación  ha cambiado de estado a ${getStatusInstallation(status).label}`,
                             type: 'info',
                             duration: 5000,
                             onSee:()=>{
-                               
+                               navigate('/inicio/instalaciones/'+id);
                             },
                             see:false,
-                            datetime: new Date()
+                            datetime: new Date(),
+                            data:{
+                                id:id,
+                            }
                         }
                     )
 
                 }
+                if (event == 'tasks'){
+                    let data = args[0];
+                    props.addNotification(
+                        {
+                            title: 'Tareas',
+                            description: `Tienes una nueva tarea`,
+                            type: 'info',
+                            duration: 5000,
+                            onSee:()=>{
+                                navigate('/inicio/tareas');
+                            },
+                            see:false,
+                            datetime: new Date(),
+                            data:{
+                                id:data._id,
+                            }
+                        }
+                    )
+                }
             });
+
         })
       
         return ()=> { props.connectToWebSocket().close()}

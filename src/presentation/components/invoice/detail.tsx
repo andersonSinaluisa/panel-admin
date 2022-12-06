@@ -149,7 +149,9 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                                     <h4>Datos Fiscales</h4>
                                     <label htmlFor="clientID">Cliente</label>
                                     <p>
-                                        {client.name} {client.lastname}
+                                      {
+                                        client!==undefined && client!=null?client.name+"  "+client.lastname:""
+                                      } 
                                     </p>
                                     
 
@@ -170,15 +172,7 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
 
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-12">
-                                
-                                        <h5>Reporte de trabajo</h5>
-                                        <p>
-                                        {invoice.message.workReport}
-                                        </p>
-                                </div>
-                            </div>
+                            
                             <hr />
                             <div className="row">
 
@@ -281,21 +275,14 @@ const DetailInvoice = (props:DetailInvoiceProps) => {
                                     <div className="col-4 mt-2">
                                         <div className="invoice-subtotal">
                                             <div className="invoice-calc d-flex justify-content-between">
-                                                <span className="invoice-title">Subtotal</span>
+                                                <span className="invoice-title">Importe Neto</span>
                                                 <span className="invoice-value">{
                                                     invoice.message.products.reduce((total, item) => {
                                                         return total + item.quantity * item.price
                                                     }, 0)
                                                 }</span>
                                             </div>
-                                            <div className="d-flex justify-content-between">
-                                                <span className="invoice-title">Descuento</span>
-                                                <span className="invoice-value">
-                                                    {
-                                                        invoice.message.discount
-                                                    }
-                                                </span>
-                                            </div>
+                                            
                                             <div className="invoice-calc d-flex justify-content-between">
                                                 <span className="invoice-title">Descuento Cliente</span>
                                                 <span className="invoice-value">{

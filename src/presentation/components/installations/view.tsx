@@ -153,7 +153,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
               setShowModal(true)
               setInstallation(item)
           },
-        },{
+        },/*{
           color: "warning",
           icon: "bx bx-edit",
           label: "Actualizar estado",
@@ -164,7 +164,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
 
               setInstallation(item)
           },
-        },{
+        },*/{
           color: "primary",
           icon: "bx bx-edit",
           label: "Editar",

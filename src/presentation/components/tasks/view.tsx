@@ -1,4 +1,5 @@
 import { TASK_OPEN } from "application/common";
+import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { ExportToCsv } from "export-to-csv";
 import { tasks_interface } from "infrastructure/api/tasks";
@@ -25,6 +26,9 @@ const TaskView = (props: TasksViewProps) => {
     useTitle(props.title)
     useBreadcrumbs(props.breadcrumbs)
     const [show, setShow] = useState(false)
+
+    const query = useQuery();
+    
 
 
     const [tasks, setTasks] = useState<tasks_interface.GetTaskResponse>({
@@ -73,7 +77,27 @@ const TaskView = (props: TasksViewProps) => {
 
     }, [])
 
+    useEffect(() => {
 
+        if(query.get("task")){
+            tasks.message.filter((task) => {
+                if(task._id === query.get("task")){
+                    setTask(task)
+                    setForm({
+                        description: task.description,
+                        interventionDate: task.interventionDate,
+                        name: task.name,
+                        observation: task.observation,
+                        priority: task.priority,
+                        responsible: task.responsible,
+                        type: task.type
+                    })
+                    setShow(true)
+                }
+            })
+        }
+
+    }, [tasks.message])
 
 
 

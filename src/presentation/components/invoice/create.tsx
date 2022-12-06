@@ -522,31 +522,25 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                         <div className="col-4 mt-2">
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
-                                                    <span className="invoice-title">Subtotal</span>
+                                                    <span className="invoice-title">Importe Neto</span>
                                                     <span className="invoice-value">{
                                                         itemProduct.reduce((total, item) => {
                                                             return total + item.quantity * item.price
                                                         }, 0)
                                                     }</span>
                                                 </div>
-                                                <div className="d-flex justify-content-between">
-                                                    <span className="invoice-title mt-2">Descuento</span>
-                                                    <span className="invoice-value col-4">
-                                                        <Input
-                                                            label=""
-                                                            name="discount"
-                                                            type="number"
-                                                            onChange={handleChange}
-                                                            value={form.discount + ""}
-                                                        />
-                                                    </span>
-                                                </div>
-                                                <div className="invoice-calc d-flex justify-content-between">
-                                                    <span className="invoice-title">Descuento Cliente</span>
-                                                    <span className="invoice-value">{
-                                                        form.clientDiscount
-                                                    }</span>
-                                                </div>
+                                              
+                                                    {
+                                                        form.clientDiscount !== 0 && (
+                                                            <div className="invoice-calc d-flex justify-content-between">
+                                                            <span className="invoice-title">Descuento Cliente</span>
+                                                            <span className="invoice-value">{
+                                                                form.clientDiscount
+                                                            }</span>
+                                                        </div>
+                                                        )
+                                                    }
+                                               
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">IVA</span>
                                                     <span className="invoice-value">21%</span>

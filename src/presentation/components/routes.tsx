@@ -19,6 +19,7 @@ import CreateInvoice from '../container/invoice/create-container'
 import DetailInvoice from '../container/invoice/detail-container';
 import EditInstallation from '../container/installations/edit-container';
 import SearchView from '../container/search/view-container';
+import DetailPersonal from '../container/personal/detail-container';
 interface RoutesProps{
     name:string;
     relative_path:string;
@@ -198,6 +199,21 @@ const routes:RoutesProps[] =[
         order:1,
         
     },
+    //DetailPersonal
+    {
+        name:'Detalle de Personal',
+        relative_path:'personal/:id',
+        path:'/inicio/personal/:id',
+        element:<DetailPersonal title="Personal" breadcrumbs={['Detalle de Personal']} />,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+        visible_in_menu:false,
+        icon:'bx bxs-user',
+        order:1,
+        
+    },
     {
         name:'Nuevo Personal',
         relative_path:'personal/nuevo',
@@ -214,8 +230,8 @@ const routes:RoutesProps[] =[
     
     {
         name:'Trabajos',
-        relative_path:'trabajos',
-        path:'/inicio/trabajos',
+        relative_path:'trabajos/',
+        path:'/inicio/trabajos/',
         element:<ViewJobs title="Trabajos" breadcrumbs={["Listado de Trabajos"]}/>,
         permissions:[
             'view_analysis',
