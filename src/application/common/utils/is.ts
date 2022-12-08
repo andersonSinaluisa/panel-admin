@@ -18,7 +18,7 @@ function isJob(value: any): value is jobs_interface.Job {
 
 
 
-     return '_id' in value && 'idClient' in value && 'direction' in value && 'contactName' in value && 'contactPhone' in value && 'obsContact' in value && 'type' in value && 'priority' in value && 'interventionDate' in value && 'description' in value && 'material' in value && 'technical' in value && 'workReport' in value && 'note' in value && 'createdAt' in value && 'state' in value && '__v' in value;
+    return '_id' in value && 'idClient' in value && 'direction' in value && 'contactName' in value && 'contactPhone' in value && 'obsContact' in value && 'type' in value && 'priority' in value && 'interventionDate' in value && 'description' in value && 'material' in value && 'technical' in value && 'workReport' in value && 'note' in value && 'createdAt' in value && 'state' in value && '__v' in value;
 
 }
 
@@ -33,8 +33,7 @@ function isUser(value: any): value is user_interface.User {
 function isClient(value: any): value is clients_interface.Client {
 
 
-
-    return '_id' in value && 'identityCounter' in value && 'userId' in value && 'personType' in value && 'documentType' in value && 'document' in value && 'name' in value && 'lastname' in value && 'customerType' in value && 'roadType' in value && 'direction' in value && 'postalCode' in value && 'location' in value && 'province' in value && 'country' in value && 'phone' in value && 'mobilePhone' in value && 'contact' in value && 'contact2' in value && 'email' in value && 'webpage' in value && 'contactSchedule' in value && 'discount' in value && 'note' in value && 'installations' in value && 'createdAt' in value;
+    return '_id' in value && 'identityCounter' in value && 'name' in value && 'contact' in value && 'contact2' in value && 'contactSchedule' in value && 'country' in value && 'createdAt' in value && 'createdBy' in value && 'direction' in value && 'discount' in value && 'document' in value && 'documentType' in value && 'email' in value && 'firstLogin' in value && 'installations' in value && 'lastname' in value && 'location' in value && 'mobilePhone' in value && 'note' in value && 'personType' in value && 'phone' in value && 'postalCode' in value && 'province' in value && 'roadType' in value && 'userId' in value && 'webpage' in value ;
 }
 
 function isInstallation(value: any): value is installations_interface.Installation {
@@ -47,37 +46,37 @@ function isPersonal(value: any): value is personal_interface.Personal {
 
 
 
-    return '_id' in value && 'identityCounter' in value && 'userId' in value 
-    && 'documentType' in value && 'document' in value && 'name' in value 
-    && 'type' in value && 'direction' in value && 'postalCode' in value 
-    && 'location' in value && 'province' in value && 'country' in value 
-    && 'phone' in value && 'mobilePhone' in value 
-    && 'email' in value && 'contactSchedule' in value 
-    && 'note' in value && 'permissions' in value && 'dependents' in value 
-    && 'createdBy' in value && 'createdAt' in value && 'lastname1' in value 
-    && 'lastname2' in value;
+    return '_id' in value && 'identityCounter' in value && 'userId' in value
+        && 'documentType' in value && 'document' in value && 'name' in value
+        && 'type' in value && 'direction' in value && 'postalCode' in value
+        && 'location' in value && 'province' in value && 'country' in value
+        && 'phone' in value && 'mobilePhone' in value
+        && 'email' in value && 'contactSchedule' in value
+        && 'note' in value && 'permissions' in value && 'dependents' in value
+        && 'createdBy' in value && 'createdAt' in value && 'lastname1' in value
+        && 'lastname2' in value;
 }
 
 
 function isInvoice(value: any): value is invoice_interface.Invoice {
 
-    return  '_id' in value && 'identityCounter' in value && 'state' in value && 'billingDate' in value && 'clientID' in value && 'NumeroIdentificacionFiscal' in value && 'products' in value && 'workReport' in value && 'workDirection' in value && 'clientDiscount' in value && 'discount' in value && 'IVA' in value && 'impuestosVariables' in value && 'paymentMethod' in value && 'note' in value && 'createdBy' in value && 'createdAt' in value;
+    return '_id' in value && 'identityCounter' in value && 'state' in value && 'billingDate' in value && 'clientID' in value && 'NumeroIdentificacionFiscal' in value && 'products' in value && 'workReport' in value && 'workDirection' in value && 'clientDiscount' in value && 'discount' in value && 'IVA' in value && 'impuestosVariables' in value && 'paymentMethod' in value && 'note' in value && 'createdBy' in value && 'createdAt' in value;
 }
 
 function isProduct(value: any): value is products_interface.Product {
 
-   /* _id: string;
-    identityCounter: string;
-    name: string;
-    nroSerie: string;
-    description: string;
-    precioVentaPublico: number;
-    cataloged: boolean;
-    stock: number;
-    assigned: boolean;
-    assignedTo: string;
-    note: string;
-    createdAt: string;*/
+    /* _id: string;
+     identityCounter: string;
+     name: string;
+     nroSerie: string;
+     description: string;
+     precioVentaPublico: number;
+     cataloged: boolean;
+     stock: number;
+     assigned: boolean;
+     assignedTo: string;
+     note: string;
+     createdAt: string;*/
     return '_id' in value && 'identityCounter' in value && 'name' in value && 'nroSerie' in value && 'description' in value && 'precioVentaPublico' in value && 'cataloged' in value && 'stock' in value && 'assigned' in value && 'assignedTo' in value && 'note' in value && 'createdAt' in value;
 
 }

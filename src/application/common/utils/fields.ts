@@ -36,11 +36,7 @@ const getFieldsByType = (object: any): Field[] => {
             name: 'lastname',
             type: 'text',
             label: 'Apellido'
-        }, {
-            name: 'customerType',
-            type: 'text',
-            label: 'Tipo de cliente'
-        }, {
+        },{
             name: 'roadType',
             type: 'text',
             label:  'Tipo de vía'
@@ -60,10 +56,6 @@ const getFieldsByType = (object: any): Field[] => {
     if (isInvoice(object)) {
 
         fields.push({
-            name: 'address',
-            type: 'text',
-            label: 'Dirección'
-        }, {
             name: 'billingDate',
             type: 'text',
             label: 'Fecha de facturación'
@@ -75,6 +67,10 @@ const getFieldsByType = (object: any): Field[] => {
             name: 'NumeroIdentificacionFiscal',
             type: 'text',
             label: 'Numero Identificacion Fiscal'
+        },{
+            name:'paymentMethod',
+            type:'text',
+            label:'Método de pago'
         });
     }
 

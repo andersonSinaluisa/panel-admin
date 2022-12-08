@@ -143,7 +143,7 @@ export const CLIENTS = createModel<RootModel>()({
                         message:""
                     },
                     status:e.response.status??400,
-                    error:e.response.data.message??"Ocurrio un error"
+                    error:e.response.data?.message??"Ocurrio un error"
                 })
             }
         },
@@ -159,10 +159,37 @@ export const CLIENTS = createModel<RootModel>()({
                 dispatch.CLIENTS.onGetClientById({
                     data:{
                         status:0,
-                        message:""
+                        message:{
+                            personType: "",
+                            documentType: "",
+                            document: "",
+                            name: "",
+                            customerType: "",
+                            roadType: "",
+                            direction: "",
+                            postalCode: "",
+                            location: "",
+                            province: "",
+                            country: "",
+                            phone: "",
+                            mobilePhone: "",
+                            contact: "",
+                            contact2: "",
+                            email: "",
+                            webpage: "",
+                            contactSchedule: "",
+                            discount: "0",
+                            note: "",
+                            _id: "",
+                            createdAt: "",
+                            identityCounter: "",
+                            installations: [],
+                            userId: "",
+                            lastname: ""
+                        }
                     },
                     status:e.response.status??400,
-                    error:e.response.data.message??"Ocurrio un error"
+                    error:e.response.data?.message??"Ocurrio un error"
                 })
             }
         },
@@ -181,7 +208,7 @@ export const CLIENTS = createModel<RootModel>()({
                         message:""
                     },
                     status:e.response.status??400,
-                    error:e.response.data.message??"Ocurrio un error"
+                    error:e.response.data?.message??"Ocurrio un error"
                 })
             }
         },
@@ -197,7 +224,35 @@ export const CLIENTS = createModel<RootModel>()({
             dispatch.CLIENTS.onGetClientById({
                 data:{
                     status:0,
-                    message:null
+                    message:{
+                        personType: "",
+                        documentType: "",
+                        document: "",
+                        name: "",
+                        customerType: "",
+                        roadType: "",
+                        direction: "",
+                        postalCode: "",
+                        location: "",
+                        province: "",
+                        country: "",
+                        phone: "",
+                        mobilePhone: "",
+                        contact: "",
+                        contact2: "",
+                        email: "",
+                        webpage: "",
+                        contactSchedule: "",
+                        discount: "0",
+                        note: "",
+                        _id: "",
+                        createdAt: "",
+                        identityCounter: "",
+                        installations: [],
+                        userId: "",
+                        lastname: ""
+                    }
+                
                 },
                 status:0,
                 error:""

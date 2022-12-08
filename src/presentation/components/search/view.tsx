@@ -14,6 +14,7 @@ import { SearchViewProps } from "presentation/container/search/view-container";
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useNavigate, useParams } from "react-router-dom";
+import ReactSelect, { MultiValue } from 'react-select';
 
 type Columns = DataTableProps["columns"];
 
@@ -27,7 +28,7 @@ const SearchView = (props: SearchViewProps) => {
 
     const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
         message: [],
-        status:0,
+        status: 0,
     });
 
     const [data, setData] = useState<search_interface.SearchResponse>({
@@ -39,7 +40,10 @@ const SearchView = (props: SearchViewProps) => {
         status: 0,
     });
     const [actions, setActions] = useState<any[]>([])
-    const [filterFields, setFilterFields] = useState<string[]>([]);
+    const [filterFields, setFilterFields] = useState<{
+        field: string,
+        list: MultiValue<{ label: string, value: string }>
+    }[]>([]);
     let navigate = useNavigate();
 
     const [searchParams, setSearchParams] = useState<{
@@ -70,28 +74,33 @@ const SearchView = (props: SearchViewProps) => {
         setCopy(props.search);
     }, [props.search])
 
-    const handleSearch = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleSearch = (e: any) => {
         setSearchParams({
             ...searchParams,
-            search: e.target.value
+            search: e.target.name
         })
+        setFilterFields([]);
         props.onSearchAsync({
             headers: {
                 token: props.token
             },
             identityCounter: "",
-            type: e.target.value
+            type: e.target.name
         })
-        getActions(e.target.value);
+        getActions(e.target.name);
+
+
     }
 
 
     const getFields = (): Columns => {
 
         let datos = copy.message;
+        console.log(datos)
         let actions: Columns = [];
         if (datos.length > 0) {
             actions = getFieldsByType(datos[0])
+
         }
         return actions;
 
@@ -139,38 +148,39 @@ const SearchView = (props: SearchViewProps) => {
         setActions(actions_)
     }
 
-    const filterDaraByField = (field: string, value: string) => {
+    const filterDataByField = (field: string, value: MultiValue<{ label: string, value: string }>) => {
 
 
-        if (filterFields.filter((item) => item === value).length === 0) {
-            filterFields.push(value);
-            setFilterFields(filterFields);
-            let final = copy.message.filter((item_) => {
-                return filterFields.findIndex((item) => item === item_[field]) != -1
-            })
-            setData({
-                ...data,
-                message: final
+        if (filterFields.filter((item) => item.field === field).length === 0) {
+            filterFields.push({
+                field: field,
+                list: value
+            });
+            //setFilterFields(filterFields);
+
+
+        }
+        let final = copy.message;
+        if (value.length !== 0) {
+            final = copy.message.filter((item_) => {
+                return value.filter((item) => item.value === item_[field]).length > 0;
+
             })
         }
-    }
 
 
-    const removeFilter = (field: string, value: string) => {
-        let index = filterFields.findIndex((item) => item === value);
-        filterFields.splice(index, 1);
-        setFilterFields(filterFields);
-        let final = copy.message.filter((item_) => {
-            return filterFields.findIndex((item) => item === item_[field]) != -1
-        })
+
         setData({
             ...data,
             message: final
         })
     }
 
+
+
+
     const getLabelDisplay = (field: string, value: string) => {
-        if (field == "idClient" || field == "owner") {
+        if (field == "idClient" || field == "owner" || field == "clientID") {
             let client = clients.message.filter((item) => item._id == value);
             if (client.length > 0) {
                 return client[0].name + " " + client[0].lastname + " (" + client[0].document + ")";
@@ -179,6 +189,34 @@ const SearchView = (props: SearchViewProps) => {
         return value;
     }
 
+
+    const getValuesByField = (field: string) => {
+        let values: any[] = [];
+        copy.message.map((item) => {
+            if (values.findIndex((item_) => item_ === item[field]) == -1) {
+                values.push(item[field])
+            }
+        })
+        return values;
+    }
+
+    const removeFilter = (field: string,value:string) => {
+       let final = filterFields.filter((item) => item.field !== field);
+
+       if(final.length>0){
+            let clear_data:{
+                field: string,
+                list: MultiValue<{ label: string, value: string }>
+            }[] = [];
+            clear_data.push({
+                field:field,
+                list:final[0].list.filter((item)=>item.value!==value)
+            });
+            setFilterFields(clear_data);
+       }
+
+
+    }
 
     return (
         <div className="content-area-wrapper" style={{ top: '-90px' }}>
@@ -190,8 +228,9 @@ const SearchView = (props: SearchViewProps) => {
                     </div>
                     {/* sidebar list start */}
                     <div className="sidebar-menu-list">
-                        <Select
-                            options={[
+                        <label htmlFor="">Buscar por</label>
+                        {
+                            [
                                 { value: 'users', label: 'Usuarios' },
                                 { value: 'jobs', label: 'Trabajos' },
                                 { value: 'tasks', label: 'Tareas' },
@@ -200,83 +239,57 @@ const SearchView = (props: SearchViewProps) => {
                                 { value: 'installations', label: 'Instalaciones' },
                                 { value: 'personal', label: 'Personal' },
                                 { value: 'products', label: 'Productos' },
-                            ]}
-                            label="Buscar por..."
-                            onChange={handleSearch}
-                            name="search_by"
-                            selected={searchParams.search}
-
-                        />
-
-                        {
-                            searchParams.search !== "" &&
-                            <Select
-                                options={getFields().map((item) => {
-                                    return { value: item.name, label: item.label }
-                                })}
-
-                                label=""
-                                name="search_by"
-                                onChange={(e) => {
-                                    setFieldSearch(e.target.value)
-                                }}
-                                selected={fieldSearch}
-                            />
-
+                            ].map((item, index) => {
+                                return (
+                                    <Checkbox
+                                        key={index}
+                                        label={item.label}
+                                        name={item.value}
+                                        value={item.value}
+                                        onChange={handleSearch}
+                                        checked={searchParams.search == item.value}
+                                    />
+                                )
+                            })
 
                         }
-                        <div
-                            id="scrollableDiv"
-                            style={{
-                                overflow: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column-reverse',
-                            }}
-                        >
-                            <InfiniteScroll
-                                dataLength={copy.message.length} //This is important field to render the next data
-                                next={() => {
+                        <div style={{
+                            overflowY: 'scroll',
+                            objectFit: 'cover',
+                            height: 'inherit',
+                            marginBottom: '50px'
+                        }}>
+                            {
+                                searchParams.search !== "" &&
 
-                                }}
+                                getFields().map((item) => {
+                                    return (
+                                        <div className="mt-1">
+                                            <label htmlFor="">{item.label}
+                                                <i className="bx bx-filter-alt "></i>
+                                            </label>
+                                            <ReactSelect
+                                                key={item.name}
 
-                                hasMore={true}
-                                loader={<h4></h4>}
-                                endMessage={
-                                    <p style={{ textAlign: 'center' }}>
-                                        <b>Yay! You have seen it all</b>
-                                    </p>
-                                }
-                                // below props only if you need pull down functionality
-                                refreshFunction={
-                                    () => { }
-                                }
-                                pullDownToRefresh
-                                pullDownToRefreshThreshold={50}
-                            >
-                                {
-                                    fieldSearch !== "" &&
-                                    copy.message.map((item) => {
-
-                                        return (
-                                            <Checkbox
-                                                label={
-                                                    getLabelDisplay(fieldSearch,item[fieldSearch])
-                                                }
-                                                name={item[fieldSearch]}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
-                                                        filterDaraByField(fieldSearch, item[fieldSearch]);
-                                                    } else {
-                                                        removeFilter(fieldSearch, item[fieldSearch]);
+                                                options={getValuesByField(item.name).map((item_) => {
+                                                    return {
+                                                        value: item_,
+                                                        label: getLabelDisplay(item.name, item_)
                                                     }
+                                                })}
+                                                isMulti
+                                                placeholder="Selecciona"
+                                                onChange={(e) => {
+                                                    filterDataByField(item.name, e)
                                                 }
                                                 }
-                                                checked={filterFields.filter((item_) => item_ === item[fieldSearch]).length > 0}
                                             />
-                                        )
-                                    })
-                                }
-                            </InfiniteScroll>
+                                        </div>
+
+                                    )
+                                })
+
+                            }
                         </div>
                     </div>
                 </TodoMenu>
@@ -310,28 +323,31 @@ const SearchView = (props: SearchViewProps) => {
                                             <i className="bx bx-menu"></i>
                                         </div>
                                         <fieldset className="form-group position-relative has-icon-left m-0 flex-grow-1 ml-1 mr-1">
-                                            
-                                           {
-                                               filterFields.map((item)=>{
-                                                   return(
-                                                    <div className="chip chip-success">
-                                                    <div className="chip-body">
-                                                        <div className="chip-text">{item}</div>
-                                                    </div>
-                                                    <button type="button" className="close" aria-label="Close"
-                                                        onClick={()=>{
-                                                            removeFilter(fieldSearch,item)
-                                                        }}
-                                                    >
-                                                        <i className="bx bx-x text-white"></i>
-                                                    </button>
-    
-                                                </div>
-                                                   )
-                                               })
-                                           }
-                                         
-                                           
+
+                                            {/*
+                                                filterFields.map((item) => {
+                                                    return item.list.map((item_) => {
+                                                        return (
+
+                                                            <div className="chip chip-success">
+                                                                <div className="chip-body">
+                                                                    <div className="chip-text">{item_.label}</div>
+                                                                </div>
+                                                                <button type="button" className="close" aria-label="Close"
+                                                                    onClick={() => {
+                                                                        removeFilter(item.field, item_.value)
+                                                                    }}
+                                                                >
+                                                                    <i className="bx bx-x text-white"></i>
+                                                                </button>
+
+                                                            </div>
+                                                        )
+                                                    })
+                                                })
+                                            */}
+
+
                                         </fieldset>
                                     </div>
                                     <DataTable

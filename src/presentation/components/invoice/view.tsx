@@ -53,6 +53,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
       token: props.token
     })
     props.clear();
+    props.clearClients()
   }, [])
 
   React.useEffect(() => {
