@@ -1,4 +1,5 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { installations_interface } from "infrastructure/api/installation";
 import { jobs_interface } from "infrastructure/api/jobs";
 import { tasks_interface } from "infrastructure/api/tasks";
@@ -29,9 +30,8 @@ const DashboardView = (props: DashboardViewProps) => {
     });
 
     const [installations, setInstallations] = React.useState<installations_interface.GetInstallationsResponse>({
-        message: [],
-        status: 0,
-        code: ""
+        data: [],
+        ...initialMetaResponse
     });
 
 
@@ -40,9 +40,9 @@ const DashboardView = (props: DashboardViewProps) => {
 
     React.useEffect(() => {
         setCountTask(props.GetTasks.message.length)
-        setCountUsers(props.GetUsers.message.length)
+        setCountUsers(props.GetUsers.data.length)
         setCountJobs(props.GetJobs.message.length)
-        setCountInstallations(props.GetInstallations.message.length)
+        setCountInstallations(props.GetInstallations.data.length)
 
 
         setTask(props.GetTasks)
@@ -95,7 +95,7 @@ const DashboardView = (props: DashboardViewProps) => {
     const getInstallationsStats = () => {
         let stats = [];
 
-        let data = installations.message;
+        let data = installations.data;
 
         //filter by month and year
         let currentMonth = new Date().getMonth() + 1;
@@ -110,9 +110,9 @@ const DashboardView = (props: DashboardViewProps) => {
         //for of all day of month
         for (let i = 1; i <= new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate(); i++) {
             
-            currentMonthData.filter(x => new Date(x.createdAt).getDate() === i && x.state===1).length > 0 ? armados.push(currentMonthData.filter(x => new Date(x.createdAt).getDate() === i  && x.state===1).length) : armados.push(0);
-            currentMonthData.filter(x => new Date(x.createdAt).getDate() === i && x.state===2).length > 0 ? desarmadas.push(currentMonthData.filter(x => new Date(x.createdAt).getDate() === i  && x.state===2).length) : desarmadas.push(0);
-            currentMonthData.filter(x => new Date(x.createdAt).getDate() === i && x.state===6).length > 0 ? autocierre.push(currentMonthData.filter(x => new Date(x.createdAt).getDate() === i  && x.state===6).length) : autocierre.push(0);
+            currentMonthData.filter(x => new Date(x.createdAt).getDate() === i && x.state.id===1).length > 0 ? armados.push(currentMonthData.filter(x => new Date(x.createdAt).getDate() === i  && x.state.id===1).length) : armados.push(0);
+            currentMonthData.filter(x => new Date(x.createdAt).getDate() === i && x.state.id===2).length > 0 ? desarmadas.push(currentMonthData.filter(x => new Date(x.createdAt).getDate() === i  && x.state.id===2).length) : desarmadas.push(0);
+            currentMonthData.filter(x => new Date(x.createdAt).getDate() === i && x.state.id===6).length > 0 ? autocierre.push(currentMonthData.filter(x => new Date(x.createdAt).getDate() === i  && x.state.id===6).length) : autocierre.push(0);
 
         }
 
@@ -319,9 +319,9 @@ const DashboardView = (props: DashboardViewProps) => {
                                     </div>
                                     <div className="activity-progress flex-grow-1">
                                         <small className="text-muted d-inline-block mb-50">Instalaciones Armadas</small>
-                                        <small className="float-right">{installations.message.filter(x => x.state === 1).length}</small>
+                                        <small className="float-right">{installations.data.filter(x => x.state.id === 1).length}</small>
                                         <div className="progress progress-bar-success progress-sm">
-                                            <div className="progress-bar" style={{ width: getStats(installations.message.length, installations.message.filter(x => x.state === 1).length) + "%" }}></div>
+                                            <div className="progress-bar" style={{ width: getStats(installations.data.length, installations.data.filter(x => x.state.id === 1).length) + "%" }}></div>
                                         </div>
                                     </div>
                                 </div>

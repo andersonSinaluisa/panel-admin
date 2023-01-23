@@ -1,28 +1,29 @@
-export const URLAPI = "http://80.240.126.227:3000"
+export const URLAPI = "https://probulon-cloud.com.es/api/v1"
 export const WEBSOCKET = "ws://80.240.126.227:8080"
-export const LOGIN = "/users/login"
-export const GET_USERS = "/users"
+export const LOGIN = "/auth/login"
+export const LOGOUT = "/auth/logout"
+export const GET_USERS = "/auth/users"
 export const CREATE_USER = "/users/register"
 export const DELETE_USER = "/users/delete/"
 
 
 
 
-export const GET_CLIENTS = "/client"
-export const CREATE_CLIENT = "/client"
-export const UPDATE_CLIENT = "/client/update/"
-export const DELETE_CLIENT = "/client/delete/"
+export const GET_CLIENTS = "/core/clients"
+export const CREATE_CLIENT = "/core/clients"
+export const UPDATE_CLIENT = "/core/clients/"
+export const DELETE_CLIENT = "/core/clients"
 
-export const GET_INSTALLATIONS = "/installations/"
-export const CREATE_INSTALLATION = "/installations/"
-export const DELETE_INSTALLATION = "/installations/delete/"
+export const GET_INSTALLATIONS = "/core/installations"
+export const CREATE_INSTALLATION = "/core/installations"
+export const DELETE_INSTALLATION = "/core/installations"
 export const UPDATE_STATE_INSTALLATION = "/installations/state/"
 
 
-export const GET_PERSONAL = "/personal"
-export const CREATE_PERSONAL = "/personal"
-export const GET_BY_ID_PERSONAL = "/personal/"
-export const DELETE_PERSONAL = "/personal/delete/"
+export const GET_PERSONAL = "/core/staff"
+export const CREATE_PERSONAL = "/core/staff"
+export const GET_BY_ID_PERSONAL = "/core/staff"
+export const DELETE_PERSONAL = "/core/staff"
 
 
 export const GET_JOBS = "/jobs/";
@@ -39,7 +40,7 @@ export const DELETE_TASKS = "/tasks/delete/";
 
 
 
-export const GET_PRODUCTS = "/products/";
+export const GET_PRODUCTS = "/core/products";
 export const CREATE_CATALOGED_PRODUCTS = "/products/cataloged";
 export const CREATE_UNCATALOGED_PRODUCTS = "/products/uncataloged";
 export const UPDATE_PRODUCTS = "/products/update/";

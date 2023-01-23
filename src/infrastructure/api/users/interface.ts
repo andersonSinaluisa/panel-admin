@@ -1,32 +1,132 @@
+import { MetaResponse } from "../api-handler"
 
-interface User{
+interface User {
     
-        _id: string,
-        identityCounter: string,
-        email: string,
-        role: string,
-        personalData: string
-        createdAt: string
+    id: number,
+    createdAt: string,
+    updatedAt: string,
+    deletedAt: string,
+    passwordChanged: boolean,
+    emailVerifiedAt: string,
+    secondaryEmailVerifiedAt: string,
+    backupEmailVerifiedAt: string,
+    whatsappVerifiedAt: string,
+    nickName: string,
+    firstName: string,
+    secondName: string,
+    firstSurname: string,
+    secondSurname: string,
+    email: string,
+    secondaryEmail: string,
+    backupEmail: string,
+    documentValue: string,
+    province: string,
+    location: string,
+    direction: string,
+    postalCode: string,
+    landlinePhone: string,
+    mobilePhone: string,
+    firstContact: string,
+    secondContact: string,
+    contactSchedule: string,
+    discount: string,
+    tracing: string,
+    description: string,
+    state: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    availability: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    role: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    personType: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    documentType: {
+        id: number,
+        createdAt: string,
+
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    streetType: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    createdBy: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    country: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    },
+    secondaryEmailRelationship: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    } | null,
+    backupEmailRelationship: {
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        deletedAt: string,
+        name: string
+    } | null
+
     
 }
 
-interface GetUsers{
-    status: number,
-    message: User[]
+
+
+
+
+interface GetUsers extends MetaResponse {
+    data: User[],
     
 }
 
 
-interface CreateUserRequest{
+interface CreateUserRequest {
     email: string,
     password: string,
-    role: "personal"|"cliente",
+    role: "personal" | "cliente",
 }
 
 
-interface DeleteUserResponse{
-    status:number;
-    message:string;
+interface DeleteUserResponse {
+    status: number;
+    message: string;
 }
 
 

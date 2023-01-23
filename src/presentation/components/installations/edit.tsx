@@ -10,6 +10,8 @@ import Select from "infrastructure/components/select";
 import { clients_interface } from "infrastructure/api/clients";
 import SelectReact from 'react-select';
 import { EditInstallationProps } from "presentation/container/installations/edit-container";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
+import { initialInstallation } from "application/models/installations";
 
 const EditInstallation = (props: EditInstallationProps) => {
   useTitle(props.title);
@@ -27,26 +29,12 @@ const EditInstallation = (props: EditInstallationProps) => {
   const { id } = useParams();
 
   const [form, setForm] =
-    useState<installations_interface.Installation>({
-      name: "",
-      owner: "",
-      postalCode: "",
-      location: "",
-      province: "",
-      country: "",
-      note: "",
-      _id: "",
-      createdAt: "",
-      devices: "",
-      identityCounter: "",
-      state: 0,
-      users: []
-    });
+    useState<installations_interface.Installation>(initialInstallation);
 
 
   const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-    message: [],
-    status: 0
+    data: [],
+   ...initialMetaResponse
   })
 
   useEffect(() => {
@@ -87,14 +75,7 @@ const EditInstallation = (props: EditInstallationProps) => {
           <div className="col-lg-6">
 
             <label htmlFor="userId">Propietario</label>
-            <p>
-              {clients.message.map((client) => {
-                if (client._id === form.owner) {
-                  return <div>{client.name + " " + client.lastname} <br /> <Link to={"/inicio/clientes/" + client._id}>ver</Link></div>
-                }
-              })
-              }
-            </p>
+            
           </div>
           <div className="col-lg-6">
             <Input
@@ -132,7 +113,7 @@ const EditInstallation = (props: EditInstallationProps) => {
               type={"text"}
               enabled={true}
 
-              value={form.country}
+              value={""}
             />
           </div>
           <div className="col-lg-6">
@@ -142,7 +123,7 @@ const EditInstallation = (props: EditInstallationProps) => {
                 <textarea className="form-control" id="note"
                   name="note"
                   disabled={true}
-                  value={form.note}
+                  value={""}
                   rows={3}></textarea>
             </div>
           </div>

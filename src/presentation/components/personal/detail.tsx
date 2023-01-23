@@ -1,5 +1,6 @@
 import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initPersonal } from "application/models/personal";
 import { personal_interface } from "infrastructure/api/personal";
 import { user_interface } from "infrastructure/api/users";
 import Input from "infrastructure/components/input";
@@ -30,33 +31,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
     const [users, setUsers] = useState<user_interface.User[]>([])
 
 
-    const [form, setForm] = useState<personal_interface.Personal>({
-        contact: "",
-        contact2: "",
-        contactSchedule: "",
-        country: "",
-        createdBy: "",
-        direction: "",
-        document: "",
-        documentType: "",
-        email: "",
-        location: "",
-        mobilePhone: "",
-        name: "",
-        phone: "",
-        note: "",
-        postalCode: "",
-        province: "",
-        type: "",
-        userId: "",
-        lastname1: "",
-        _id: "",
-        createdAt: "",
-        dependents: 0,
-        identityCounter: "",
-        lastname2: "",
-        permissions: [],
-    });
+    const [form, setForm] = useState<personal_interface.Personal>(initPersonal);
 
 
 
@@ -69,14 +44,14 @@ const DetailPersonal = (props: DetailPersonalProps) => {
             type: "text",
             label: "Nombre",
             options: [],
-            value: form.name,
+            value: form.firstName,
         },
         {
             name: "lastname1",
             type: "text",
             label: "Apellido",
             options: [],
-            value: form.lastname1,
+            value: form.firstSurname,
         },
 
         {
@@ -87,7 +62,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
                 { label: 'DNI', value: 'DNI' },
                 { label: 'Otro', value: 'Otro' }
             ],
-            value: form.documentType,
+            value: form.documentType.name,
         },
 
         {
@@ -95,7 +70,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
             type: "text",
             label: "Documento",
             options: [],
-            value: form.document,
+            value: form.documentValue,
         },
 
         {
@@ -103,7 +78,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
             type: "text",
             label: "País",
             options: [],
-            value: form.country,
+            value: form.country.name,
         },
 
         {
@@ -140,15 +115,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
             type: "text",
             label: "Teléfono",
             options: [],
-            value: form.phone,
-        },
-        {
-            name: "note",
-
-            type: "text",
-            label: "Nota",
-            options: [],
-            value: form.note,
+            value: form.mobilePhone,
         },
         {
             name: "postalCode",
@@ -173,7 +140,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
                 { label: 'externo', value: 'externo' },
 
             ],
-            value: form.type,
+            value: "interno",
         },
 
         {
@@ -181,7 +148,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
             type: "text",
             label: "Contacto",
             options: [],
-            value: form.contact,
+            value: "",
         },
         {
 
@@ -189,7 +156,7 @@ const DetailPersonal = (props: DetailPersonalProps) => {
             type: "text",
             label: "Contacto 2",
             options: [],
-            value: form.contact2,
+            value: "",
         },
         {
             name: "contactSchedule",

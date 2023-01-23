@@ -14,6 +14,8 @@ const Login = () => {
     password: "",
   });
 
+  const [load, setLoad] = useState<boolean>(false);
+
   const [message, setMessage] = useState<ToastProps>({
     type: "info",
     visible: false,
@@ -22,7 +24,9 @@ const Login = () => {
   });
 
   useEffect(() => {
+
     if (error !== "") {
+
       setMessage({
         description: error,
         title: "Error",
@@ -30,7 +34,9 @@ const Login = () => {
         visible: true,
       });
     }
-  }, [error]);
+    setLoad(false);
+
+  }, [error, load]);
 
   const handleChange = (e: React.ChangeEvent) => {
     const target: EventTarget & HTMLInputElement = e.target as EventTarget &
@@ -45,7 +51,12 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (load){
+      return;
+    }
+    setLoad(true);
     onLogin(data);
+
   };
 
   return (
@@ -53,15 +64,15 @@ const Login = () => {
       <div className="col-xl-12 col-12">
         <div className="bg-authentication mb-0">
           <div className="row m-0">
-            <div className="col-md-12 col-lg-6 col-12 px-md-5 mt-5">
+            <div className="col-md-12  col-lg-6 col-12 px-md-5 mt-5">
               <h4 className="text-center mb-2"><img className="logo" src={window.location.origin + "/assets/app-assets/images/logo/logo.png"}
-                            style={{
-                                WebkitFilter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
-                                filter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
-                                width: "150px",
-                                height: "50px"
-                                
-                            }} /></h4>
+                style={{
+                  WebkitFilter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
+                  filter: "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white)",
+                  width: "150px",
+                  height: "50px"
+
+                }} /></h4>
 
               <div className="card disable-rounded-right mb-0 p-2  d-flex justify-content-center m-md-3">
                 <div className="card-content">
@@ -97,19 +108,32 @@ const Login = () => {
                           </Link>
                         </div>
                       </div>
-                      <button
-                        type="submit"
-                        className="btn btn-primary glow w-100 position-relative"
-                      >
-                        Ingresar
-                        <i
-                          id="icon-arrow"
-                          className="bx bx-right-arrow-alt"
-                        ></i>
-                      </button>
+                      {
+                        load ? (
+                          <button
+                            type="button"
+                            className="btn btn-primary glow w-100 position-relative"
+                            disabled
+                          >
+                            <i className="bx bx-loader bx-spin white align-middle mr-50"></i>
+                            <span className="align-middle">Ingresando...</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="submit"
+                            className="btn btn-primary glow w-100 position-relative"
+                          >
+                            Ingresar
+                            <i
+                              id="icon-arrow"
+                              className="bx bx-right-arrow-alt"
+                            ></i>
+                          </button>)
+                      }
+
                     </form>
                     <hr />
-                    
+
                   </div>
                 </div>
               </div>
@@ -118,7 +142,7 @@ const Login = () => {
               <div className="card-content">
                 <img
                   className="img-fluid"
-                  src={window.location.origin+"/assets/app-assets/images/pages/login/undraw_presentation_re_sxof.svg"}
+                  src={window.location.origin + "/assets/app-assets/images/pages/login/undraw_presentation_re_sxof.svg"}
                   alt="branding logo"
                 />
               </div>

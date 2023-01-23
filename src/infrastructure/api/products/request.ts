@@ -5,7 +5,9 @@ import { CatalogProductRequest, CreateProductCatalogRequest, CreateProductUncata
 
 
 const GetProducts = (props:APIHANDLER.HeaderProps)=>{
-    return APIHANDLER.get(Globals.GET_PRODUCTS,{
+    let perPage = props.perPage || 15;
+    let page = props.page || 1;
+    return APIHANDLER.get(Globals.GET_PRODUCTS+"?perPage="+perPage+"&page="+page,{
         headers:{
             Authorization:"Bearer "+props.token
         }

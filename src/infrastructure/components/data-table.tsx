@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as Globals from '../../application/common'
 import { ExportToCsv } from 'export-to-csv';
+import { initialMetaResponse, MetaResponse } from "infrastructure/api/api-handler";
 
 
 
@@ -11,7 +12,7 @@ export interface DataTableProps {
   columns: Array<{
     name: string;
     label: string;
-    type: 'date' | 'boolean' | 'avatar' | 'array' | 'text' | 'object' | 'render'| string,
+    type: 'date' | 'boolean' | 'avatar' | 'array' | 'text' | 'object' | 'render' | string,
     field_show?: string;
     render?: (value: any) => any;
   }>;
@@ -22,6 +23,24 @@ export interface DataTableProps {
     color: string;
     onClick: Function;
   }>
+  isLoading?: boolean;
+
+  meta?: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+    links: {
+      url: string;
+      label: string;
+      active: boolean;
+    }[]
+  },
+  error?: string;
+  onChangePage?: (page: number) => void;
 
 }
 
@@ -36,6 +55,7 @@ export interface DataTableProps {
  * @param {int} pageLimit - Número de páginas.
  * @param {array} columns - Array de columnas de la tabla.
  * @param {array} actions - Array de acciones de la tabla.
+ * @param {object} meta - Objeto con la información de la paginación.
  * @return {object} Un componente que representa una tabla.
  * @example
  * <DataTable
@@ -58,39 +78,28 @@ export interface DataTableProps {
  *      />
  */
 const DataTable = (props: DataTableProps) => {
-  const { actions, columns, dataLimit, dataTable, pageLimit } = props;
+
+  const Meta_ = props.meta ? props.meta : initialMetaResponse.meta
+  
+  const [load,setLoad] = useState(true)
+  const [error,setError] = useState(props.error?props.error:"")
+  const { actions, columns, dataTable} = props;
   const [data_table, setDataTable] = useState<Array<Object>>([]);
-  const [pages] = useState(Math.round(data_table.length / dataLimit));
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pages] = useState(
+    Math.round(Meta_.total / Meta_.per_page)
+  );
+  const [currentPage, setCurrentPage] = useState(Meta_.current_page);
 
-  function goToNextPage() {
-    setCurrentPage((page) => page + 1);
-  }
 
-  function goToPreviousPage() {
-    if (currentPage > 1) {
-      setCurrentPage((page) => page - 1);
-    } else {
-      setCurrentPage(pages);
-    }
-  }
 
-  function changePage(event: React.MouseEvent) {
-    const target: HTMLLIElement = event.target as HTMLLIElement;
-    const pageNumber = Number(target.textContent);
-    setCurrentPage(pageNumber);
-  }
-
-  const getPaginatedData = () => {
-    const startIndex = currentPage * dataLimit - dataLimit;
-    const endIndex = startIndex + dataLimit;
-    return data_table.slice(startIndex, endIndex);
-  };
-
-  const getPaginationGroup = () => {
-    let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-    return new Array(pageLimit).fill("").map((_, idx) => start + idx + 1);
-  };
+  useEffect(() => {
+    console.log("useEffect",props.isLoading)
+    setLoad(props.isLoading!==undefined?props.isLoading:true)
+  }, [props.isLoading])
+ 
+  useEffect(() => {
+    setError(props.error?props.error:"")
+  }, [props.error])
 
   useEffect(() => {
     setDataTable(dataTable);
@@ -98,6 +107,9 @@ const DataTable = (props: DataTableProps) => {
     if (typeof dataTable === "object") {
       setDataTable(Object.values(dataTable));
     }
+
+    
+
   }, [dataTable]);
 
   const onSearch = (event: React.ChangeEvent) => {
@@ -116,49 +128,49 @@ const DataTable = (props: DataTableProps) => {
 
   return (
     <div className="table-responsive">
-     
+
       <div className="">
-      <nav aria-label="row position-relative ">
-        {/* search input*/}
-        <div className="col-md-12 mt-3 d-flex">
-          <div className="form-group col-5">
-            <input
-              type="text"
-              className="form-control"
-              id="search"
-              placeholder="Buscar..."
-              onChange={onSearch}
-            />
-          </div>
-          <div className="col-6">
-          <button
-            className="btn btn-primary "
-            onClick={() => {
-              const options = {
-                fieldSeparator: ',',
-                quoteStrings: '"',
-                decimalSeparator: '.',
-                showLabels: true,
-                showTitle: true,
-                title: 'Reporte',
-                useTextFile: false,
-                useBom: true,
-                useKeysAsHeaders: true,
-                filename: 'reporte',
-                headers: columns.map((column) => column.label),
-              };
-              const csvExporter = new ExportToCsv(options);
-              csvExporter.generateCsv(data_table);
-            }}
-          >
-            Exportar <i className="bx bxs-download"></i>
-          </button>
-          </div>
-         
+        <nav aria-label="row position-relative ">
+          {/* search input*/}
+          <div className="col-md-12 mt-3 d-flex">
+            <div className="form-group col-5">
+              <input
+                type="text"
+                className="form-control"
+                id="search"
+                placeholder="Buscar..."
+                onChange={onSearch}
+              />
+            </div>
+            <div className="col-6">
+              <button
+                className="btn btn-primary "
+                onClick={() => {
+                  const options = {
+                    fieldSeparator: ',',
+                    quoteStrings: '"',
+                    decimalSeparator: '.',
+                    showLabels: true,
+                    showTitle: true,
+                    title: 'Reporte',
+                    useTextFile: false,
+                    useBom: true,
+                    useKeysAsHeaders: true,
+                    filename: 'reporte',
+                    headers: columns.map((column) => column.label),
+                  };
+                  const csvExporter = new ExportToCsv(options);
+                  csvExporter.generateCsv(data_table);
+                }}
+              >
+                Exportar <i className="bx bxs-download"></i>
+              </button>
+            </div>
 
 
-        </div>
-      </nav>
+
+          </div>
+        </nav>
         <table className="table table-bordered bg-white" id="table">
           <thead>
             <tr>
@@ -170,7 +182,7 @@ const DataTable = (props: DataTableProps) => {
             </tr>
           </thead>
           <tbody>
-            {getPaginatedData().map((item: any, index) => (
+            {data_table.map((item: any, index) => (
               <tr key={index}>
                 {columns.map((column, index) => (
                   <td key={index}>
@@ -199,8 +211,8 @@ const DataTable = (props: DataTableProps) => {
                     ) : column.type === "array" ? (
                       item[column.name].map((item: any, index: number) => (
                         <>
-                          
-                            {column.field_show ? " [" +item[column.field_show] + " ]" : JSON.stringify(item) + " |"}
+
+                          {column.field_show ? " [" + item[column.field_show] + " ]" : JSON.stringify(item) + " |"}
                         </>
                       ))
                     ) : column.type === "text" ? (
@@ -211,9 +223,9 @@ const DataTable = (props: DataTableProps) => {
                         item[column.name][column.field_show]
 
                         : "" : ""
-                    ) : column.type==='render'? (
-                           column.render?column.render(item[column.name]):item[column.name]
-                    ): (
+                    ) : column.type === 'render' ? (
+                      column.render ? column.render(item[column.name]) : item[column.name]
+                    ) : (
                       item[column.name]
                     )}
                   </td>
@@ -230,40 +242,56 @@ const DataTable = (props: DataTableProps) => {
                   </td> : null}
               </tr>
             ))}
+            {
+              load && error!="" ? <tr>
+                <td colSpan={columns.length + 1} className="text-center">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span> 
+                  </div>
+                </td>
+              </tr> : null
+              
+            }
+            {
+              error!=="" ? <tr>
+                <td colSpan={columns.length + 1} className="text-center">
+                  <div className="alert alert-danger" role="alert">
+                    {error}
+                  </div>
+                </td>
+              </tr> : null
+            }
           </tbody>
         </table>
       </div>
       <div className="col-md-6">
-        {getPaginatedData().length + " de " + data_table.length}
+        {Meta_.to + " de " + Meta_.total}
       </div>
 
       <ul className="pagination pagination-lg col-12 justify-content-end">
-        {/* show page numbers */}
-        <li
-          className={`page-item  ${currentPage === 1 ? "active" : null} `}
-          onClick={goToPreviousPage}
-        >
-          <a className="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        {getPaginationGroup().map((item, index) => (
-          <li
-            onClick={changePage}
-            className={`page-item  ${currentPage === item ? "active" : null} `}
-            key={index}
-          >
-            <span className="page-link">{item}</span>
-          </li>
-        ))}
-        <li
-          className={`page-item  ${currentPage === pages ? "active" : null} `}
-          onClick={goToNextPage}
-        >
-          <a className="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
+        {
+          Meta_.links.map(link => {
+            return (
+              <li
+                className={`page-item  ${link.active ? "active" : null} `}
+                onClick={() => { 
+                  if (link.url!=null){
+                    let page:any = link.url.split("page=")[1];
+                    page = parseInt(page);
+                    if(props.onChangePage){
+                      props.onChangePage(page);
+                    }
+                  }
+                }}
+                key={link.label}
+              >
+                <a className="page-link" href="#">
+                  {link.label.replace('&laquo;', '<<').replace('&raquo;', '>>').replace("Previous", "").replace("Next", "")}
+                </a>
+              </li>
+            )
+          })
+        }
       </ul>
     </div>
   );

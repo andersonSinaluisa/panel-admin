@@ -3,6 +3,7 @@ import { ResponseServer } from "infrastructure/api/api-handler";
 import { clients_interface, clients_request } from "infrastructure/api/clients";
 import { RootModel } from "..";
 import * as APIHANDLER from 'infrastructure/api/api-handler';
+import { ClientUpdateRequest } from "infrastructure/api/clients/interface";
 
 
 interface GetClientsStateProps extends ResponseServer{
@@ -39,12 +40,160 @@ export interface DeleteClientStateProps extends ResponseServer{
 }
 
 
+export const initialClient = {
+
+    id: 0,
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: "",
+    passwordChanged: false,
+    emailVerifiedAt: "",
+    secondaryEmailVerifiedAt: "",
+    backupEmailVerifiedAt: "",
+    whatsappVerifiedAt: "",
+    nickName: "",
+    firstName: "",
+    secondName: "",
+    firstSurname: "",
+    secondSurname: "",
+    email: "",
+    secondaryEmail: "",
+    backupEmail: "",
+    documentValue: "",
+    province: "",
+    location: "",
+    direction: "",
+    postalCode: "",
+    landlinePhone: "",
+    mobilePhone: "",
+    firstContact: "",
+    secondContact: "",
+    contactSchedule: "",
+    discount: "",
+    tracing: "",
+    description: "",
+
+    state: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    availability: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    role: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    personType: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    createdBy: null,
+    documentType: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    streetType: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    country: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    secondaryEmailRelationship: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    backupEmailRelationship: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        name: "",
+    },
+    whatsapp: "",
+    whatsappVerified: false,
+    emailVerified: false,
+    secondaryEmailVerified: false,
+    backupEmailVerified: false,
+    password: "",
+    passwordConfirmation: "",
+    rememberToken: "",
+    emailVerificationToken: "",
+    
+    
+}
+
+
+export const initialClientUpdate:ClientUpdateRequest ={
+    name:"",
+    secondaryEmail:"",
+    backupEmail:"",
+    mobilePhone:"",
+    documentValue:"",
+    province:"",
+    location:"",
+    direction:"",
+    postalCode:"",
+    landlinePhone:"",
+    firstContact:"",
+    secondContact:"",
+    contactSchedule:"",
+    discount:"",
+    tracing:"",
+    description:"",
+    personType:{
+        id:0
+    },
+    documentType:{
+        id:0
+    },
+    streetType:{
+        id:0
+    },
+    country:{
+        id:0
+    },
+    secondaryEmailRelationship:{
+        id:0
+    },
+    backupEmailRelationship:{
+        id:0
+    }
+}
+
 export const CLIENTS = createModel<RootModel>()({
     state:{
         GetClients:{
             data:{
-                status:0,
-                message:[]
+                data:[],
+                ...APIHANDLER.initialMetaResponse
             },
             status:0,
             error:""
@@ -98,8 +247,8 @@ export const CLIENTS = createModel<RootModel>()({
             }catch(e:any){
                 dispatch.CLIENTS.onGetClients({
                     data:{
-                        status:0,
-                        message:[]
+                        data:[],
+                        ...APIHANDLER.initialMetaResponse
                     },
                     status:e.response.status??400,
                     error:e.response.data.message??"Ocurrio un error"
@@ -128,7 +277,7 @@ export const CLIENTS = createModel<RootModel>()({
             }     
 
         },
-        async onUpdateClientAsync(props:{headers:APIHANDLER.HeaderProps,body:clients_interface.ClientUpdateRequest,id:string}){
+        async onUpdateClientAsync(props:{headers:APIHANDLER.HeaderProps,body:clients_interface.ClientUpdateRequest,id:number}){
             try{
                 const res = await clients_request.UpdateClient(props).toPromise()
                 dispatch.CLIENTS.onUpdateClient({
@@ -193,7 +342,7 @@ export const CLIENTS = createModel<RootModel>()({
                 })
             }
         },
-        async onDeleteClientAsync(props:{headers:APIHANDLER.HeaderProps,id:string}){
+        async onDeleteClientAsync(props:{headers:APIHANDLER.HeaderProps,id:number}){
             try{
                 const res = await clients_request.DeleteClient(props).toPromise()
                 dispatch.CLIENTS.onDeleteClient({

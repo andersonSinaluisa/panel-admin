@@ -1,45 +1,109 @@
+import { MetaResponse } from "../api-handler";
+
 interface Client{
-    _id: string;
-    identityCounter: string;
-    userId: string;
-    personType: string;
-    documentType: string;
-    document: string;
-    name: string;
-    lastname:string;
-    customerType:string;
-    roadType: string;
+
+
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+    passwordChanged: boolean;
+    emailVerifiedAt: string;
+    secondaryEmailVerifiedAt: string;
+    backupEmailVerifiedAt: string;
+    whatsappVerifiedAt: string;
+    nickName: string;
+    firstName: string;
+    secondName: string;
+    firstSurname: string;
+    secondSurname: string;
+    email: string;
+    secondaryEmail: string;
+    backupEmail: string;
+    documentValue: string;
+    province: string;
+    location: string;
     direction: string;
     postalCode: string;
-    location: string;
-    province: string;
-    country: string;
-    phone: string;
+    landlinePhone: string;
     mobilePhone: string;
-    contact: string;
-    contact2: string;
-    email: string;
-    webpage: string;
+    firstContact: string;
+    secondContact: string;
     contactSchedule: string;
     discount: string;
-    note: string;
-    installations: Array<{
-        id: string;
-        role: string;
-        permissions: Array<
-            {
-                id: string;
-                name: string;
-            }
-            >;
-    }>;
-    createdAt: string;
+    tracing: string;
+    description: string;
+        
+    state: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    availability: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    role: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    personType: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    createdBy: any;
+    documentType: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    streetType: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+
+    };
+    country: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    secondaryEmailRelationship: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
+    backupEmailRelationship: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string;
+        name: string;
+    };
 }
 
 
-interface GetClientsResponse{
-    status: number,
-    message: Client[]
+interface GetClientsResponse extends MetaResponse{
+    data: Client[]
 }
 
 interface CreateClientRequest{
@@ -69,27 +133,43 @@ interface CreateClientRequest{
 
 
 interface ClientUpdateRequest{
-    personType: string;
-    documentType: string;
-    document:string;
     name: string;
-    customerType:string;
-    roadType: string;
-    lastname:string;
+    secondaryEmail: string;
+    backupEmail: string;
+    mobilePhone: string;
+    documentValue: string;
+    province: string;
+    location: string;
     direction: string;
     postalCode: string;
-    location: string;
-    province: string;
-    country: string;
-    phone: string;
-    mobilePhone: string;
-    contact: string;
-    contact2: string;
-    email: string;
-    webpage: string;
+    landlinePhone: string;
+    firstContact: string;
+    secondContact: string;
     contactSchedule: string;
     discount: string;
-    note: string;
+    tracing: string;
+    description: string;
+    personType: {
+        id: number;
+    };
+    documentType: {
+        id: number;
+    };
+    streetType: {
+        id: number;
+    };
+    country: {
+        id: number;
+    };
+    secondaryEmailRelationship: {
+        id: number;
+    };
+    backupEmailRelationship: {
+        id: number;
+    };
+
+
+    
 }
 
 

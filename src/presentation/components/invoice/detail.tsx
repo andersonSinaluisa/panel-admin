@@ -1,3 +1,5 @@
+import { initialClient } from "application/models/clients";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
 import { products_interface } from "infrastructure/api/products";
@@ -36,39 +38,11 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
         status: 0
     });
     const [products, setProducts] = useState<products_interface.GetProductsResponse>({
-        message: [],
-        status: 0,
-        code: 0
+        data: [],
+        ...initialMetaResponse
     });
 
-    const [client, setClient] = React.useState<clients_interface.Client>({
-        personType: "",
-        documentType: "",
-        document: "",
-        name: "",
-        customerType: "",
-        roadType: "",
-        direction: "",
-        postalCode: "",
-        location: "",
-        province: "",
-        country: "",
-        phone: "",
-        mobilePhone: "",
-        contact: "",
-        contact2: "",
-        email: "",
-        webpage: "",
-        contactSchedule: "",
-        discount: "0",
-        note: "",
-        _id: "",
-        createdAt: "",
-        identityCounter: "",
-        installations: [],
-        userId: "",
-        lastname: ""
-    });
+    const [client, setClient] = React.useState<clients_interface.Client>(initialClient);
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
         visible: false,
@@ -151,7 +125,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="Código Cliente"
                                             type="text"
                                             name="code"
-                                            value={client.identityCounter}
+                                            value={client.documentValue}
                                             enabled={true}
 
                                         />
@@ -171,7 +145,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="Cliente"
                                             type="text"
                                             name="direction"
-                                            value={client.name+" "+client.lastname}
+                                            value={client.firstName+" "+client.secondName}
                                             enabled={true}
                                         />
                                         <Input
@@ -200,7 +174,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="C.I.F. / N.I.F."
                                             type="text"
                                             name="direction"
-                                            value={client.document}
+                                            value={client.documentValue}
                                             enabled={true}
                                         />
                                     </div>
@@ -240,9 +214,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                                                             </p>
                                                                         </div>
                                                                         <div className="col-md-1 col-12  form-group mt-2">
-                                                                            {products.message.find((product) => product._id === item.id) && (
-                                                                                products.message.find((product) => product._id === item.id)?.identityCounter
-                                                                            )}
+                                                                            00000
                                                                         </div>
 
                                                                         <div className="col-md-2 col-12 form-group mt-2">
@@ -251,9 +223,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                                                             </p>
                                                                         </div>
                                                                         <div className="col-md-5 col-12 form-group mt-2">
-                                                                            {products.message.find((product) => product._id === item.id) && (
-                                                                                products.message.find((product) => product._id === item.id)?.description
-                                                                            )}
+                                                                           DESCRIPCION
                                                                         </div>
 
                                                                         <div className="col-md-1 col-12 form-group mt-2">

@@ -7,7 +7,7 @@ import { user_interface, user_request } from "infrastructure/api/users";
 import { io } from "socket.io-client";
 
 export interface SessionStateProps extends ResponseServer{
-    data:auth_interfaces.LoginResponse;
+    data:auth_interfaces.LoginResponse|null;
 }
 
 export interface UserStateProps extends ResponseServer{
@@ -18,35 +18,107 @@ export interface UserStateProps extends ResponseServer{
 }
 
 
+
+export const initLogin = {
+
+            data:{
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: "",
+        passwordChanged: false,
+        emailVerifiedAt: "",
+        secondaryEmailVerifiedAt: "",
+        backupEmailVerifiedAt: "",
+        nickName: "",
+        firstName: "",
+
+        secondName: "",
+        firstSurname: "",
+        secondSurname: "",
+        email: "",
+        secondaryEmail: "",
+        backupEmail: "",
+        documentValue: "",
+        province: "",
+        location: "",
+        direction: "",
+        postalCode: "",
+        landlinePhone: "",
+        mobilePhone: "",
+        firstContact: "",
+        secondContact: "",
+        contactSchedule: "",
+        discount: "",
+        tracing: "",
+        description: "",
+        state: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: "",
+            name: ""
+
+                },
+        availability: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: "",
+            name: ""
+            
+            },
+        role: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: "",
+            name: ""
+            
+                },
+        personType: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: "",
+            name: ""
+            },
+        createdBy: "",
+        documentType: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: "",
+            name: ""
+        },
+        streetType: "",
+        country: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: "",
+            name: ""
+        },
+        secondaryEmailRelationship: "",
+        backupEmailRelationship: ""
+
+      },
+      token:"",
+      message:{
+        summary:"",
+        detail:"",
+            status:0
+      }
+}
+
 export const AUTH = createModel<RootModel>()({
     state:{
         Session:{
-            data:{
-                message:{
-                    idUser:"",
-                    token:""
-                },
-                status:0
-            },
+            data:initLogin,
             status:0,
             error:""
             
-        } as SessionStateProps,
-        UserData:{
-            data:{
-                message:{
-                    _id:"",
-                    createdAt:"",
-                    email:"",
-                    identityCounter:"",
-                    personalData:"",
-                    role:"",
-                },
-                status:0
-            },
-            error:"",
-            status:0
-        } as UserStateProps
+        } as SessionStateProps
     },
     effects:(dispatch:any)=>({
 
@@ -59,31 +131,33 @@ export const AUTH = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.AUTH.onLogin({
-                    data:{
-                        message:{
-                            idUser:0,
-                            token:""
-                        },
-                        status:0
-                    },
+                    data:initLogin,
                     status:e.response?e.response.status:400,
-                    error:e.response?e.response.data.message:"Ocurrió un error"
+                    error:error
                 })
             }
         },
-        clearSession(){
+        async clearSession(props:HeaderProps){
+
+            try{
+                const res = await auth_request.Logout(props).toPromise()
             dispatch.AUTH.onLogin({
-                data:{
-                    message:{
-                        idUser:0,
-                        token:""
-                    },
-                    status:0
-                },
+                    data:initLogin,
                 status:0,
                 error:""
             })
+            }catch(e:any){
+                
+                dispatch.AUTH.onLogin({
+                    data:initLogin,
+                    status:0,
+                    error:e.response?e.response.data?.message?.summary:"Ocurrió un error al cerrar sesión"
+                })
+            }
+            
         },
         //connect to websocket
         connectToWebSocket(){
@@ -94,37 +168,6 @@ export const AUTH = createModel<RootModel>()({
             
             return socket;
         },
-        async onGetUserAsync(props:{
-            headers:HeaderProps,
-            id:string
-        }){
-
-            try{
-                const res = await user_request.GetUser(props).toPromise();
-                dispatch.AUTH.onGetUser({
-                    data:res.data,
-                    status:res.status,
-                    error:""
-                })
-            }catch(e:any){
-                dispatch.AUTH.onGetUser({
-                    data:{
-                        message:{
-                            _id:"",
-                            identityCounter:"",
-                            email:"",
-                            role:"",
-                            personalData:"",
-                            createdAt:""
-                        },
-                        status:0
-                    },
-                    status:e.response?e.response.status:400,
-                    error:e.response?e.response.data.message:"Ocurrió un error"
-                })
-            }
-        },
-
         
 
 
@@ -133,8 +176,6 @@ export const AUTH = createModel<RootModel>()({
         onLogin(state:any,payload:any){
             return {...state,Session:payload}
         },
-        onGetUser(state:any,payload:any){
-            return {...state,UserData:payload}
-        }
+       
     }
 })

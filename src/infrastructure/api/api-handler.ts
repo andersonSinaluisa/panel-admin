@@ -91,6 +91,55 @@ const del = (url: string, options?: any, data?: any) => {
 
 interface HeaderProps{
   token:string;
+  perPage?:number;
+  page?:number;
+}
+
+interface MetaResponse{
+
+  links:{
+    url:string;
+    label:string;
+    active:boolean;
+  },
+  meta:{
+    current_page:number;
+    from:number;
+    last_page:number;
+    path:string;
+    per_page:number;
+    to:number;
+    total:number;
+    links:{
+      url:string;
+      label:string;
+      active:boolean;
+    }[]
+  },
+  message:{
+    status:number;
+  }
+}
+
+const initialMetaResponse:MetaResponse={
+  links:{
+    url:'',
+    label:'',
+    active:false,
+  },
+  meta:{
+    current_page:1,
+    from:0,
+    last_page:0,
+    path:'',
+    per_page:0,
+    to:0,
+    total:0,
+    links:[]
+  },
+  message:{
+    status:0,
+  }
 }
 
  interface ResponseServer{
@@ -105,6 +154,8 @@ export  {
   del,
   patch,
   request,
+  initialMetaResponse,
   type ResponseServer,
-  type HeaderProps
+  type HeaderProps,
+  type MetaResponse
 }

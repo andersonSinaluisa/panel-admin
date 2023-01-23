@@ -1,5 +1,7 @@
 import { getStatusInstallation ,status} from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initialInstallation } from "application/models/installations";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { installations_interface } from "infrastructure/api/installation";
 import DataTable from "infrastructure/components/data-table";
@@ -19,9 +21,8 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
     let navigate = useNavigate();
   
     const [installations, setInstallations] = useState<installations_interface.GetInstallationsResponse>({
-      message: [],
-      status: 0,
-      code:""
+      data: [],
+      ...initialMetaResponse
     });
 
     const [state,setState] = useState<installations_interface.UpdateStateInstallationsRequest>({
@@ -29,8 +30,8 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
     })
   
     const [clients,setClients] = useState<clients_interface.GetClientsResponse>({
-      message: [],
-      status: 0,
+      data: [],
+      ...initialMetaResponse
       
     });
     
@@ -44,21 +45,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
   
     const [showModalStatus,SetShowModalStatus] = useState<boolean>(false)
 
-    const [installation,setInstallation] = useState<installations_interface.Installation>({
-      _id:"",
-      name:"",
-      owner:"",
-      postalCode:"",
-      location:"",
-      province:"",
-      country:"",
-      createdAt:"",
-      devices:"",
-      state:0,
-      note:"",
-      identityCounter:"",
-      users:[]
-    })
+    const [installation,setInstallation] = useState<installations_interface.Installation>(initialInstallation)
 
 
     useEffect(() => {
@@ -165,7 +152,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
               setInstallation(item)
           },
         },*/{
-          color: "primary",
+          color: "warning",
           icon: "bx bx-edit",
           label: "Editar",
           name: "edit",
@@ -218,27 +205,11 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
           <div className="table-responsive ">
             <DataTable
               key={"table-group"}
-              dataTable={installations.message}
+              dataTable={installations.data}
               actions={getActions()}
               columns={[
                
-                {
-                  name: "owner",
-                  label: "Propietario",
-                  type: "render",
-                  render(value) {
-                    return (
-                      <div>
-                        {clients.message.map((client) => {
-                          if (client._id === value) {
-                            return client.name+ " " + client.lastname+" - "+client.document;
-                          }
-                        })}
-                      </div>
-                    );
-                  },
-                  
-                },
+                
                 {
                   name: "postalCode",
                   label: "Codigo postal",
@@ -254,45 +225,16 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
                     label: "Provincia",
                     type: "text",
                 },
-                {
-                    name: "country",
-                    label: "País",
-                    type: "text",
-                },
-                {
-                    name:'note',
-                    label:'Nota',
-                    type:'render',
-                    render:(item:any)=>{
-                        //split text with max length 20
-                        if (item.length > 20) {
-                             //see more button
-                            return (
-                                <div>{item.substring(0, 20)}...
-                                    <button className="btn btn-link" onClick={() => {}}>
-                                        Ver más
-                                    </button>
-                                </div>
-                            );
-                           
-                        } else {
-                            return item;
-                        }
-                       
-                    }
-                },
-                {
-                    name:'state',
-                    label:'Estado',
-                    type:'render',
-                    render:(item)=>{
-                        let {color,label} = getStatusInstallation(item);
-                        return <span className={`badge badge-pill badge-${color}`}>{label}</span>
-                    }
-                }
               ]}
-              dataLimit={5}
+              dataLimit={15}
               pageLimit={2}
+              meta={installations.meta}
+              onChangePage={(page: number) => {
+                props.GetInstallationsAsync({
+                  token: props.token,
+                  page: page,
+                });
+              }}
             />
           </div>
         </div>

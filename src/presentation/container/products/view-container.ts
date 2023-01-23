@@ -18,18 +18,20 @@ export interface ProductsViewProps{
     onDeleteProductAsync:(props:{headers:HeaderProps,id:string})=>void;
     DeleteProduct:DeleteProductStateProps;
     onClearProducts:()=>void;
+    errorGetProducts:string;
 }
 
 //connect to redux
-const mapStateToProps = ({AUTH,PRODUCTS}:any,ownProps:any) => {
+const mapStateToProps = ({AUTH,PRODUCTS,loading}:any,ownProps:any) => {
     return {
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetProducts:PRODUCTS.GetProducts.data,
         UpdateStockProduct:PRODUCTS.UpdateStockProduct,
         CatalogProduct:PRODUCTS.CatalogProduct,
-        DeleteProduct:PRODUCTS.DeleteProduct
+        DeleteProduct:PRODUCTS.DeleteProduct,
+        errorGetProducts:PRODUCTS.GetProducts.error,
     }
 }
 

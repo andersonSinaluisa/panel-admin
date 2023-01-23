@@ -1,6 +1,7 @@
 import { createModel } from "@rematch/core";
-import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
+import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { installations_interface, installations_request } from "infrastructure/api/installation";
+import { GetInstallationsResponse, Installation } from "infrastructure/api/installation/interface";
 import { RootModel } from "..";
 
 
@@ -28,10 +29,101 @@ export interface DeleteInstallationStateProps extends ResponseServer {
 }
 
 export interface GetInstallationStateProps extends ResponseServer {
-    data: {
-        status: number;
-        message: installations_interface.Installation;
-    }
+    data: GetInstallationsResponse;
+}
+
+
+export const initialInstallation:Installation = {
+
+    id:0,
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: null,
+    name: "",
+    postalCode: "",
+    province: "",
+    location: "",
+    direction: "",
+    description: "",
+    state: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        type: {
+            id: 0,
+            created_at: "",
+            updated_at: "",
+            deleted_at: null,
+            name: "",
+            code: ""
+        },
+        name: ""
+    },
+   
+    availability: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        type: {
+            id: 0,
+            created_at: "",
+            updated_at: "",
+            deleted_at: null,
+            name: "",
+            code: ""
+        },
+        name: ""
+    },
+    country: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        type: {
+            id: 0,
+            created_at: "",
+            updated_at: "",
+            deleted_at: null,
+            name: "",
+            code: ""
+        },
+        name: ""
+    },
+    
+    client: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        nickName: "",
+        firstName: "",
+        secondName: "",
+        firstSurname: "",
+        secondSurname: "",
+        role: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: ""
+        }
+    },
+    peripherals: [],
+    clients: [],
+    devices: []
+
+            
+    
 
 }
 
@@ -39,9 +131,8 @@ export const INSTALLATIONS = createModel<RootModel>()({
     state: {
         GetInstallations: {
             data: {
-                code: "",
-                message: [],
-                status: 0,
+                data: [],
+                ...initialMetaResponse
             },
             status: 0,
             error: ""
@@ -71,24 +162,7 @@ export const INSTALLATIONS = createModel<RootModel>()({
             error: ""
         } as DeleteInstallationStateProps,
         GetInstallation: {
-            data: {
-                status: 0,
-                message: {
-                    _id: "",
-                    country: "",
-                    createdAt: "",
-                    devices: "",
-                    identityCounter: "",
-                    location: "",
-                    name: "",
-                    note: "",
-                    owner: "",
-                    postalCode: "",
-                    province: "",
-                    state: 0,
-                    users: []
-                }
-            },
+            data: {},
             status: 0,
             error: ""
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { AuthContext, AuthContextProps } from 'application/common/hooks/use-auth';
 import { auth_interfaces } from 'infrastructure/api/auth';
 import {useNavigate} from 'react-router-dom';
+import { initLogin } from 'application/models/auth';
 
 
 type LoginResponse = auth_interfaces.LoginResponse;
@@ -12,6 +13,7 @@ interface AuthProviderProps {
   children?: React.ReactNode;
   dataLogin:LoginResponse,
   onLoginAsync:Function;
+  onLogoutAsync:Function;
   error:string;
 };
 
@@ -25,13 +27,7 @@ interface AuthProviderProps {
 const AuthProvider = (props: AuthProviderProps) => {
   const navigate = useNavigate();
 
-  const init: LoginResponse = {
-    message:{
-      idUser:"",
-      token:""
-    },
-    status:0
-  }
+  const init: LoginResponse = initLogin;
   const [token, setToken] = React.useState<string | null>("");
   const [dataLogin, setDataLogin] = React.useState<LoginResponse>(init);
   const [error,setError] = React.useState<string>("")
@@ -40,7 +36,7 @@ const AuthProvider = (props: AuthProviderProps) => {
     setDataLogin(props.dataLogin); 
     setError(props.error)
 
-    if (props.dataLogin.message.token != "") {
+    if (props.dataLogin.token != "") {
 
       navigate("/inicio/")
     }
@@ -52,13 +48,13 @@ const AuthProvider = (props: AuthProviderProps) => {
   };
 
   const handleLogout = () => {
-    setDataLogin(init);
-    setToken(null);
+    props.onLogoutAsync({token:dataLogin.token})
+   
   };
 
   const value: AuthContextProps = {
     dataLogin,
-    token:dataLogin.message.token,
+    token:dataLogin.token,
     onLogin: handleLogin,
     onLogout: handleLogout,
     error:error

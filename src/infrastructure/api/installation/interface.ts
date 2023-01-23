@@ -1,23 +1,30 @@
+import { MetaResponse } from "../api-handler"
+import { Availability, Client, Client2, Country, Peripheral, State } from "../core/interface"
 
+  
 interface Installation {
-    _id: string;
-    identityCounter: string;
-    name: string;
-    owner: string;
-    postalCode: string;
-    location: string;
-    province: string;
-    country: string;
-    note: string;
-    devices:string;
-    users: Array<
-        {
-            id: string;
-            role: string;
-        }
-    >,
-    createdAt: string;
-    state:number;
+
+  
+    id: number
+    createdAt: string
+    updatedAt: string
+    deletedAt: any
+    name: string
+    postalCode: string
+    province: string
+    location: string
+    direction: string
+    description: string
+    state: State
+    availability: Availability
+    country: Country
+    client: Client
+    peripherals: Peripheral[]
+    clients: Client2[]
+    devices: any[]
+
+    
+    
 }
 
 interface CreateInstallationRequest{
@@ -30,10 +37,9 @@ interface CreateInstallationRequest{
     note: string;
 }
 
-interface GetInstallationsResponse{
-    code: string;
-    status: number;
-    message: Array<Installation>
+interface GetInstallationsResponse extends MetaResponse{
+    data: Installation[];
+
 }
 interface GetInstallationResponse{
     code: string;

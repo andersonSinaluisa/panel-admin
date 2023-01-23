@@ -1,3 +1,5 @@
+import { MetaResponse } from "../api-handler";
+import { Availability, State, Warehouse } from "../core/interface";
 
 interface CreateProductCatalogRequest {
     name: string;
@@ -20,26 +22,29 @@ interface CreateProductUncatalogRequest {
 
 
 
+
 interface Product {
-    _id: string;
-    identityCounter: string;
-    name: string;
-    nroSerie: string;
-    description: string;
-    precioVentaPublico: number;
-    cataloged: boolean;
-    stock: number;
-    assigned: boolean;
-    assignedTo: string;
-    note: string;
+    id: number;
     createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+    name: string;
+    code: string;
+    onSale: boolean;
+    stock: number;
+    priceForPublic: string;
+    initialUnitPurchasePrice: string;
+    description: string;
+    
+    state:State;
+    availability:Availability;
+    wharehouse:Warehouse;
+
 };
 
 
-interface GetProductsResponse {
-    code: number;
-    status: number;
-    message:Product[];
+interface GetProductsResponse extends MetaResponse {
+    data:Product[];
 }
 
 interface GetProductResponse {

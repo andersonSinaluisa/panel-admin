@@ -14,11 +14,11 @@ export interface ClientsViewProps{
     DeleteClient:DeleteClientStateProps;
     onGetClientsAsync:(props:HeaderProps)=>void;
     onClear: ()=>void;
-    onDeleteClientAsync:(props:{headers:HeaderProps,id:string})=>void;
+    onDeleteClientAsync:(props:{headers:HeaderProps,id:number})=>void;
 }
        
 const mapSatateToProps = ({ AUTH,CLIENTS, Groups}: any, ownProps: any) => ({
-    token: AUTH.Session.data.message.token,
+    token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
     ClientsData:CLIENTS.GetClients.data,
@@ -27,7 +27,7 @@ const mapSatateToProps = ({ AUTH,CLIENTS, Groups}: any, ownProps: any) => ({
 
 const mapDispatchToProps = ({CLIENTS}: any) => ({
     onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props),
-    onDeleteClientAsync:(props:{headers:HeaderProps,id:string})=>CLIENTS.onDeleteClientAsync(props),
+    onDeleteClientAsync:(props:{headers:HeaderProps,id:number})=>CLIENTS.onDeleteClientAsync(props),
     onClear: ()=>CLIENTS.onClear()
 })
 

@@ -1,6 +1,7 @@
 import { isClient, isInstallation, isJob, isPersonal, isTask, isUser } from "application/common/utils/is";
 import { similarity } from "application/common/utils/similarity";
 import { notification } from "application/models/notifications";
+import { auth_interfaces } from "infrastructure/api/auth";
 import { clients_interface } from "infrastructure/api/clients";
 import { search_interface } from "infrastructure/api/search";
 import { tasks_interface } from "infrastructure/api/tasks";
@@ -17,7 +18,6 @@ interface NavbarProps {
   dataSearch: search_interface.SearchResponse;
   openSearch: boolean;
   onOpenSearch: (value: boolean) => void;
-  userData: user_interface.User;
   notifications: notification[];
 }
 
@@ -28,7 +28,15 @@ const Navbar = (props: NavbarProps) => {
 
   const [openSearch, setOpenSearch] = useState(false);
   const [search, setSearch] = useState<search_interface.SearchResponse>({
-    message: [],
+    message: {
+      clients: [],
+      installations: [],
+      jobs: [],
+      personal  : [],
+      tasks: [],
+      products  : [],
+      users: [],
+    },
     status: 0
   });
   const [showDrop, setShowDrop] = useState(false);
@@ -176,47 +184,7 @@ const Navbar = (props: NavbarProps) => {
 
 
 
-  const validateSearch = (search: search_interface.SearchResponse) => {
-
-
-    //obtener la interface de search.message
-    const data = search.message as search_interface.SearchResponse["message"];
-
-    if (data) {
-
-      if (isClient(data)) {
-        return data.name + " " + data.lastname + "/" + data.document;
-      }
-
-      if (isInstallation(data)) {
-        return data.name + "/" + data.location;
-      }
-
-      if (isUser(data)) {
-        return data.email;
-      }
-      if (isJob(data)) {
-        return data.type + "/" + data.description;
-      }
-
-      if (isPersonal(data)) {
-        return data.name + " " + data.document;
-      }
-
-      if (isTask(data)) {
-        return data.description;
-      }
-
-      console.log(data);
-
-    }
-
-
-
-
-
-    return "no";
-  }
+  
 
 
   const handleSelectItem = (item: any) => {
@@ -452,128 +420,6 @@ const Navbar = (props: NavbarProps) => {
                     </li>
 
 
-                    {
-                      search.status === 200 ?
-
-
-                        search.message?.map((item: any, index) => {
-
-                          if (seachParam.type === "clients") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
-                                href="#" onClick={() => handleSelectItem(item)}>
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.name} {item.lastname} / {item.document}
-                                  </span>
-                                </div>
-                              </a>
-
-                            </li>
-                          } else if (seachParam.type === "installations") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
-                                href="#" onClick={() => handleSelectItem(item)}>
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.name} / {item.location}
-                                  </span>
-                                </div>
-                              </a>
-
-                            </li>
-                          } else if (seachParam.type === "jobs") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-                              <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.type} / {item.description}
-                                  </span>
-                                </div>
-                              </a>
-
-                            </li>
-                          } else if (seachParam.type === "personal") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
-                                href="#" onClick={() => handleSelectItem(item)}>                                
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.name} / {item.document}
-                                  </span>
-                                </div>
-                              </a>
-
-                            </li>
-                          } else if (seachParam.type === "tasks") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
-                                href="#" onClick={() => handleSelectItem(item)}>                                
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.name} / {item.description}
-                                  </span>
-                                </div>
-                              </a>
-
-                            </li>
-                          } else if (seachParam.type === "users") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
-                                
-                                href="#" onClick={() => handleSelectItem(item)}>
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.email}
-
-                                  </span>
-                                </div>
-                              </a>
-
-                            </li>
-                          } else if (seachParam.type === "billing") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12"
-
-                                href="#" onClick={() => handleSelectItem(item)}>
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    Fecha: {item.billingDate} - NIF:{item.NumeroIdentificacionFiscal}
-
-                                  </span>
-                                </div>
-                              </a>
-                            
-                            </li>
-                          } else if (seachParam.type === "products") {
-                            return <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer ">
-                              <a className="d-flex align-items-center justify-content-between w-100 col-12" 
-                                href="#" onClick={() => handleSelectItem(item)}>
-                                <div className="d-flex justify-content-start">
-                                  <span>
-                                    {item.name} / {item.description}
-                                  
-                                  </span>
-                                </div>
-                              </a>
-                            
-                            </li>
-                          }
-
-                        })
-                        : <li className="auto-suggestion d-flex align-items-center justify-content-between cursor-pointer current_item">
-                          <a className="d-flex align-items-center justify-content-between w-100" href="content-helper-classes.html">
-                            <div className="d-flex justify-content-start">
-                              <span className="mr-75 bx bx-help-circle" data-icon="bx bx-help-circle"></span>
-                              <span>Sin Resultados</span>
-                            </div>
-                          </a>
-                        </li>
-
-                    }
 
                   </ul>
                 </div>
@@ -660,8 +506,8 @@ const Navbar = (props: NavbarProps) => {
                   }
                 >
                   <div className="user-nav d-sm-flex d-none">
-                    <span className="user-name">{props.userData.email}</span>
-                    <span className="user-status">{props.userData.role}</span>
+                    <span className="user-name">{props.dataLogin.data.firstName+ " "+props.dataLogin.data.secondName}</span>
+                    <span className="user-status">{props.dataLogin.data.role?.name}</span>
                   </div>
                   <span>
                     <img

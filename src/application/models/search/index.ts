@@ -13,7 +13,15 @@ export const SEARCH = createModel<RootModel>()({
     state: {
         search:{
             data:{
-                message:[],
+                message:{
+                    clients:[],
+                    installations:[],
+                    users:[],
+                    jobs:[],
+                    personal:[],
+                    products:[],
+                    tasks:[]
+                },
                 status:0,
             },
             error:"",
@@ -45,7 +53,16 @@ export const SEARCH = createModel<RootModel>()({
             }catch(e:any){
                 dispatch.SEARCH.onSearch({
                     data:{
-                        message:[],
+                        message:{
+                            clients:[],
+                            installations:[],
+                            users:[],
+                            jobs:[],
+                            personal:[],
+                            products:[],
+                            tasks:[]
+                            
+                        },
                         status:0
                     },
                     error:e.message,

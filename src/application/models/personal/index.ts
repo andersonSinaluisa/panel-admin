@@ -1,5 +1,5 @@
 import { createModel } from "@rematch/core";
-import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
+import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { CreatePersonalRequest, GetPersonalByIdResponse, GetPersonalResponse, Personal } from "infrastructure/api/personal/interface";
 import { CreatePersonal, DeletePersonal, GetPersonal, GetPersonalById } from "infrastructure/api/personal/request";
 import { RootModel } from "..";
@@ -32,13 +32,196 @@ export interface PersonalStateProps extends ResponseServer{
     }
 }
 
+
+export const initPersonal:Personal = {
+   
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        passwordChanged: false,
+        emailVerifiedAt: "",
+        secondaryEmailVerifiedAt: "",
+        backupEmailVerifiedAt: "",
+        nickName: "",
+        firstName: "",
+        secondName: "",
+        firstSurname: "",
+        secondSurname: "",
+        email: "",
+        secondaryEmail: "",
+        backupEmail: "",
+        documentValue: "",
+        province: "",
+        location: "",
+        direction: "",
+        postalCode: "",
+        landlinePhone: "",
+        mobilePhone: "",
+        firstContact: "",
+        secondContact: "",
+        contactSchedule: "",
+        discount: "",
+        tracing: "",
+        description: "",
+        whatsappVerifiedAt: "",
+        state: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+        availability: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+       
+        sdf: {
+            id: 0,
+            created_at: "",
+            updated_at: "",
+            role_id: 0,
+            role_child_id: 0
+        },
+        role: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            role: ""
+        },
+        streetType: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+       
+        country: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+        secondaryEmailRelationship: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+        backupEmailRelationship: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+
+        personType: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+        createdBy: null,
+        documentType: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            type: {
+                id: 0,
+                created_at: "",
+                updated_at: "",
+                deleted_at: null,
+                name: "",
+                code: ""
+            },
+            name: "",
+            code: ""
+        },
+        dependents: [],
+        permissions: []
+} 
+
 export const PERSONAL = createModel<RootModel>()({
     
     state: {
         GetPersonal:{
             data: {
-                message:[],
-                status:0
+                data:[],
+                ...initialMetaResponse
             },
             status:0,
             error:""
@@ -61,35 +244,8 @@ export const PERSONAL = createModel<RootModel>()({
         } as DeletePersonalStateProps,
         GetPersonalById:{
             data:{
-                message:{
-                    _id : "",
-                    identityCounter : "",
-                    userId : "",
-                    documentType : "",
-                    document : "",
-                    name : "",
-                    lastname1 : "",
-                    lastname2 : "",
-                    type : "",
-                    direction : "",
-                    postalCode : "",
-
-                    location : "",
-                    province : "",
-                    country : "",
-                    phone : "",
-                    mobilePhone : "",
-                    contact : "",
-                    contact2 : "",
-                    email : "",
-                    contactSchedule : "",
-                    note : "",
-                    permissions : [],
-                    dependents : 0,
-                    createdBy : "",
-                    createdAt : "",
-                },
-                status:0
+                data:initPersonal,
+                message:""
             },
             error:"",
             status:0
@@ -134,13 +290,16 @@ export const PERSONAL = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.PERSONAL.onGetPersonal({
                     data:{
-                        message:[],
-                        status:0
+                        data:[],
+                        ...initialMetaResponse
                     },
-                    status:0,
-                    error:e.message
+                    status:e.response?e.response.status:400,
+                    error:error
                 })
             }
 
@@ -167,7 +326,7 @@ export const PERSONAL = createModel<RootModel>()({
                 })
             }
         },
-        async onGetPersonalByIdAsync(payload:{ headers: HeaderProps, id: string }){
+        async onGetPersonalByIdAsync(payload:{ headers: HeaderProps, id: number }){
             try{
                 const res = await GetPersonalById(payload).toPromise()
                 dispatch.PERSONAL.onGetPersonalById({
@@ -176,39 +335,15 @@ export const PERSONAL = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.PERSONAL.onGetPersonalById({
                     data:{
-                        message:{
-                            _id : "",
-                            identityCounter : "",
-                            userId : "",
-                            documentType : "",
-                            document : "",
-                            name : "",
-                            lastname1 : "",
-                            lastname2 : "",
-                            type : "",
-                            direction : "",
-                            postalCode : "",
-                            location : "",
-                            province : "",
-                            country : "",
-                            phone : "",
-                            mobilePhone : "",
-                            contact : "",
-                            contact2 : "",
-                            email : "",
-                            contactSchedule : "",
-                            note : "",
-                            permissions : [],
-                            dependents : 0,
-                            createdBy : "",
-                            createdAt : "",
-                        },
-                        status:0
+                        data:initPersonal,
+                        message:""
                     },
                     status:0,
-                    error:e.message
+                    error:error
                 })
             }
         },

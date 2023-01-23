@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import DataTable from "infrastructure/components/data-table";
-import { user_interface } from "infrastructure/api/users";
 import Modal from "infrastructure/components/modal";
 import { ToastProps } from "infrastructure/components/toast";
 import { ClientsViewProps } from "presentation/container/clients/view-container";
 import { clients_interface } from "infrastructure/api/clients";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 
 const ClientsView = (props: ClientsViewProps) => {
   useTitle(props.title);
@@ -15,38 +15,11 @@ const ClientsView = (props: ClientsViewProps) => {
   let navigate = useNavigate();
 
   const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-    message: [],
-    status: 0,
+    data: [],
+    ...initialMetaResponse
   });
 
-  const [itemSeleted,setItemSelected] = useState<clients_interface.Client>({
-   _id:"",
-   contact:"",
-   contact2:"",
-   contactSchedule:"",
-   country:"",
-   createdAt:"",
-   customerType:"",
-   direction:"",
-   discount:"",
-   document:"",
-   documentType:"",
-   email:"",
-   identityCounter:"",
-   installations:[],
-   location:"",
-   mobilePhone:"",
-   name:"",
-   note:"",
-   personType:"",
-   phone:"",
-   postalCode:"",
-   province:"",
-   roadType:"",
-   userId:"",
-   webpage:"",
-   lastname:""
-  })
+  const [itemSeleted,setItemSelected] = useState<clients_interface.Client|null>(null)
   const [message, setMessage] = useState<ToastProps>({
     type: "info",
     visible: false,
@@ -129,7 +102,7 @@ const ClientsView = (props: ClientsViewProps) => {
       headers:{
         token:props.token
       },
-      id:item._id
+      id:item.id
     })
     setShowModal(false);
   }
@@ -145,32 +118,27 @@ const ClientsView = (props: ClientsViewProps) => {
         <div className="table-responsive ">
           <DataTable
             key={"table-group"}
-            dataTable={clients.message}
+            dataTable={clients.data}
             actions={getActions()}
             columns={[
               {
-                name: "identityCounter",
-                label: "DNI",
+                name: "documentValue",
+                label: "Documento",
                 type: "text",
               },
               {
 
-                name:'name',
+                name:'firstName',
                 label:'Nombre',
                 type:'text'
               },
               {
 
-                name:'lastname',
+                name:'firstSurname',
                 label:'Apellido',
                 type:'text'
               },
 
-              {
-                name: "personType",
-                label: "Tipo de Persona",
-                type: "text",
-              },
               {
                 name: "email",
                 label: "Correo",
@@ -184,6 +152,7 @@ const ClientsView = (props: ClientsViewProps) => {
             ]}
             dataLimit={5}
             pageLimit={2}
+            meta={clients.meta}
           />
         </div>
       </div>
@@ -191,7 +160,7 @@ const ClientsView = (props: ClientsViewProps) => {
       <Modal className="modal-main" show={showModal} style={{}}>
         <div className="card">
           <div className="card-header">
-              <h3>¿Desea eliminar el Cliente { itemSeleted.name } ?</h3>
+              <h3>¿Desea eliminar el Cliente { itemSeleted?.nickName } ?</h3>
           </div>
           <div className="card-footer d-flex justify-content-md-end">
               <button type="button" 
@@ -199,7 +168,9 @@ const ClientsView = (props: ClientsViewProps) => {
               onClick={()=>setShowModal(false)}
               >Cancelar</button>
               <button type="button" 
-              onClick={()=>handleDelete(itemSeleted)}
+              onClick={()=>handleDelete(
+                itemSeleted as clients_interface.Client
+              )}
               className="btn btn-danger ml-md-3">Eliminar</button>
           </div>
         </div>

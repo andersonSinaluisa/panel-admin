@@ -1,4 +1,6 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initialClient } from "application/models/clients";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
 import { products_interface } from "infrastructure/api/products";
@@ -20,40 +22,12 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
     useBreadcrumbs(props.breadcrumbs)
 
     const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-        message: [],
-        status: 0,
+        data: [],
+        ...initialMetaResponse
     });
 
 
-    const [client, setClient] = useState<clients_interface.Client>({
-        _id: "",
-        identityCounter: "",
-        userId: "",
-        personType: "",
-        documentType: "",
-        document: "",
-        name: "",
-        lastname: "",
-        customerType: "",
-        roadType: "",
-        direction: "",
-        postalCode: "",
-        location: "",
-        province: "",
-        country: "",
-        phone: "",
-        mobilePhone: "",
-        contact: "",
-        contact2: "",
-        email: "",
-        webpage: "",
-        contactSchedule: "",
-        discount: "",
-        note: "",
-        installations: [],
-        createdAt: "",
-
-    })
+    const [client, setClient] = useState<clients_interface.Client>(initialClient)
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
         visible: false,
@@ -62,19 +36,14 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
     });
 
     const [products, setProducts] = useState<products_interface.GetProductsResponse>({
-        message: [],
-        status: 0,
-        code: 0
+        data: [],
+        ...initialMetaResponse
     });
 
     const [itemProduct, setItemProduct] = useState<invoice_interface.ProductInvoice[]>([
         {
-            id: "",
-            name: "",
-            note: "",
-            nroSerie: "",
-            price: 0,
-            quantity: 0,
+            productId: 0,
+            amount: 0,
         }
     ])
 
@@ -155,12 +124,8 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
         setItemProduct([
             ...itemProduct,
             {
-                id: "",
-                quantity: 0,
-                price: 0,
-                name: "",
-                note: "",
-                nroSerie: "",
+                productId: 0,
+                amount: 0,
             },
         ]);
     };
@@ -284,19 +249,14 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
         index: number
     ) => {
         const newItems = [...itemProduct];
-        const product = products.message.find(
-            (product) => product._id === event.currentTarget.value
+        const product = products.data.find(
+            (product) => product.id + "" === event.currentTarget.value
         );
 
         if (product) {
             newItems[index] = {
-
-                id: product._id,
-                name: product.name,
-                note: product.note,
-                nroSerie: product.nroSerie,
-                price: product.precioVentaPublico,
-                quantity: 0,
+                productId: product.id,
+                amount: 0,
             }
         }
 
@@ -305,16 +265,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
 
 
     const handleSelectClient = (event: any) => {
-        const client = clients.message.find((client) => client._id === event.value)
-        if (client) {
-            setForm({
-                ...form,
-                clientID: client._id,
-                NumeroIdentificacionFiscal: client.document,
-                workDirection: client.direction,
-                clientDiscount: parseFloat(client.discount),
-            })
-        }
+
     }
 
     return (
@@ -348,7 +299,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             label="Código Cliente"
                                             type="text"
                                             name="code"
-                                            value={clients.message.find((client) => client._id === form.clientID)?.identityCounter}
+                                            value={""}
                                             enabled={true}
 
                                         />
@@ -364,9 +315,9 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                         <label htmlFor="clientID">Cliente</label>
                                         <SelectReact
                                             name="clientID"
-                                            options={clients.message.map((client) => ({
-                                                value: client._id,
-                                                label: client.name,
+                                            options={clients.data.map((client) => ({
+                                                value: client.id,
+                                                label: client.firstName + " " + client.secondName,
                                             }))}
                                             onChange={handleSelectClient}
 
@@ -375,7 +326,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             label="Dirección"
                                             type="text"
                                             name="direction"
-                                            value={clients.message.find((client) => client._id === form.clientID)?.direction}
+                                            value={""}
                                             enabled={true}
                                         />
 
@@ -383,21 +334,19 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             label="Código Postal"
                                             type="text"
                                             name="direction"
-                                            value={clients.message.find((client) => client._id === form.clientID)?.postalCode}
+                                            value={""}
                                             enabled={true}
                                         />
                                         <Input
                                             label="Provincia"
                                             type="text"
                                             name="direction"
-                                            value={clients.message.find((client) => client._id === form.clientID)?.province}
                                             enabled={true}
                                         />
                                         <Input
                                             label="C.I.F. / N.I.F."
                                             type="text"
                                             name="direction"
-                                            value={clients.message.find((client) => client._id === form.clientID)?.document}
                                             enabled={true}
                                         />
                                     </div>
@@ -438,7 +387,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                                                 name="quantity"
                                                                                 type="number"
                                                                                 onChange={(event) => handleItemValue(event, index)}
-                                                                                value={item.quantity + ""}
+                                                                                value={""}
                                                                             />
                                                                         </div>
 
@@ -446,37 +395,36 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                                             <Select
                                                                                 label=""
                                                                                 name="productID"
-                                                                                options={products.message.map((product) => {
+                                                                                options={products.data.map((product) => {
                                                                                     return {
-                                                                                        value: product._id,
-                                                                                        label: product.identityCounter,
+                                                                                        value: product.id,
+                                                                                        label: product.code,
                                                                                     }
                                                                                 }
                                                                                 )}
                                                                                 onChange={(event) => handleSelectedProduct(event, index)}
                                                                                 selected={
-                                                                                    item.id
+                                                                                    item.productId
                                                                                 }
                                                                             />
                                                                         </div>
                                                                         <div className="col-md-2 col-12  form-group mt-2">
                                                                             {
-                                                                                item.nroSerie
+                                                                                "00000"
                                                                             }
                                                                         </div>
                                                                         <div className="col-md-4 col-12 form-group mt-2">
-                                                                            {products.message.find((product) => product._id === item.id) && (
-                                                                                products.message.find((product) => product._id === item.id)?.description
+                                                                            {products.data.find((product) => product.id === item.productId) && (
+                                                                                products.data.find((product) => product.id === item.productId)?.description
                                                                             )}
                                                                         </div>
 
 
                                                                         <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ {item.price
-                                                                            }</strong>
+                                                                            <strong className="text-primary align-middle">$ {"0000"}</strong>
                                                                         </div>
                                                                         <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ {item.quantity * item.price}</strong>
+                                                                            <strong className="text-primary align-middle">$ 0000</strong>
                                                                         </div>
 
                                                                         <div className="col-12">
@@ -548,11 +496,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Importe Neto</span>
-                                                    <span className="invoice-value">{
-                                                        itemProduct.reduce((total, item) => {
-                                                            return total + item.quantity * item.price
-                                                        }, 0)
-                                                    }</span>
+                                                    <span className="invoice-value">0000</span>
                                                 </div>
 
                                                 {
@@ -573,11 +517,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                 <hr />
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Total</span>
-                                                    <span className="invoice-value">$ {
-                                                        itemProduct.reduce((total, item) => {
-                                                            return total + item.quantity * item.price
-                                                        }, 0) - form.discount - form.clientDiscount
-                                                    }</span>
+                                                    <span className="invoice-value">$ 0.00</span>
                                                 </div>
                                                 <div className="invoice-calc d-flex mt-3 justify-content-between">
                                                     <button className="btn btn-primary btn-block" onClick={handleSubmit}>

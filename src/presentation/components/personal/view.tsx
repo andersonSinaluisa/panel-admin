@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {personal_interface} from 'infrastructure/api/personal';
 import { ToastProps } from "infrastructure/components/toast";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
+import { initPersonal } from "application/models/personal";
 
 
 const PersonalView = (props: PersonalViewProps) => {
@@ -15,39 +17,11 @@ const PersonalView = (props: PersonalViewProps) => {
     let navigate = useNavigate();
   
     const [personal, setPersonal] = useState<personal_interface.GetPersonalResponse>({
-      message: [],
-      status: 0,
+      data: [],
+      ...initialMetaResponse
     });
   
-    const [itemSeleted,setItemSelected] = useState<personal_interface.Personal>({
-    
-    _id:"",
-    identityCounter:"",
-    userId:"",
-    documentType:"",
-    document:"",
-    name:"",
-    type:"",
-    direction:"",
-    postalCode:"",
-    location:"",
-    province:"",
-    country:"",
-    phone:"",
-    mobilePhone:"",
-    contact:"",
-    contact2:"",
-    email:"",
-    contactSchedule:"",
-        
-    note:"",
-    permissions:[],
-    dependents:0,
-    createdBy:"",
-    createdAt:"",
-    lastname1:"",
-    lastname2:"",
-    })
+    const [itemSeleted,setItemSelected] = useState<personal_interface.Personal>(initPersonal)
     const [message, setMessage] = useState<ToastProps>({
       type: "info",
       visible: false,
@@ -103,7 +77,7 @@ const PersonalView = (props: PersonalViewProps) => {
               setShowModal(true)
           },
         },{
-          color: "primary",
+          color: "warning",
           icon: "bx bx-edit-alt",
           label: "Editar",
           name: "edit",
@@ -120,7 +94,7 @@ const PersonalView = (props: PersonalViewProps) => {
           headers:{
               token:props.token
           },
-          id:item._id
+          id:item.id
       })
       setShowModal(false);
     }
@@ -136,24 +110,24 @@ const PersonalView = (props: PersonalViewProps) => {
           <div className="table-responsive ">
             <DataTable
               key={"table-group"}
-              dataTable={personal.message}
+              dataTable={personal.data}
               actions={getActions()}
               columns={[
                
   
                 {
-                  name: "document",
-                  label: "Identificación",
+                  name: "documentValue",
+                  label: "Documento",
                   type: "text",
                 },
                 {
-                    name:'name',
+                    name:'firstName',
                     label:'Nombre',
                     type:'text'
                 },
                 {
-                    name:'type',
-                    label:'Tipo',
+                    name:'firstSurname',
+                    label:'Apellido',
                     type:'text'
                 },
                 {
@@ -162,18 +136,20 @@ const PersonalView = (props: PersonalViewProps) => {
                     type:'text'
                 },
                 {
-                  name: "type",
-                  label: "Tipo",
-                  type: "text",
-                },
-                {
                   name: "createdAt",
                   label: "Fecha Creación",
                   type: "date",
-                },
+                }
               ]}
               dataLimit={5}
               pageLimit={2}
+              meta={personal.meta}
+              onChangePage={(page: number) => {
+                props.onGetPersonalAsync({
+                  token: props.token,
+                  page,
+                });
+              }}
             />
           </div>
         </div>

@@ -1,4 +1,6 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initProduct } from "application/models/products";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { products_interface } from "infrastructure/api/products";
 import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
@@ -14,25 +16,12 @@ const ProductView = (props: ProductsViewProps) => {
     let navigate = useNavigate()
 
     const [products, setProducts] = React.useState<products_interface.GetProductsResponse>({
-        code: 0,
-        message: [],
-        status: 0,
+        data: [],
+        ...initialMetaResponse
     })
+    const [load, setLoad] = React.useState<boolean>(true)
 
-    const [product, setProduct] = React.useState<products_interface.Product>({
-        _id: "",
-        assigned: false,
-        assignedTo: "",
-        cataloged: false,
-        createdAt: "",
-        description: "",
-        name: "",
-        identityCounter: "",
-        note: "",
-        nroSerie: "",
-        precioVentaPublico: 0,
-        stock: 0,
-    })
+    const [product, setProduct] = React.useState<products_interface.Product>(initProduct)
 
     const [showModal, setShowModal] = React.useState<boolean>(false);
 
@@ -42,8 +31,10 @@ const ProductView = (props: ProductsViewProps) => {
         props.onGetProductsAsync({
             token: props.token
         })
+        setLoad(true)
         props.onClearProducts()
-    }, [])
+    }, [props.token])
+
 
 
     useEffect(() => {
@@ -59,7 +50,7 @@ const ProductView = (props: ProductsViewProps) => {
             label: "Editar",
             name: "delete",
             onClick: (item: products_interface.Product) => {
-                navigate('/inicio/productos/' + item._id)
+                navigate('/inicio/productos/' + item.id)
             }
         })
         lista_acc.push({
@@ -80,7 +71,7 @@ const ProductView = (props: ProductsViewProps) => {
 
     const handleDelete = (item: any) => {
         props.onDeleteProductAsync({
-            headers:{
+            headers: {
                 token: props.token
             },
             id: item._id
@@ -97,24 +88,19 @@ const ProductView = (props: ProductsViewProps) => {
         <div className="row" id="table-borderless">
             <div className="col-12 mb-2">
                 <Link to="/inicio/productos/nuevo" className="btn btn-primary">
-                    Nuevo Producto 
+                    Nuevo Producto
                 </Link>
             </div>
             <div className="col-12">
                 <div className="table-responsive ">
                     <DataTable
                         key={"table-group"}
-                        dataTable={products.message}
+                        dataTable={products.data}
                         actions={getActions()}
                         columns={[
-                            {
-                                name: "identityCounter",
-                                label: "ID",
-                                type: "text",
-                            },
 
                             {
-                                name: "nroSerie",
+                                name: "code",
                                 label: "Serie",
                                 type: "text",
                             },
@@ -129,20 +115,35 @@ const ProductView = (props: ProductsViewProps) => {
                                 type: 'text'
                             },
                             {
-                                name:'stock',
-                                label:'Stock',
-                                type:'text'
-                                
+                                name: 'stock',
+                                label: 'Stock',
+                                type: 'text'
+
                             },
                             {
                                 name: 'cataloged',
                                 label: 'Catalogado',
                                 type: 'boolean'
                             },
-                            
+                            {
+                                name: 'warehouse',
+                                label: 'Almacen',
+                                type: 'object',
+                                field_show: 'name'
+                            }
+
                         ]}
                         dataLimit={5}
                         pageLimit={2}
+                        meta={products.meta}
+                        onChangePage={(page: number) => {
+                            props.onGetProductsAsync({
+                                token: props.token,
+                                page: page
+                            })
+                        }}
+                        isLoading={load}
+                        error={props.errorGetProducts}
                     />
                 </div>
             </div>

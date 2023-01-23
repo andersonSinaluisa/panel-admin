@@ -2,6 +2,7 @@ import { TASK_OPEN } from "application/common";
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { ExportToCsv } from "export-to-csv";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { user_interface } from "infrastructure/api/users";
 import FilterLabel from "infrastructure/components/filter-label";
@@ -51,8 +52,8 @@ const TaskView = (props: TasksViewProps) => {
         type: ""
     })
     const [users, setUsers] = useState<user_interface.GetUsers>({
-        message: [],
-        status: 0
+        data:[],
+        ...initialMetaResponse
     })
 
     const [form, setForm] = useState<tasks_interface.CreateTaskRequest>({
@@ -479,8 +480,8 @@ const TaskView = (props: TasksViewProps) => {
                         />
                         <Select
                             label="Responsable"
-                            options={users.message.map(e => {
-                                return { label: e.email, value: e._id }
+                            options={users.data.map(e => {
+                                return { label: e.email, value: e.id }
                             })}
                             name="responsible"
                             onChange={handleChange}

@@ -38,12 +38,8 @@ interface GetInvoiceResponse {
     message: Invoice;
 }
 interface ProductInvoice{
-    id: string;
-    name: string;
-    nroSerie: string;
-    note: string;
-    price: number;
-    quantity: number;
+    productId: number;
+    amount: number;
 }
 
 interface CreateInvoiceRequest {

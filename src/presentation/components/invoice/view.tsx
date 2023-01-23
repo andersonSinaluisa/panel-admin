@@ -1,4 +1,5 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
 import DataTable from "infrastructure/components/data-table";
@@ -18,8 +19,8 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
     status: 0
   })
   const [clients, setClients] = React.useState<clients_interface.GetClientsResponse>({
-    message: [],
-    status: 0
+    data: [],
+    ...initialMetaResponse
   })
 
   const [showModal, setShowModal] = React.useState<boolean>(false);
@@ -127,22 +128,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
                 label: "Identificacion Fiscal",
                 type: "text",
               },
-              {
-                name: "clientID",
-                label: "Cliente",
-                type: "render",
-                render: (clientID: string) => {
-                  return (
-                    <div>
-                      {clients.message.map(client => {
-                        if (client._id === clientID) {
-                          return client.name + " " + client.lastname;
-                        }
-                      })}
-                    </div>
-                  );
-                },
-              },
+             
               {
                 name: "billingDate",
                 label: "Fecha de Facturacion",

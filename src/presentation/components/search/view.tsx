@@ -1,5 +1,6 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { getFieldsByType } from "application/common/utils/fields";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { search_interface } from "infrastructure/api/search";
 import Checkbox from "infrastructure/components/checkbox";
@@ -27,16 +28,35 @@ const SearchView = (props: SearchViewProps) => {
     const [fieldSearch, setFieldSearch] = useState("");
 
     const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-        message: [],
-        status: 0,
+        data: [],
+        ...initialMetaResponse
     });
 
+
+    const [types, setTypes] = useState<string[]>([]);
+
     const [data, setData] = useState<search_interface.SearchResponse>({
-        message: [],
+        message: {
+            users: [],
+            installations: [],
+            clients: [],
+            jobs: [],
+            products: [],
+            tasks: [],
+            personal: [],
+        },
         status: 0,
     });
     const [copy, setCopy] = useState<search_interface.SearchResponse>({
-        message: [],
+        message: {
+            users: [],
+            installations: [],
+            clients: [],
+            jobs: [],
+            products: [],
+            tasks: [],
+            personal: [],
+        },
         status: 0,
     });
     const [actions, setActions] = useState<any[]>([])
@@ -79,13 +99,16 @@ const SearchView = (props: SearchViewProps) => {
             ...searchParams,
             search: e.target.name
         })
-        setFilterFields([]);
+
+        types.push(e.target.name);
+
+
         props.onSearchAsync({
             headers: {
                 token: props.token
             },
             identityCounter: "",
-            type: e.target.name
+            type: types.join("&"),
         })
         getActions(e.target.name);
 
@@ -96,12 +119,23 @@ const SearchView = (props: SearchViewProps) => {
     const getFields = (): Columns => {
 
         let datos = copy.message;
-        console.log(datos)
+        
+        
+
         let actions: Columns = [];
-        if (datos.length > 0) {
-            actions = getFieldsByType(datos[0])
+
+        //get last element types
+        let type = types[types.length - 1];
+        
+
+        let data = datos[type as keyof search_interface.SearchResponse["message"]];
+        if (data){
+            if (data.length > 0) {
+                actions = getFieldsByType(data[0])
 
         }
+        }
+        
         return actions;
 
 
@@ -160,20 +194,27 @@ const SearchView = (props: SearchViewProps) => {
 
 
         }
+        let type = types[types.length - 1];
+
         let final = copy.message;
+        let data = final[type as keyof search_interface.SearchResponse["message"]];
+
         if (value.length !== 0) {
-            final = copy.message.filter((item_) => {
+            /*final =data.filter((item_:any) => {
                 return value.filter((item) => item.value === item_[field]).length > 0;
 
-            })
+            })*/
         }
 
 
 
-        setData({
+       /* setData({
             ...data,
-            message: final
-        })
+            message: {	
+                ...data.message,
+                [type]: final
+            }
+        })*/
     }
 
 
@@ -181,10 +222,7 @@ const SearchView = (props: SearchViewProps) => {
 
     const getLabelDisplay = (field: string, value: string) => {
         if (field == "idClient" || field == "owner" || field == "clientID") {
-            let client = clients.message.filter((item) => item._id == value);
-            if (client.length > 0) {
-                return client[0].name + " " + client[0].lastname + " (" + client[0].document + ")";
-            }
+           
         }
         return value;
     }
@@ -192,7 +230,9 @@ const SearchView = (props: SearchViewProps) => {
 
     const getValuesByField = (field: string) => {
         let values: any[] = [];
-        copy.message.map((item) => {
+        let type = types[types.length - 1];
+        let data = copy.message[type as keyof search_interface.SearchResponse["message"]];
+        data.map((item:any) => {
             if (values.findIndex((item_) => item_ === item[field]) == -1) {
                 values.push(item[field])
             }

@@ -12,13 +12,13 @@ export interface UsersViewProps{
     breadcrumbs: string[];
     UsersData:user_interface.GetUsers;
     onGetUsersAync:(props: HeaderProps)=>void;
-    onDeleteUserAsync:(props:{headers:HeaderProps,id:string})=>void;
+    onDeleteUserAsync:(props:{headers:HeaderProps,id:number})=>void;
     DeleteUser:DeleteUserStateProps;
     onClear:()=>void;
 }
        
 const mapSatateToProps = ({ AUTH,USERS, Groups}: any, ownProps: any) => ({
-    token: AUTH.Session.data.message.token,
+    token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
     UsersData:USERS.GetUsers.data,
@@ -27,7 +27,7 @@ const mapSatateToProps = ({ AUTH,USERS, Groups}: any, ownProps: any) => ({
 
 const mapDispatchToProps = ({USERS}: any) => ({
     onGetUsersAync:(props:HeaderProps)=>USERS.onGetUsersAync(props),
-    onDeleteUserAsync:(props:{headers:HeaderProps,id:string})=>USERS.onDeleteUserAsync(props),
+    onDeleteUserAsync:(props:{headers:HeaderProps,id:number})=>USERS.onDeleteUserAsync(props),
     onClear:()=>USERS.onClear()
 })
 

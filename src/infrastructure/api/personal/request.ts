@@ -4,7 +4,9 @@ import { CreatePersonalRequest } from './interface';
 
 
 const GetPersonal = (props: APIHANDLER.HeaderProps) => {
-    return APIHANDLER.get(Globals.GET_PERSONAL, {
+    let perPage = props.perPage ? props.perPage : 15;
+    let page = props.page ? props.page : 1;
+    return APIHANDLER.get(Globals.GET_PERSONAL+"?perPage="+perPage+"&page="+page, {
         headers: {
             Authorization: "Bearer " + props.token
 
@@ -19,7 +21,7 @@ const CreatePersonal = (props: { headers: APIHANDLER.HeaderProps, body: CreatePe
     })
 }
 
-const GetPersonalById = (props: { headers: APIHANDLER.HeaderProps, id: string }) => {
+const GetPersonalById = (props: { headers: APIHANDLER.HeaderProps, id: number }) => {
     return APIHANDLER.get(Globals.GET_BY_ID_PERSONAL + props.id, {
         headers: {
             Authorization: "Bearer " + props.headers.token

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import * as Globlas from 'application/common'
 import { auth_interfaces } from "infrastructure/api/auth";
 import routes from "presentation/components/routes";
+import { initLogin } from "application/models/auth";
 
 
 interface SidebarProps {
@@ -12,13 +13,7 @@ interface SidebarProps {
 
 const Sidebar = (props: SidebarProps) => {
 
-    const [data, setData] = useState<auth_interfaces.LoginResponse>({
-        message: {
-            idUser: "",
-            token: "",
-        },
-        status: 0
-    })
+    const [data, setData] = useState<auth_interfaces.LoginResponse>(initLogin)
 
 
     useEffect(() => {

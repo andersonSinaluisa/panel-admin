@@ -5,10 +5,11 @@ import { CreateUserRequest } from './interface';
 
 
 const GetUsers = (props:APIHANDLER.HeaderProps)=>{
-    return APIHANDLER.get(Globals.GET_USERS,{
+    const perPage = props.perPage?props.perPage: 10;
+    const page = props.page?props.page: 1;
+    return APIHANDLER.get(Globals.GET_USERS+"?perPage="+perPage+"&page="+page,{
         headers:{
             Authorization: "Bearer "+props.token
-
         }
     })
 }

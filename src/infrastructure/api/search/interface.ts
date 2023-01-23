@@ -8,9 +8,16 @@ import { user_interface } from "../users";
 
 interface SearchResponse{
     status:number;
-    message:clients_interface.Client[]|installations_interface.Installation[]
-    |jobs_interface.Job[]|personal_interface.Personal[]|products_interface.Product[]
-    |tasks_interface.Task[]|user_interface.User[]|any[];
+    message:{
+        clients: clients_interface.Client[];
+        installations: installations_interface.Installation[];
+        jobs: jobs_interface.Job[];
+        personal: personal_interface.Personal[];
+        products: products_interface.Product[];
+        tasks: tasks_interface.Task[];
+        users: user_interface.User[];
+        
+    }
 }
 
 export type {

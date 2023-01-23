@@ -1,5 +1,7 @@
 import { getStatusInstallation } from 'application/common';
+import { initLogin } from 'application/models/auth';
 import { notification } from 'application/models/notifications';
+import { auth_interfaces } from 'infrastructure/api/auth';
 import { search_interface } from 'infrastructure/api/search';
 import { user_interface } from 'infrastructure/api/users';
 import { useEffect, useState } from 'react';
@@ -21,14 +23,7 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     let navigate = useNavigate();
     const [showOverlay, setShowOverlay] = useState(false);
     const [onpenSearch, setOnpenSearch] = useState(false);
-    const [userData,setUserData] = useState<user_interface.User>({
-        _id:"",
-        createdAt:"",
-        email:"",
-        identityCounter:"",
-        personalData:"",
-        role:""
-    })
+    const [userData,setUserData] = useState<auth_interfaces.LoginResponse>(initLogin)
 
 
     useEffect(() => {
@@ -42,7 +37,15 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     const [title, setTitle] = useState("");
     const [breadcrumbs, setBreadcrumbs] = useState([]);
     const [search, setSearch] = useState<search_interface.SearchResponse>({
-        message: [],
+        message: {
+            clients: [],
+            installations: [],
+            users: [],
+            jobs: [],
+            personal: [],
+            products: [],
+            tasks: [],
+        },
         status:0
     });
 
@@ -61,74 +64,10 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     },[props.search])
 
 
-    useEffect(()=>{
-        props.onGetUserAsync({
-            headers:{
-                token:token as string
-            },
-            id:dataLogin.message.idUser
-        })
-    },[token])
-    useEffect(()=>{
-        setUserData(props.UserData.data.message)
-    },[props.UserData])
-
-
-    useEffect(()=>{
-        props.connectToWebSocket().on("connect",()=>{    
-            
-            props.connectToWebSocket().onAny((event, ...args) => {
-                console.log(event, args);
-                //event start with installation-
-                if(event.startsWith("installation-")){
-                   let id = event.split("-")[1];
-                   let state = args[0];
-                   //parseInt
-                     let status = parseInt(state);
-                    props.addNotification(
-                        {
-                            title: 'Instalación',
-                            description: `La instalación  ha cambiado de estado a ${getStatusInstallation(status).label}`,
-                            type: 'info',
-                            duration: 5000,
-                            onSee:()=>{
-                               navigate('/inicio/instalaciones/'+id);
-                            },
-                            see:false,
-                            datetime: new Date(),
-                            data:{
-                                id:id,
-                            }
-                        }
-                    )
-
-                }
-                if (event == 'tasks'){
-                    let data = args[0];
-                    props.addNotification(
-                        {
-                            title: 'Tareas',
-                            description: `Tienes una nueva tarea`,
-                            type: 'info',
-                            duration: 5000,
-                            onSee:()=>{
-                                navigate('/inicio/tareas');
-                            },
-                            see:false,
-                            datetime: new Date(),
-                            data:{
-                                id:data._id,
-                            }
-                        }
-                    )
-                }
-            });
-
-        })
-      
-        return ()=> { props.connectToWebSocket().close()}
+   
     
-    },[])
+
+
 
 
     if (!token) {
@@ -153,9 +92,8 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
         <>
             <div className="header-navbar-shadow"></div>
 
-            <Navbar dataLogin={dataLogin} onLogout={props.clearSession}
+            <Navbar dataLogin={dataLogin} onLogout={onLogout}
                 dataSearch={search} onSearch={handleSearch} onOpenSearch={setOnpenSearch} openSearch={onpenSearch}
-                    userData={userData}
                     notifications={props.notifications}
                 />
         

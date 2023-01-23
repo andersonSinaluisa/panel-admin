@@ -10,6 +10,7 @@ import Select from "infrastructure/components/select";
 import { clients_interface } from "infrastructure/api/clients";
 import SelectReact from 'react-select';
 import json from 'application/common/utils/datos.json';
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 
 const CreateInstallation = (props: CreateInstallationProps) => {
   useTitle(props.title);
@@ -37,8 +38,8 @@ const CreateInstallation = (props: CreateInstallationProps) => {
 
 
   const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-    message: [],
-    status: 0
+   data: [],
+   ...initialMetaResponse
   })
 
   useEffect(() => {
@@ -177,9 +178,9 @@ const CreateInstallation = (props: CreateInstallationProps) => {
             <SelectReact
               isSearchable={true}
               name="owner"
-              options={clients.message.map(e => ({
-                value: e._id,
-                label: e.name + " " + e.lastname
+              options={clients.data.map(e => ({
+                value: e.id,
+                label: e.firstName + " " + e.secondName
               }))}
               placeholder="Seleccione un propietario"
               onChange={

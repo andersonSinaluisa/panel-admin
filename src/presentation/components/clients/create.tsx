@@ -145,7 +145,7 @@ const CreateClient = (props: CreateClientProps) => {
               isSearchable={true}
               name="userId"
               options={users.map(e => ({
-                value: e._id,
+                value: e.id,
                 label: e.email
               }))}
               placeholder="Seleccione un usuario"

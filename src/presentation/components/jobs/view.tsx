@@ -1,6 +1,7 @@
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { ExportToCsv } from "export-to-csv";
+import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { jobs_interface } from "infrastructure/api/jobs";
 import FilterLabel from "infrastructure/components/filter-label";
@@ -66,8 +67,8 @@ const ViewJobs = (props: ViewJobsProps) => {
         status: 0
     })
     const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-        message: [],
-        status: 0
+        data: [],
+        ...initialMetaResponse
     })
 
     const [message, setMessage] = useState<ToastProps>({
@@ -556,9 +557,9 @@ const ViewJobs = (props: ViewJobsProps) => {
                         <SelectReact
                             isSearchable={true}
                             name="idClient"
-                            options={clients.message.map(e => ({
-                                value: e._id,
-                                label: e.name + " " + e.lastname
+                            options={clients.data.map(e => ({
+                                value: e.id,
+                                label: e.firstName + " " + e.secondName
                             }))}
                             placeholder="Seleccione un Cliente"
                             onChange={

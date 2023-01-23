@@ -11,7 +11,7 @@ export interface UpdateClientProps{
     title: string;
     breadcrumbs: string[];
     UpdateClient:UpdateClientStateProps;
-    onUpdateClientAsync:(props:{headers:HeaderProps,body:clients_interface.ClientUpdateRequest,id:string})=>void;
+    onUpdateClientAsync:(props:{headers:HeaderProps,body:clients_interface.ClientUpdateRequest,id:number})=>void;
     onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=>void;
     GetClientById:GetClientByIdStateProps;
 }
@@ -25,7 +25,7 @@ const mapSatateToProps = ({ AUTH,CLIENTS}: any, ownProps: any) => ({
 })
 
 const mapDispatchToProps = ({CLIENTS}: any) => ({
-    onUpdateClientAsync:(props:{headers:HeaderProps,body:clients_interface.ClientUpdateRequest,id:string})=>CLIENTS.onUpdateClientAsync(props),
+    onUpdateClientAsync:(props:{headers:HeaderProps,body:clients_interface.ClientUpdateRequest,id:number})=>CLIENTS.onUpdateClientAsync(props),
     onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=>CLIENTS.onGetClientByIdAsync(props)
 })
 

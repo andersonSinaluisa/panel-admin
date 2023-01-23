@@ -34,7 +34,7 @@ interface RoutesProps{
 
 const routes:RoutesProps[] =[
     //SearchView
-    {
+    /*{
         name:'Buscador',
         relative_path:'',
         path:'/inicio/',

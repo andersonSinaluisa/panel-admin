@@ -4,7 +4,9 @@ import { CreateInstallationRequest, UpdateStateInstallationsRequest } from './in
 
 
 const GetInstallations = (props:APIHANDLER.HeaderProps)=>{
-    return APIHANDLER.get(Globals.GET_INSTALLATIONS,{
+    let perPage = props.perPage ? props.perPage : 10;
+    let page = props.page ? props.page : 1;
+    return APIHANDLER.get(Globals.GET_INSTALLATIONS+"?perPage="+perPage+"&page="+page,{
         headers:{
             Authorization: "Bearer "+props.token
         }

@@ -26,7 +26,7 @@ export interface ViewInstallationsProps{
 
        
 const mapSatateToProps = ({ AUTH,INSTALLATIONS,CLIENTS}: any, ownProps: any) => ({
-    token: AUTH.Session.data.message.token,
+    token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
     GetInstallations:INSTALLATIONS.GetInstallations.data,

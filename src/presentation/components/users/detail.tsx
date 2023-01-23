@@ -11,11 +11,15 @@ import { user_interface } from "infrastructure/api/users";
 import { UserCreateProps } from "presentation/container/users/create-container";
 import Select from "infrastructure/components/select";
 import { UserDetailProps } from "presentation/container/users/detail-container";
+import { initUser } from "application/models/users";
+
+
+
 
 const DetailUser = (props: UserDetailProps) => {
 
 
-    let {id} = useParams();
+  let { id } = useParams();
   useTitle(props.title);
   useBreadcrumbs(props.breadcrumbs);
 
@@ -28,31 +32,26 @@ const DetailUser = (props: UserDetailProps) => {
     description: "",
   });
 
-  const [form, setForm] = useState<user_interface.User>({
-    email:"",
-    _id:"",
-    createdAt:"",
-    identityCounter:"",
-    personalData:"",
-    role:"personal"
-  });
+  const [form, setForm] = useState<user_interface.User>(
+    initUser
+  );
 
 
-  useEffect(()=>{
+  useEffect(() => {
     props.onGetUserAsync({
-        id:id as string,
-        headers:{
-            token: props.token
-        }
+      id: id as string,
+      headers: {
+        token: props.token
+      }
     })
-  },[])
+  }, [])
 
 
-  useEffect(()=>{
+  useEffect(() => {
 
     setForm(props.GetUser)
-      
-  },[props.GetUser])
+
+  }, [props.GetUser])
 
 
   const handleChange = (
@@ -64,7 +63,7 @@ const DetailUser = (props: UserDetailProps) => {
     });
   };
 
-  
+
 
   return (
     <section id="basic-vertical-layouts">
@@ -80,27 +79,27 @@ const DetailUser = (props: UserDetailProps) => {
               value={form.email}
             />
           </div>
-         
+
           <div className="col-lg-6">
-            
-             <Input
+
+            <Input
               label="Rol"
               name="role"
               type={"text"}
               onChange={handleChange}
               enabled={true}
-                value={form.role}
+              value={form.role.name}
             />
           </div>
 
-            <div className="col-lg-6">
-                <Link to={
-                    "/inicio/personal/"+form._id
-                }>
-                    Ver datos
-                </Link>
-            </div>
-          
+          <div className="col-lg-6">
+            <Link to={
+              "/inicio/personal/" + form.id
+            }>
+              Ver datos
+            </Link>
+          </div>
+
         </div>
         <div className="col-12 row ">
           <div className="col-12 justify-content-end d-md-flex ">
@@ -111,7 +110,7 @@ const DetailUser = (props: UserDetailProps) => {
             >
               Atrás
             </Link>
-            
+
           </div>
         </div>
       </div>

@@ -71,19 +71,7 @@ const EditProduct = (props: EditProductProps) => {
 
 
     useEffect(()=>{
-        setForm({
-            assigned:props.GetProduct.message.assigned,
-            assignedTo:props.GetProduct.message.assignedTo,
-            cataloged:props.GetProduct.message.cataloged,
-            description:props.GetProduct.message.description,
-            name:props.GetProduct.message.name,
-            note:props.GetProduct.message.note,
-            nroSerie:props.GetProduct.message.nroSerie,
-            precioVentaPublico:props.GetProduct.message.precioVentaPublico,
-            stock:props.GetProduct.message.stock,
-
-        })
-    
+        
     },[props.GetProduct])
 
 
