@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM node:14.19.0-alpine3.12 as build-stage
 
 
 # source of project
@@ -6,13 +6,8 @@ FROM nginx:latest
 WORKDIR /usr/share/app
 
 COPY . /usr/share/app
-
-# install dependencies node and npm
-
-RUN apt-get update && apt-get install -y curl
-RUN    curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN    apt-get install -y nodejs
-
+# install dependencies ngnix
+RUN apt install nginx
 # install dependencies
 
 RUN npm install
