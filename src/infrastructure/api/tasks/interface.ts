@@ -1,3 +1,5 @@
+import { MetaResponse } from "../api-handler";
+import { Availability, Name, Priority, Responsible, State, Type } from "../core/interface";
 
 interface CreateTaskRequest{
     name: string;
@@ -11,25 +13,25 @@ interface CreateTaskRequest{
 
 
 interface Task{
-    _id: string;
-    identityCounter: string;
-    name: string;
-    type: string;
-    description: string;
-    state: string;
-    priority: string;
-    interventionDate: string;
-    responsible: string;
-    createdBy: string;
-    observation: string;
-    createdAt: string;
+    id:             number;
+    createdAt:      string;
+    updatedAt:      string;
+    deletedAt:      null;
+    interventionAt: string;
+    description:    string;
+    observation:    string;
+    state:          State;
+    availability:   Availability;
+    responsible:    Responsible;
+    type:           Type;
+    priority:       Priority;
+    name:           Name;
 }
 
 
-interface GetTaskResponse{
+interface GetTaskResponse extends MetaResponse{
     
-    status: number;
-    message: Task[];
+    data: Task[];
 }
 
 interface GetTaskByIdResponse{

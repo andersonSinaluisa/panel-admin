@@ -1,6 +1,7 @@
 import { TASK_OPEN } from "application/common";
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initTask } from "application/models/tasks";
 import { ExportToCsv } from "export-to-csv";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { tasks_interface } from "infrastructure/api/tasks";
@@ -29,30 +30,17 @@ const TaskView = (props: TasksViewProps) => {
     const [show, setShow] = useState(false)
 
     const query = useQuery();
-    
+
 
 
     const [tasks, setTasks] = useState<tasks_interface.GetTaskResponse>({
-        message: [],
-        status: 0
+        data: [],
+        ...initialMetaResponse
     })
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [task, setTask] = useState<tasks_interface.Task>({
-        _id: "",
-        createdAt: "",
-        description: "",
-        createdBy: "",
-        identityCounter: "",
-        interventionDate: "",
-        name: "",
-        observation: "",
-        priority: "",
-        responsible: "",
-        state: "",
-        type: ""
-    })
+    const [task, setTask] = useState<tasks_interface.Task>(initTask)
     const [users, setUsers] = useState<user_interface.GetUsers>({
-        data:[],
+        data: [],
         ...initialMetaResponse
     })
 
@@ -80,19 +68,11 @@ const TaskView = (props: TasksViewProps) => {
 
     useEffect(() => {
 
-        if(query.get("task")){
-            tasks.message.filter((task) => {
-                if(task._id === query.get("task")){
+        if (query.get("task")) {
+            tasks.data.filter((task) => {
+                if (task.id + "" === query.get("task")) {
                     setTask(task)
-                    setForm({
-                        description: task.description,
-                        interventionDate: task.interventionDate,
-                        name: task.name,
-                        observation: task.observation,
-                        priority: task.priority,
-                        responsible: task.responsible,
-                        type: task.type
-                    })
+
                     setShow(true)
                 }
             })
@@ -125,7 +105,16 @@ const TaskView = (props: TasksViewProps) => {
     }, [props.CreateTasks])
 
     useEffect(() => {
-        setTasks(props.GetTasks)
+
+        setTasks({
+            data: [
+                ...props.GetTasks.data,
+                ...tasks.data
+            ],
+            meta: props.GetTasks.meta,
+            links: props.GetTasks.links,
+            message: props.GetTasks.message,
+        })
         setUsers(props.GetUsers)
     }, [props.GetTasks, props.GetUsers])
 
@@ -259,17 +248,9 @@ const TaskView = (props: TasksViewProps) => {
     const handleCloseTask = (item: tasks_interface.Task) => {
 
 
-        
 
-        props.onCloseTaskAsync({
-            body: {
-                note: item.observation,
-            },
-            headers: {
-                token: props.token
-            },
-            id: item._id
-        })
+
+
     }
 
     const handleDeleteTask = (item: tasks_interface.Task) => {
@@ -277,7 +258,7 @@ const TaskView = (props: TasksViewProps) => {
             headers: {
                 token: props.token
             },
-            id: item._id
+            id: item.id
         })
         setShowModal(false)
     }
@@ -287,36 +268,13 @@ const TaskView = (props: TasksViewProps) => {
     const handleSelect = (item: tasks_interface.Task) => {
 
         //cast item to form to show in modal
-        setForm(
-            {
-                description: item.description,
-                interventionDate: item.interventionDate,
-                name: item.name,
-                observation: item.observation,
-                priority: item.priority,
-                responsible: item.responsible,
-                type: item.type
-            }
-        )
+
         setTask(item)
         setShow(true)
     }
 
     const handleOpenCreateTask = () => {
-        setTask({
-            _id: "",
-            createdAt: "",
-            description: "",
-            createdBy: "",
-            identityCounter: "",
-            interventionDate: "",
-            name: "",
-            observation: "",
-            priority: "",
-            responsible: "",
-            state: "",
-            type: ""
-        })
+        setTask(initTask)
         setForm({
             description: "",
             interventionDate: "",
@@ -330,7 +288,7 @@ const TaskView = (props: TasksViewProps) => {
 
     }
 
-    const handleShowModal = (item:tasks_interface.Task) => {
+    const handleShowModal = (item: tasks_interface.Task) => {
         setShowModal(true)
         setTask(item)
     }
@@ -480,9 +438,7 @@ const TaskView = (props: TasksViewProps) => {
                         />
                         <Select
                             label="Responsable"
-                            options={users.data.map(e => {
-                                return { label: e.email, value: e.id }
-                            })}
+                            options={[]}
                             name="responsible"
                             onChange={handleChange}
                             selected={form.responsible}
@@ -496,7 +452,7 @@ const TaskView = (props: TasksViewProps) => {
                         </div>
                         <div className="mt-1 d-flex justify-content-end">
                             {
-                                task._id === "" ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
+                                task.id === 0 ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
                             }
 
                         </div>
@@ -515,62 +471,74 @@ const TaskView = (props: TasksViewProps) => {
                             <div className="todo-app-list-wrapper" >
                                 <div className="todo-app-list" >
                                     <TodoSearch
-                                         items={[
+                                        items={[
                                             {
-                                                element:<button
-                                                className="btn btn-primary "
-                                                onClick={() => {
-                                                  const options = {
-                                                    fieldSeparator: ',',
-                                                    quoteStrings: '"',
-                                                    decimalSeparator: '.',
-                                                    showLabels: true,
-                                                    showTitle: true,
-                                                    title: 'Reporte',
-                                                    useTextFile: false,
-                                                    useBom: true,
-                                                    useKeysAsHeaders: true,
-                                                    filename: 'reporte',
-                                                  };
-                                                  const csvExporter = new ExportToCsv(options);
-                                                  csvExporter.generateCsv(tasks.message);
-                                                }}
-                                              >
-                                                Exportar <i className="bx bxs-download"></i>
-                                              </button>
+                                                element: <button
+                                                    className="btn btn-primary "
+                                                    onClick={() => {
+                                                        const options = {
+                                                            fieldSeparator: ',',
+                                                            quoteStrings: '"',
+                                                            decimalSeparator: '.',
+                                                            showLabels: true,
+                                                            showTitle: true,
+                                                            title: 'Reporte',
+                                                            useTextFile: false,
+                                                            useBom: true,
+                                                            useKeysAsHeaders: true,
+                                                            filename: 'reporte',
+                                                        };
+                                                        const csvExporter = new ExportToCsv(options);
+                                                        csvExporter.generateCsv(tasks.message);
+                                                    }}
+                                                >
+                                                    Exportar <i className="bx bxs-download"></i>
+                                                </button>
                                             }
                                         ]}
                                     />
                                     <div className="todo-task-list list-group" style={{ overflow: 'auto' }}>
                                         {/* task list start */}
                                         <TaskList
-                                            items={tasks.message.map((item) => {
+                                            fetchData={() => {
+                                                console.log("fetchData")
+                                                if (tasks.data.length < props.GetTasks.meta.total ) {
+
+                                                    props.onGetTasksAsync({
+                                                        token: props.token,
+                                                        page: tasks.meta.current_page + 1,
+                                                        perPage: 10,
+                                                    })
+                                                }
+                                            }}
+                                            items={tasks.data.map((item) => {
                                                 return {
-                                                    label: item.name,
+                                                    label: item.name.name,
                                                     onClick: () => handleSelect(item),
                                                     tags: [
                                                         {
-                                                            color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "info" : "success",
-                                                            label: "prioridad: "+item.priority
+                                                            color: item.priority.name === "Alta" ? "warning" : item.priority.name === "Media" ? "info" : "success",
+                                                            label: "prioridad: " + item.priority.name
                                                         },
                                                         {
-                                                            color: item.state === TASK_OPEN ? "success" : "danger",
-                                                            label: "estado: "+item.state
+                                                            color: item.state.code === TASK_OPEN ? "success" : "danger",
+                                                            label: "estado: " + item.state.name
                                                         }
                                                     ],
                                                     options: [
                                                         {
-                                                            element: <a className="todo-item-delete ml-75" onClick={()=>handleShowModal(item)}>
+                                                            element: <a className="todo-item-delete ml-75" onClick={() => handleShowModal(item)}>
                                                                 <i className="bx bx-trash"></i>
                                                             </a>
                                                         }
                                                     ],
-                                                    completed: item.state === TASK_OPEN ? false : true,
+                                                    completed: item.state.code === TASK_OPEN ? false : true,
                                                     data: item
                                                 }
                                             })}
                                             onChecked={handleCloseTask}
                                             key={1}
+                                            hasMore={tasks.data.length < props.GetTasks.meta.total}
                                         />
                                         {/* task list end */}
                                         <div className="no-results">
@@ -589,7 +557,7 @@ const TaskView = (props: TasksViewProps) => {
             <Modal className="modal-main" show={showModal} style={{}}>
                 <div className="card">
                     <div className="card-header">
-                        <h3>¿Desea eliminar la tarea {task.name}?</h3>
+                        <h3>¿Desea eliminar la tarea {task.name.name}?</h3>
                     </div>
                     <div className="card-footer d-flex justify-content-md-end">
                         <button type="button"

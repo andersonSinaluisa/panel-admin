@@ -1,41 +1,34 @@
+import { MetaResponse } from "../api-handler";
+import { Availability, Client, PaymentMethod, State } from "../core/interface";
+
 interface Invoice {
 
-    _id: string;
-    identityCounter: string;
-    state: string;
+    id:number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
     billingDate: string;
-    clientID: string;
-    NumeroIdentificacionFiscal: string;
-    products: Array<
-        {
-            id: string;
-            name: string;
-            nroSerie: string;
-            note: string;
-            price: number;
-            quantity: number;
-        }>,
+    taxIdentificationNumber: string;
     workReport: string;
     workDirection: string;
-    clientDiscount: number;
     discount: number;
-    IVA: number;
-    impuestosVariables: number;
-    paymentMethod: string;
-    note: string;
-    createdBy: string;
-    createdAt: string;
+    clientDiscount: number;
+    iva: number;
+    variableTaxes: number;
+    description: string;
+    state:State;
+    availability:Availability;
+    client:Client;
+    paymentMethod:PaymentMethod;
 }
 
 
-interface GetInvoicesResponse {
-    status: number;
-    message: Invoice[];
+interface GetInvoicesResponse  extends MetaResponse{
+    data: Invoice[];
 }
 
 interface GetInvoiceResponse {
-    status: number;
-    message: Invoice;
+    data: Invoice;
 }
 interface ProductInvoice{
     productId: number;

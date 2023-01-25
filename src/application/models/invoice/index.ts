@@ -1,6 +1,7 @@
 import { createModel } from "@rematch/core";
-import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
+import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { invoice_interface, invoice_request } from "infrastructure/api/invoice";
+import { Invoice } from "infrastructure/api/invoice/interface";
 import { RootModel } from "..";
 
 
@@ -29,38 +30,110 @@ export interface DeleteInvoiceStateProps extends ResponseServer{
 }
 
 
+export const initInvoice :Invoice={
+    id:0,
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: "",
+    billingDate: "",
+    taxIdentificationNumber: "",
+    workReport: "",
+    workDirection: "",
+    discount: 0,
+    clientDiscount: 0,
+    iva: 0,
+    variableTaxes: 0,
+    description: "",
+    availability: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        type: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            name: "",
+            code: ""
+        },
+        name: "",
+        code: ""
+    },
+    client: {
+        createdAt: "",
+        deletedAt:"",
+        firstName: "",
+        id: 0,
+        firstSurname: "",
+        secondSurname: "",
+        secondName: "",
+        nickName: "",
+        role: {
+            createdAt: "",
+            deletedAt: "",
+            id: 0,
+            name: "",
+            type: {
+                code: "",
+                createdAt: "",
+                deletedAt: "",
+                id: 0,
+                name: "",
+                updatedAt: ""
+            },
+            updatedAt: ""
+        },
+        updatedAt: "",
+    },
+    paymentMethod: {
+        code: "",
+        createdAt: "",
+        deletedAt: "",
+        id: 0,
+        name: "",
+        type: {
+            code: "",
+            createdAt: "",
+            deletedAt: "",
+            id: 0,
+            name: "",
+            updatedAt: ""
+        },
+        updatedAt: ""
+    },
+    state: {
+        code: "",
+        createdAt: "",
+        deletedAt: "",
+        id: 0,
+        name: "",
+        type: {
+            code: "",
+            createdAt: "",
+            deletedAt   : "",
+            id: 0,
+            name: "",
+            updatedAt: ""
+        },
+        updatedAt: ""
+    },
+}
+
+
 export const INVOICE = createModel<RootModel>()({
     state: {
         GetInvoices:{
             data: {
-                status:0,
-                message:[],
+                data:[],
+                ...initialMetaResponse
             },
             error:"",
             status:0,
         } as GetInvoicesStateProps,
         GetInvoice:{
             data: {
-                status:0,
-                message:{
-                    _id: "",
-                    identityCounter: "",
-                    state: "",
-                    billingDate: "",
-                    clientID: "",
-                    NumeroIdentificacionFiscal: "",
-                    products:[],
-                    workReport: "",
-                    workDirection: "",
-                    clientDiscount: 0,
-                    discount: 0,
-                    IVA:0,
-                    impuestosVariables: 0,
-                    paymentMethod: "",
-                    note: "",
-                    createdBy: "",
-                    createdAt: ""
-                }
+                data:initInvoice
             },
             error:"",
             status:0,
@@ -101,8 +174,8 @@ export const INVOICE = createModel<RootModel>()({
                     
                     dispatch.INVOICE.onGetInvoices({
                         data:{
-                            status:0,
-                            message:[],
+                            data:[],
+                            ...initialMetaResponse
                         },
                         error:e.message,
                         status:e.response?.status || 500,
@@ -133,26 +206,7 @@ export const INVOICE = createModel<RootModel>()({
                     
                     dispatch.INVOICE.onGetInvoice({
                         data:{
-                            status:0,
-                            message:{
-                                _id: "",
-                                identityCounter: "",
-                                state: "",
-                                billingDate: "",
-                                clientID: "",
-                                NumeroIdentificacionFiscal: "",
-                                products:[],
-                                workReport: "",
-                                workDirection: "",
-                                clientDiscount: 0,
-                                discount: 0,
-                                IVA:0,
-                                impuestosVariables: 0,
-                                paymentMethod: "",
-                                note: "",
-                                createdBy: "",
-                                createdAt: ""
-                            }
+                            data:initInvoice
                         },
                         error:e.message,
                         status:e.response?.status || 500,
@@ -194,7 +248,7 @@ export const INVOICE = createModel<RootModel>()({
         },
 
         async onDeleteInvoiceAsync(props:{
-            id:string;
+            id:number;
             headers:HeaderProps;
         }){
             try{
@@ -223,26 +277,7 @@ export const INVOICE = createModel<RootModel>()({
            
             dispatch.INVOICE.onGetInvoice({
                 data:{
-                    status:0,
-                    message:{
-                        _id: "",
-                        identityCounter: "",
-                        state: "",
-                        billingDate: "",
-                        clientID: "",
-                        NumeroIdentificacionFiscal: "",
-                        products:[],
-                        workReport: "",
-                        workDirection: "",
-                        clientDiscount: 0,
-                        discount: 0,
-                        IVA:0,
-                        impuestosVariables: 0,
-                        paymentMethod: "",
-                        note: "",
-                        createdBy: "",
-                        createdAt: ""
-                    }
+                    data:initInvoice
                 },
                 error:"",
                 status:0,

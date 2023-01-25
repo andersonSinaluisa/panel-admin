@@ -19,14 +19,14 @@ const DashboardView = (props: DashboardViewProps) => {
     const [Countinstallations, setCountInstallations] = React.useState<number>(0);
 
     const [task, setTask] = React.useState<tasks_interface.GetTaskResponse>({
-        message: [],
-        status: 0
+        data: [],
+        ...initialMetaResponse
     });
 
 
     const [jobs, setJobs] = React.useState<jobs_interface.GetJobsResponse>({
-        message: [],
-        status: 0
+        data: [],
+        ...initialMetaResponse
     });
 
     const [installations, setInstallations] = React.useState<installations_interface.GetInstallationsResponse>({
@@ -39,9 +39,9 @@ const DashboardView = (props: DashboardViewProps) => {
 
 
     React.useEffect(() => {
-        setCountTask(props.GetTasks.message.length)
+        setCountTask(props.GetTasks.data.length)
         setCountUsers(props.GetUsers.data.length)
-        setCountJobs(props.GetJobs.message.length)
+        setCountJobs(props.GetJobs.data.length)
         setCountInstallations(props.GetInstallations.data.length)
 
 
@@ -76,10 +76,10 @@ const DashboardView = (props: DashboardViewProps) => {
     const getTaskStats = () => {
         let stats = [];
         stats.push(
-            getStats(task.message.length, task.message.filter(x => x.state === "cerrado").length),
+            getStats(task.data.length, task.data.filter(x => x.state.name === "cerrado").length),
         )
         stats.push(
-            getStats(task.message.length, task.message.filter(x => x.state === "abierto").length),
+            getStats(task.data.length, task.data.filter(x => x.state.name === "abierto").length),
         )
 
 
@@ -333,9 +333,9 @@ const DashboardView = (props: DashboardViewProps) => {
                                     </div>
                                     <div className="activity-progress flex-grow-1">
                                         <small className="text-muted d-inline-block mb-50">Trabajos Completados</small>
-                                        <small className="float-right">{jobs.message.filter(x => x.state === 'cerrado').length}</small>
+                                        <small className="float-right">{jobs.data.filter(x => x.state.name === 'cerrado').length}</small>
                                         <div className="progress progress-bar-warning progress-sm">
-                                            <div className="progress-bar" style={{ width: getStats(jobs.message.length, jobs.message.filter(x => x.state === 'cerrado').length) + "%" }}></div>
+                                            <div className="progress-bar" style={{ width: getStats(jobs.data.length, jobs.data.filter(x => x.state.name === 'cerrado').length) + "%" }}></div>
                                         </div>
                                     </div>
                                 </div>
@@ -347,9 +347,9 @@ const DashboardView = (props: DashboardViewProps) => {
                                     </div>
                                     <div className="activity-progress flex-grow-1">
                                         <small className="text-muted d-inline-block mb-50">Tareas Completadas</small>
-                                        <small className="float-right">{task.message.filter(x => x.state === 'cerrado').length}</small>
+                                        <small className="float-right">{task.data.filter(x => x.state.name === 'cerrado').length}</small>
                                         <div className="progress progress-bar-success progress-sm">
-                                            <div className="progress-bar" style={{ width: getStats(task.message.length, task.message.filter(x => x.state === 'cerrado').length) + "%" }}></div>
+                                            <div className="progress-bar" style={{ width: getStats(task.data.length, task.data.filter(x => x.state.name === 'cerrado').length) + "%" }}></div>
                                         </div>
                                     </div>
                                 </div>

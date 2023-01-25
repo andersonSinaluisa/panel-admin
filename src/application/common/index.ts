@@ -26,15 +26,15 @@ export const GET_BY_ID_PERSONAL = "/core/staff"
 export const DELETE_PERSONAL = "/core/staff"
 
 
-export const GET_JOBS = "/jobs/";
-export const CREATE_JOBS = "/jobs/";
-export const CLOSE_JOBS = "/jobs/close/";
-export const DELETE_JOBS = "/jobs/delete/";
+export const GET_JOBS = "/core/jobs";
+export const CREATE_JOBS = "/core/jobs";
+export const CLOSE_JOBS = "/core/jobs";
+export const DELETE_JOBS = "/core/jobs";
 
-export const GET_TASKS = "/tasks";
-export const CREATE_TASKS = "/tasks/";
-export const CLOSE_TASKS = "/tasks/close/";
-export const DELETE_TASKS = "/tasks/delete/";
+export const GET_TASKS = "/core/tasks";
+export const CREATE_TASKS = "/core/tasks";
+export const CLOSE_TASKS = "/core/tasks";
+export const DELETE_TASKS = "/core/tasks";
 
 
 
@@ -51,9 +51,9 @@ export const DELETE_PRODUCT = "/products/delete/";
 
 export const SEARCH = "/searcher/";
 
-export const GET_BILLING = "/billing";
-export const CREATE_BILLING = "/billing";
-export const DELETE_BILLING = "/factura/delete/";
+export const GET_BILLING = "/core/invoices";
+export const CREATE_BILLING = "/core/invoices";
+export const DELETE_BILLING = "/core/invoices";
 
 
 
@@ -107,5 +107,6 @@ export const status = [
 ]
 
 
-export const TASK_OPEN = "abierto";
-export const TASK_CLOSE = "cerrado";
+export const TASK_OPEN = "type_task_status_opened";
+export const TASK_CLOSE = "type_task_status_closed";
+

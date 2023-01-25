@@ -19,7 +19,7 @@ export interface TasksViewProps{
     GetUsers:user_interface.GetUsers;
     CloseTask:CloseTaskStateProps;
     onClear:()=>void;
-    onDeleteTaskAsync:(props:{headers:HeaderProps,id:string})=>void;
+    onDeleteTaskAsync:(props:{headers:HeaderProps,id:number})=>void;
     DeleteTask:DeleteTaskStateProps;
 }
 
@@ -27,7 +27,7 @@ export interface TasksViewProps{
 //connect to redux
 const mapStateToProps = ({AUTH,TASKS,USERS}:any,ownProps:any) => {
     return {
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetTasks:TASKS.GetTasks.data,
@@ -42,7 +42,7 @@ const mapDispatchToProps = ({TASKS,USERS}: any) => ({
     onGetTasksAsync:(props: HeaderProps)=>TASKS.onGetTasksAsync(props),
     onCreateTasksAsync:(props: { headers: HeaderProps, body: tasks_interface.CreateTaskRequest })=>TASKS.onCreateTasksAsync(props),
     onGetUsersAync:(props:HeaderProps)=>USERS.onGetUsersAync(props),
-    onCloseTaskAsync:(props:{headers:HeaderProps,body:tasks_interface.CloseTaskRequest,id:string})=>TASKS.onCloseTaskAsync(props),
+    onCloseTaskAsync:(props:{headers:HeaderProps,body:tasks_interface.CloseTaskRequest,id:number})=>TASKS.onCloseTaskAsync(props),
     onClear:()=>TASKS.onClear(),
     onDeleteTaskAsync:(props:{headers:HeaderProps,id:string})=>TASKS.onDeleteTaskAsync(props)
 })

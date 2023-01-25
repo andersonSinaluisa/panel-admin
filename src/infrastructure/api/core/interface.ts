@@ -7,13 +7,14 @@
     deletedAt: any
     type: Type
     name: string
+    code: string
   }
   
   export interface Type {
     id: number
-    created_at: string
-    updated_at: string
-    deleted_at: any
+    createdAt: string
+    updatedAt: string
+    deletedAt: any
     name: string
     code: string
   }
@@ -25,6 +26,7 @@
     deletedAt: any
     type: Type
     name: string
+    code: string
   }
 
   
@@ -110,4 +112,116 @@ export interface Warehouse {
     name: string;
     province: string;
     location: string;
+}
+export interface PersonType{
+    id: number
+    createdAt: string
+    updatedAt: string
+    deletedAt: any
+    type: Type
+    name: string
+}
+
+export interface DocumentType{
+    id: number
+    createdAt: string
+    updatedAt: string
+    deletedAt: any
+    type: Type
+    name: string
+}
+
+export interface StreetType{
+  id: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: any
+  type: Type
+  name: string
+}
+
+export interface Priority{
+  id: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: any
+  type: Type
+  name: string
+}
+
+export interface Name{
+  id: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: any
+  type: Type
+  name: string
+}
+export interface SecondaryEmailRelationship{
+  id: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: any
+  type: Type
+  name: string
+}
+export interface BackupEmailRelationship{
+  id: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: any
+  type: Type
+  name: string
+}
+export interface Responsible{
+  id:                         number;
+    createdAt:                  string;
+    updatedAt:                  string;
+    deletedAt:                  null|string;
+    passwordChanged:            boolean;
+    emailVerifiedAt:            string;
+    secondaryEmailVerifiedAt:   string;
+    backupEmailVerifiedAt:      string;
+    whatsappVerifiedAt:         string;
+    nickName:                   string;
+    firstName:                  string;
+    secondName:                 string;
+    firstSurname:               string;
+    secondSurname:              string;
+    email:                      string;
+    secondaryEmail:             string;
+    backupEmail:                string;
+    documentValue:              string;
+    province:                   string;
+    location:                   string;
+    direction:                  string;
+    postalCode:                 string;
+    landlinePhone:              string;
+    mobilePhone:                string;
+    firstContact:               string;
+    secondContact:              string;
+    contactSchedule:            string;
+    discount:                   string;
+    tracing:                    string;
+    description:                string;
+    state:                      State;
+    availability:               Availability;
+    role:                       Role;
+    personType:                 PersonType;
+    documentType:               DocumentType;
+    streetType:                 StreetType;
+    country:                    Country;
+    secondaryEmailRelationship: SecondaryEmailRelationship;
+    backupEmailRelationship:    BackupEmailRelationship;
+}
+
+export interface PaymentMethod{
+
+  id: number
+  createdAt: string
+  updatedAt: string
+  deletedAt: any
+  type: Type
+  name: string
+  code: string
 }

@@ -14,8 +14,8 @@ export interface ViewJobsProps {
     CloseJob: CloseJobStateProps;
     onGetJobsAsync: (payload: HeaderProps) => void;
     onCreateJobAsync: (payload: { headers: HeaderProps, body: CreateJobRequest }) => void;
-    onDeleteJobAsync: (payload: { headers: HeaderProps, id: string }) => void;
-    onCloseJobAsync: (payload: { headers: HeaderProps, body: CloseJobRequest, id: string }) => void;
+    onDeleteJobAsync: (payload: { headers: HeaderProps, id: number }) => void;
+    onCloseJobAsync: (payload: { headers: HeaderProps, body: CloseJobRequest, id: number }) => void;
     onGetClientsAsync:(props:HeaderProps)=>void;
     token: string;
     title: string;
@@ -32,7 +32,7 @@ const mapStateToProps = ({ JOBS , AUTH,CLIENTS}: any, ownProps:any) => {
         CreateJob: JOBS.CreateJob,
         DeleteJob: JOBS.DeleteJob,
         CloseJob: JOBS.CloseJob,
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetClients: CLIENTS.GetClients.data
@@ -47,8 +47,8 @@ const mapDispatchToProps = ({ JOBS,CLIENTS }: any) => {
     return {
         onGetJobsAsync: (payload: HeaderProps) => JOBS.onGetJobsAsync(payload),
         onCreateJobAsync: (payload: { headers: HeaderProps, body: CreateJobRequest }) => JOBS.onCreateJobAsync(payload),
-        onDeleteJobAsync: (payload: { headers: HeaderProps, id: string }) => JOBS.onDeleteJobAsync(payload),
-        onCloseJobAsync: (payload: { headers: HeaderProps, body: CloseJobRequest, id: string }) => JOBS.onCloseJobAsync(payload),
+        onDeleteJobAsync: (payload: { headers: HeaderProps, id: number }) => JOBS.onDeleteJobAsync(payload),
+        onCloseJobAsync: (payload: { headers: HeaderProps, body: CloseJobRequest, id: number }) => JOBS.onCloseJobAsync(payload),
         onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props)
     };
 }

@@ -78,13 +78,15 @@ export const initProduct: Product = {
         deletedAt: null,
         type: {
             id: 0,
-            created_at: "",
-            updated_at: "",
-            deleted_at: null,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
             name: "",
             code: ""
         },
-        name: ""
+        name: "",
+        code: ""
+
     },
 
     availability: {
@@ -94,13 +96,14 @@ export const initProduct: Product = {
         deletedAt: null,
         type: {
             id: 0,
-            created_at: "",
-            updated_at: "",
-            deleted_at: null,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
             name: "",
             code: ""
         },
-        name: ""
+        name: "",
+        code: ""
     },
     wharehouse: {
         id: 0,
@@ -112,13 +115,14 @@ export const initProduct: Product = {
             deletedAt: null,
             type: {
                 id: 0,
-                created_at: "",
-                updated_at: "",
-                deleted_at: null,
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
                 name: "",
                 code: ""
             },
-            name: ""
+            name: "",
+            code: ""
         },
         country: {
             id: 0,
@@ -127,9 +131,9 @@ export const initProduct: Product = {
             deletedAt: null,
             type: {
                 id: 0,
-                created_at: "",
-                updated_at: "",
-                deleted_at: null,
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
                 name: "",
                 code: ""
             },
@@ -147,13 +151,15 @@ export const initProduct: Product = {
             deletedAt: null,
             type: {
                 id: 0,
-                created_at: "",
-                updated_at: "",
-                deleted_at: null,
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
                 name: "",
                 code: ""
             },
-            name: ""
+            name: "",
+            code: ""
+
         },
 
     }

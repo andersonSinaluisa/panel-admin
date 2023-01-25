@@ -1,5 +1,6 @@
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initJob } from "application/models/jobs";
 import { ExportToCsv } from "export-to-csv";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
@@ -42,29 +43,11 @@ const ViewJobs = (props: ViewJobsProps) => {
         note: "",
         workReport: ""
     })
-    const [job, setJob] = useState<jobs_interface.Job>({
-        _id: "",
-        contactName: "",
-        contactPhone: "",
-        createdAt: "",
-        description: "",
-        direction: "",
-        idClient: "",
-        identityCounter: "",
-        interventionDate: "",
-        material: "",
-        note: "",
-        obsContact: "",
-        priority: "",
-        technical: "",
-        type: "",
-        workReport: "",
-        state: "",
-    })
+    const [job, setJob] = useState<jobs_interface.Job>(initJob)
 
     const [jobs, setJobs] = useState<jobs_interface.GetJobsResponse>({
-        message: [],
-        status: 0
+        data: [],
+        ...initialMetaResponse
     })
     const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
         data: [],
@@ -105,21 +88,9 @@ const ViewJobs = (props: ViewJobsProps) => {
 
     useEffect(() => {
         if(query.get("job")){
-            jobs.message.filter((job) => {
-                if(job._id === query.get("job")){
-                    setForm({
-                        contactName: job.contactName,
-                        contactPhone: job.contactPhone,
-                        description: job.description,
-                        direction: job.direction,
-                        idClient: job.idClient,
-                        interventionDate: job.interventionDate,
-                        material: job.material,
-                        obsContact: job.obsContact,
-                        priority: job.priority,
-                        technical: job.technical,
-                        type: job.type
-                    })
+            jobs.data.filter((job) => {
+                if(job.id+"" === query.get("job")){
+                    
                     setJob(job)
                     setShow(true)
                 }
@@ -187,7 +158,12 @@ const ViewJobs = (props: ViewJobsProps) => {
     }, [props.CloseJob])
 
     useEffect(() => {
-        setJobs(props.GetJobs)
+        setJobs({
+            data:[...jobs.data, ...props.GetJobs.data],
+            message: props.GetJobs.message,
+            links: props.GetJobs.links,
+            meta: props.GetJobs.meta
+        })
     }, [props.GetJobs])
 
     useEffect(() => {
@@ -357,25 +333,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             technical: "",
             type: ""
         })
-        setJob({
-            _id: "",
-            contactName: "",
-            contactPhone: "",
-            createdAt: "",
-            description: "",
-            direction: "",
-            idClient: "",
-            identityCounter: "",
-            interventionDate: "",
-            material: "",
-            note: "",
-            obsContact: "",
-            priority: "",
-            technical: "",
-            type: "",
-            workReport: "",
-            state: ""
-        })
+        setJob(initJob)
     }
 
     const handleDeleteJob = (job: any) => {
@@ -435,7 +393,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             headers: {
                 token: props.token
             },
-            id: job._id
+            id: job.id
         })
         setShowModalClose(false)
 
@@ -471,7 +429,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             <i className="bx bx-plus"></i>
                             <span>
                                 {
-                                    job._id === "" ? "Nuevo Trabajo" : "Editar Trabajo"
+                                    job.id === 0 ? "Nuevo Trabajo" : "Editar Trabajo"
                                 }
                             </span>
                         </button>
@@ -677,7 +635,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                         />
                         <div className="mt-1 d-flex justify-content-end">
                             {
-                                job._id === "" ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
+                                job.id === 0 ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
                             }
 
                         </div>
@@ -725,23 +683,23 @@ const ViewJobs = (props: ViewJobsProps) => {
                                     <div className="todo-task-list list-group" style={{ overflow: 'auto' }}>
                                         {/* task list start */}
                                         <TaskList
-                                            items={jobs.message.map((item) => {
+                                            items={jobs.data.map((item) => {
                                                 return {
                                                     label: item.direction,
                                                     onClick: () => handleSelect(item),
                                                     tags: [
                                                         {
-                                                            label: "prioridad: " + item.priority,
-                                                            color: item.priority === "Alta" ? "warning" : item.priority === "Media" ? "info" : "success"
+                                                            label: "prioridad: " + item.priority.name,
+                                                            color: item.priority.name === "Alta" ? "warning" : item.priority.name === "Media" ? "info" : "success"
                                                         },
                                                         {
-                                                            label: "Estado: " + item.state,
-                                                            color: item.state === "abierto" ? "success" : "danger"
+                                                            label: "Estado: " + item.state.name,
+                                                            color: item.state.name === "abierto" ? "success" : "danger"
                                                         },
 
                                                     ],
                                                     data: item,
-                                                    completed: item.state === "abierto" ? false : true,
+                                                    completed: item.state.name === "abierto" ? false : true,
                                                     options: [
                                                         {
                                                             element: <a className="todo-item-delete ml-75"
@@ -754,6 +712,16 @@ const ViewJobs = (props: ViewJobsProps) => {
                                             })}
                                             onChecked={handleCloseJob}
                                             key={1}
+                                            fetchData={()=>{
+                                                if(jobs.data.length<props.GetJobs.meta.total){
+                                                    props.onGetJobsAsync({
+                                                        token: props.token,
+                                                        page: props.GetJobs.meta.current_page + 1,
+                                                        
+                                                    })
+                                                }
+                                            }}
+                                            hasMore={jobs.data.length<props.GetJobs.meta.total}
                                         />
                                         {/* task list end */}
                                         <div className="no-results">

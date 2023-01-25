@@ -13,7 +13,7 @@ export interface ViewInvoicesProps {
     title: string;
     breadcrumbs: string[];
     onDeleteInvoiceAsync: (payload: {
-        id:string;
+        id:number;
         headers:HeaderProps;
     }) => void;
     DeleteInvoice:DeleteInvoiceStateProps;
@@ -27,7 +27,7 @@ export interface ViewInvoicesProps {
 const mapStateToProps = ({ INVOICE , AUTH,CLIENTS}: any, ownProps:any) => {
     return {
         GetInvoices: INVOICE.GetInvoices.data,
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         DeleteInvoice: INVOICE.DeleteInvoice,
@@ -44,7 +44,7 @@ const mapDispatchToProps = ({ INVOICE,CLIENTS }: any) => {
     return {
         onGetInvoicesAsync:(props:HeaderProps)=>INVOICE.onGetInvoicesAsync(props),
         onDeleteInvoiceAsync:(props:{
-            id:string;
+            id:number;
             headers:HeaderProps;
         })=>INVOICE.onDeleteInvoiceAsync(props),
         onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props),

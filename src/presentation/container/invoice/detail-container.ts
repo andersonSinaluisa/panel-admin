@@ -18,7 +18,7 @@ export interface DetailInvoiceProps {
     breadcrumbs: string[];
     GetInvoice: invoice_interface.GetInvoiceResponse;
     onGetClientsAsync:(props:HeaderProps)=>void;
-    onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> void;
+    onGetClientByIdAsync:(props:{headers:HeaderProps,id:number})=> void;
     GetClientById:clients_interface.Client;
     onGetProductsAsync:(props:HeaderProps)=>void;
     GetProducts:GetProductsResponse;
@@ -45,7 +45,7 @@ const mapDispatchToProps = ({ INVOICE,CLIENTS,PRODUCTS }: any) => {
             id:string;
             headers:HeaderProps;
         })=>INVOICE.onGetInvoiceAsync(props),
-        onGetClientByIdAsync:(props:{headers:HeaderProps,id:string})=> CLIENTS.onGetClientByIdAsync(props),
+        onGetClientByIdAsync:(props:{headers:HeaderProps,id:number})=> CLIENTS.onGetClientByIdAsync(props),
         onGetProductsAsync:(props:HeaderProps)=>PRODUCTS.onGetProductsAsync(props),
     };
 }

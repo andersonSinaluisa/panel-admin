@@ -1,6 +1,7 @@
 import { createModel } from "@rematch/core";
-import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
+import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { tasks_interface, tasks_request } from "infrastructure/api/tasks";
+import { Task } from "infrastructure/api/tasks/interface";
 import { RootModel } from "..";
 
 
@@ -32,13 +33,273 @@ export interface DeleteTaskStateProps extends ResponseServer{
     }
 }
 
+export const initTask:Task = {
+
+    id:0,
+    createdAt:"",
+    updatedAt:"",
+    deletedAt:null,
+    description:"",
+    observation:"",
+    interventionAt:"",
+    state:{
+        id:0,
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:null,
+        type:{
+            code:"",
+            createdAt:"",
+            deletedAt:null,
+            id:0,
+            name:"",
+            updatedAt:""
+            
+        },
+        name:"",
+        code:""
+    },
+    availability:{
+        id:0,
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:null,
+        type:{
+            id:0,
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:null,
+            name:"",
+            code:""
+        },
+        name:"",
+        code:""
+    },
+    responsible: {
+ 
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        passwordChanged: false,
+        emailVerifiedAt: "",
+        secondaryEmailVerifiedAt: "",
+        backupEmailVerifiedAt: "",
+        whatsappVerifiedAt: "",
+        nickName: "",
+        firstName: "",
+        secondName: "",
+        firstSurname: "",
+
+        secondSurname: "",
+        email: "",
+        secondaryEmail: "",
+        backupEmail: "",
+        documentValue: "",
+        province: "",
+        location: "",
+        direction: "",
+        postalCode: "",
+        landlinePhone: "",
+        mobilePhone: "",
+        firstContact: "",
+
+        secondContact: "",
+        contactSchedule: "",
+        discount: "",
+        tracing: "",
+        description: "",
+        state:{
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type: {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+            code: ""
+        },
+        availability: {
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type: {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+            code: ""
+        },
+        role: {
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+        },
+        backupEmailRelationship:{
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+        },
+        country:{
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+
+        },
+        documentType:{
+            createdAt: "",
+            updatedAt: "",
+
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+        },
+        personType:{
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+        },
+        secondaryEmailRelationship:{
+            createdAt: "",
+            updatedAt: "",
+
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+        },
+        streetType:{
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            type:  {
+
+                createdAt: "",
+                updatedAt: "",
+                deletedAt: null,
+                id: 0,
+                name: "",
+                code: ""
+            },
+        },
+    },
+    type:{
+        id:0,
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:null,
+        name:"",
+        code:""
+    },
+    priority:{
+        id:0,
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:null,
+        name:"",
+        type:{
+            id:0,
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:null,
+            name:"",
+            code:""
+        },
+    },
+    name:{
+        id:0,
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:null,
+        name:"",
+        type:{
+            id:0,
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:null,
+
+            name:"",
+            code:""
+        }
+    }
+
+}
 
 export const TASKS = createModel<RootModel>()({
     state: {
         GetTasks:{
             data: {
-                message:[],
-                status:0
+                data:[],
+                ...initialMetaResponse
             },
             status:0,
             error:""
@@ -119,7 +380,9 @@ export const TASKS = createModel<RootModel>()({
 
                 });
             } catch (error:any) {
-                dispatch.TASKS.onGetTasks({ data: { message: [], status: 0 }, status: 0, error: error.response?error.response.data.message:error.message });
+                dispatch.TASKS.onGetTasks(
+                    { data: { data: [], ...initialMetaResponse }, 
+                    status: 0, error: error.response?error.response.data.message:error.message });
             }
         },
         async onCreateTasksAsync(props: { headers: HeaderProps, body: tasks_interface.CreateTaskRequest }) {
@@ -161,7 +424,7 @@ export const TASKS = createModel<RootModel>()({
                 dispatch.TASKS.onCloseTask({ data: { status: 0, message: "" }, status: 0, error: error.response?error.response.data.message:error.message });
             }
         },
-        async onDeleteTaskAsync(props:{headers:HeaderProps,id:string}) {
+        async onDeleteTaskAsync(props:{headers:HeaderProps,id:number}) {
             try {
                 const response = await tasks_request.DeleteTask(props).toPromise();
                 dispatch.TASKS.onDeleteTask({

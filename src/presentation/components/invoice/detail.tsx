@@ -1,4 +1,5 @@
 import { initialClient } from "application/models/clients";
+import { initInvoice } from "application/models/invoice";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
@@ -16,26 +17,8 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
     const { id } = useParams();
 
     const [invoice, setInvoice] = React.useState<invoice_interface.GetInvoiceResponse>({
-        message: {
-            _id: "",
-            identityCounter: "",
-            state: "",
-            billingDate: "",
-            clientID: "",
-            NumeroIdentificacionFiscal: "",
-            products: [],
-            workReport: "",
-            workDirection: "",
-            clientDiscount: 0,
-            discount: 0,
-            IVA: 0,
-            impuestosVariables: 0,
-            paymentMethod: "",
-            note: "",
-            createdBy: "",
-            createdAt: ""
-        },
-        status: 0
+        data: initInvoice,
+        
     });
     const [products, setProducts] = useState<products_interface.GetProductsResponse>({
         data: [],
@@ -69,20 +52,6 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
 
 
 
-    useEffect(() => {
-        setInvoice(props.GetInvoice)
-        if(props.GetInvoice.message.clientID!==""){
-            props.onGetClientByIdAsync(
-                {
-                    headers: {
-                        token: props.token,
-                    },
-                    id: props.GetInvoice.message.clientID
-                }
-            )
-        }
-    
-    }, [props.GetInvoice])
 
     useEffect(() => {
         setProducts(props.GetProducts)
@@ -109,7 +78,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="N° Factura"
                                             type="text"
                                             name="numeroFactura"
-                                            value={invoice.message.identityCounter}
+                                            value={invoice.data.taxIdentificationNumber}
                                             enabled={true}
 
                                         />
@@ -117,7 +86,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="Fecha factura"
                                             type="date"
                                             name="billingDate"
-                                            value={invoice.message.billingDate}
+                                            value={invoice.data.billingDate}
                                             enabled={true}
 
                                         />
@@ -205,12 +174,10 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                                     <div className=" d-flex border rounded mb-1 row col-12">
                                                         <div className="invoice-item-filed row col-12 ">
 
-                                                            {
-                                                                invoice.message.products.map((item, index) => (
                                                                     <>
                                                                         <div className="col-md-1 col-12 form-group mt-2">
                                                                             <p className="invoice-item-title align-middle">
-                                                                                {item.quantity}
+                                                                                0
                                                                             </p>
                                                                         </div>
                                                                         <div className="col-md-1 col-12  form-group mt-2">
@@ -219,7 +186,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
 
                                                                         <div className="col-md-2 col-12 form-group mt-2">
                                                                             <p className="invoice-item-title align-middle">
-                                                                                {item.nroSerie}
+                                                                                00001   
                                                                             </p>
                                                                         </div>
                                                                         <div className="col-md-5 col-12 form-group mt-2">
@@ -227,11 +194,10 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                                                         </div>
 
                                                                         <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ {item.price
-                                                                            }</strong>
+                                                                            <strong className="text-primary align-middle">$ 0.00 </strong>
                                                                         </div>
                                                                         <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ {item.quantity * item.price}</strong>
+                                                                            <strong className="text-primary align-middle">$ 0.00</strong>
                                                                         </div>
 
                                                                         <div className="col-12">
@@ -241,9 +207,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
 
                                                                     </>
 
-                                                                ))
-
-                                                            }
+                                                               
                                                         </div>
                                                         <div className="invoice-icon d-flex flex-column justify-content-between border-left p-25">
 
@@ -263,29 +227,25 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             <h6>Metodo de pago</h6>
                                             <p>
                                                 {
-                                                    invoice.message.paymentMethod
+                                                    invoice.data.paymentMethod.name
                                                 }
                                             </p>
                                             <h6>Notas de la factura</h6>
                                             <p>
-                                                {invoice.message.note}
+                                               nota agregar aqui
                                             </p>
                                         </div>
                                         <div className="col-4 mt-2">
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Importe Neto</span>
-                                                    <span className="invoice-value">{
-                                                        invoice.message.products.reduce((total, item) => {
-                                                            return total + item.quantity * item.price
-                                                        }, 0)
-                                                    }</span>
+                                                    <span className="invoice-value">0.00</span>
                                                 </div>
 
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Descuento </span>
                                                     <span className="invoice-value">{
-                                                        invoice.message.clientDiscount
+                                                        invoice.data.clientDiscount
                                                     }</span>
                                                 </div>
                                                 <div className="invoice-calc d-flex justify-content-between">
@@ -295,11 +255,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                                 <hr />
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Total</span>
-                                                    <span className="invoice-value">$ {
-                                                        invoice.message.products.reduce((total, item) => {
-                                                            return total + item.quantity * item.price
-                                                        }, 0) - invoice.message.discount - invoice.message.clientDiscount
-                                                    }</span>
+                                                    <span className="invoice-value">$ 0.00</span>
                                                 </div>
 
                                             </div>

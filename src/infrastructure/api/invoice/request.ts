@@ -4,7 +4,9 @@ import { CreateInvoiceRequest } from './interface';
 
 
 const GetInvoices = (props:APIHANLDER.HeaderProps)=>{
-    return APIHANLDER.get(Global.GET_BILLING,{
+    let perPage =props.perPage || 10;
+    let page = props.page || 1;
+    return APIHANLDER.get(Global.GET_BILLING+"?perPage="+perPage+"&page="+page,{
         headers:{
             'Authorization':"Bearer "+props.token
         }
@@ -33,7 +35,7 @@ const CreateInvoice = (props:{
 
 const DeleteInvoice = (props:{
     headers:APIHANLDER.HeaderProps,
-    id: string
+    id: number
 })=>{
     return APIHANLDER.del(Global.DELETE_BILLING+props.id,{
             'Authorization':"Bearer "+props.headers.token

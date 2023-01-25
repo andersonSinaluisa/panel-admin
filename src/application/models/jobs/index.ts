@@ -1,7 +1,7 @@
 import { createModel } from "@rematch/core";
-import { HeaderProps, ResponseServer } from "infrastructure/api/api-handler";
+import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { jobs_interface, jobs_request } from "infrastructure/api/jobs";
-import { GetJobsResponse } from "infrastructure/api/jobs/interface";
+import { GetJobsResponse, Job } from "infrastructure/api/jobs/interface";
 import { RootModel } from "..";
 
 interface GetJobsStateProps extends ResponseServer{
@@ -29,14 +29,257 @@ export interface CloseJobStateProps extends ResponseServer{
     }
 }
 
+export const initJob :Job = {
+    id:0,
+    createdAt:"",
+    updatedAt:"",
+    deletedAt:"",
+    direction:"",
+    contactName:"",
+    contactPhone:"",
+    workReport:"",
+    interveneAt:"",
+    description:"",
+    state:{
+        id:0,
+        name:"",
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:"",
+        type:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            code:""
+        },
+        code:""
+    },
+    availability:{
+        id:0,
+        name:"",
+        code:"",
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:"",
+        type:{
+            id:0,
+            name:"",
+            code:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:""
+        }
+    },
+    materials:[],
+    priority:{
+        id:0,
+        name:"",
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:"",
+        type:{
+            id  :0,
+            name:"",
+            code:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:""
+        },
+    },
+    technical:{
+
+        id:0,
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:"",
+        passwordChanged:false,
+        emailVerifiedAt:"",
+        secondaryEmailVerifiedAt:"",
+        backupEmailVerifiedAt:"",
+        whatsappVerifiedAt:"",
+        nickName:"",
+        firstName:"",
+        secondName:"",
+        firstSurname:"",
+        secondSurname:"",
+        email:"",
+        secondaryEmail:"",
+        backupEmail:"",
+        documentValue:"",
+        province:"",
+        location:"",
+        direction:"",
+        postalCode:"",
+        landlinePhone:"",
+        mobilePhone:"",
+        firstContact:"",
+        secondContact:"",
+        contactSchedule:"",
+        discount:"",
+        tracing:"",
+        description:"",
+        state:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+                code:""
+
+            },
+            code:""
+        },
+
+        availability:{
+
+            id:0,
+            name:"",
+            code:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        role:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        personType:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        backupEmailRelationship:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        secondaryEmailRelationship:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        createdBy:"",
+        documentType:{
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            id:0,
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        streetType:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+        country:{
+            id:0,
+            name:"",
+            createdAt:"",
+            updatedAt:"",
+            deletedAt:"",
+            type:{
+                id:0,
+                name:"",
+                code:"",
+                createdAt:"",
+                updatedAt:"",
+                deletedAt:"",
+            },
+        },
+    },
+    type:{
+        id:0,
+        name:"",
+        createdAt:"",
+        updatedAt:"",
+        deletedAt:"",
+        code:""
+
+    },
+}
 
 export const JOBS = createModel<RootModel>()({
 
     state: {
         GetJobs:{
             data:{
-                status:0,
-                message:[]
+                data:[],
+                ...initialMetaResponse
             },
             error:"",
             status:0
@@ -105,8 +348,8 @@ export const JOBS = createModel<RootModel>()({
             }catch(e:any){
                 dispatch.JOBS.onGetJobs({
                     data:{
-                        status:0,
-                        message:[]
+                        data:[],
+                        ...initialMetaResponse
                     },
                     error:e.response?e.response.data.message:"Ocurrio un error",
                     status:e.response?e.response.status:400
@@ -132,7 +375,7 @@ export const JOBS = createModel<RootModel>()({
                 });
             }
         },
-        async onDeleteJobAsync(payload:{headers:HeaderProps,id:string}){
+        async onDeleteJobAsync(payload:{headers:HeaderProps,id:number}){
             try{
                 const response = await jobs_request.DeleteJobs(payload).toPromise()
                 dispatch.JOBS.onDeleteJob({
@@ -151,7 +394,7 @@ export const JOBS = createModel<RootModel>()({
                 });
             }
         },
-        async onCloseJobAsync(payload:{headers:HeaderProps,body:jobs_interface.CloseJobRequest,id:string}){
+        async onCloseJobAsync(payload:{headers:HeaderProps,body:jobs_interface.CloseJobRequest,id:number}){
             try{
                 const response = await jobs_request.CloseJobs(payload).toPromise()
                 dispatch.JOBS.onCloseJob({

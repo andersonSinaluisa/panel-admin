@@ -38,6 +38,7 @@ const ProductView = (props: ProductsViewProps) => {
 
 
     useEffect(() => {
+        setLoad(false)
         setProducts(props.GetProducts);
     }, [props.GetProducts])
 

@@ -1,4 +1,5 @@
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { initInvoice } from "application/models/invoice";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
 import { invoice_interface } from "infrastructure/api/invoice";
@@ -15,8 +16,8 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
   useBreadcrumbs(props.breadcrumbs)
   let navigate = useNavigate();
   const [invoices, setInvoices] = React.useState<invoice_interface.GetInvoicesResponse>({
-    message: [],
-    status: 0
+    data: [],
+    ...initialMetaResponse
   })
   const [clients, setClients] = React.useState<clients_interface.GetClientsResponse>({
     data: [],
@@ -24,25 +25,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
   })
 
   const [showModal, setShowModal] = React.useState<boolean>(false);
-  const [invoice, setInvoice] = React.useState<invoice_interface.Invoice>({
-    _id: "",
-    identityCounter: "",
-    state: "",
-    billingDate: "",
-    clientID: "",
-    NumeroIdentificacionFiscal: "",
-    products: [],
-    workReport: "",
-    workDirection: "",
-    clientDiscount: 0,
-    discount: 0,
-    IVA: 0,
-    impuestosVariables: 0,
-    paymentMethod: "",
-    note: "",
-    createdBy: "",
-    createdAt: ""
-  })
+  const [invoice, setInvoice] = React.useState<invoice_interface.Invoice>(initInvoice)
 
 
 
@@ -75,7 +58,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
       headers: {
         token: props.token
       },
-      id: invoice._id
+      id: invoice.id
     })
     props.onGetInvoicesAsync({
       token: props.token
@@ -114,19 +97,21 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
         <div className="table-responsive ">
           <DataTable
             key={"table-group"}
-            dataTable={invoices.message}
+            dataTable={invoices.data}
             actions={getActions()}
             columns={[
-              {
-                name: "identityCounter",
-                label: "Identificador",
-                type: "text",
-              },
+             
 
               {
-                name: "NumeroIdentificacionFiscal",
+                name: "taxIdentificationNumber",
                 label: "Identificacion Fiscal",
                 type: "text",
+              },
+              {
+                name: "client",
+                label: "Cliente",
+                type: "object",
+                field_show: "nickName"
               },
              
               {
@@ -136,7 +121,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
               },
 
               {
-                name: "IVA",
+                name: "iva",
                 label: "IVA",
                 type: "text",
               },
@@ -144,6 +129,13 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
             ]}
             dataLimit={5}
             pageLimit={2}
+            onChangePage={(page: number) => {
+              props.onGetInvoicesAsync({
+                token: props.token,
+                page: page
+              })
+            }}
+            
           />
         </div>
       </div>
@@ -151,7 +143,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
       <Modal className="modal-main" show={showModal} style={{}}>
         <div className="card">
           <div className="card-header">
-            <h3>¿Desea eliminar la factura {invoice.NumeroIdentificacionFiscal} ?</h3>
+            <h3>¿Desea eliminar la factura {invoice.taxIdentificationNumber} ?</h3>
           </div>
           <div className="card-footer d-flex justify-content-md-end">
             <button type="button"

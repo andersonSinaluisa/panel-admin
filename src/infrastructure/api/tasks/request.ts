@@ -4,7 +4,9 @@ import { CloseTaskRequest, CreateTaskRequest } from './interface';
 
 
 const GetTask = (props:APIHANDLER.HeaderProps)=>{
-    return APIHANDLER.get(Globals.GET_TASKS,{
+    let perPage = props.perPage ? props.perPage : 10;
+    let page = props.page ? props.page : 1;
+    return APIHANDLER.get(Globals.GET_TASKS+"?perPage="+perPage+"&page="+page,{
         headers:{
             Authorization:"Bearer "+props.token
         }
@@ -36,7 +38,7 @@ const CloseTask = (props:{headers:APIHANDLER.HeaderProps,body:CloseTaskRequest,i
 }
 
 //delete
-const DeleteTask = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
+const DeleteTask = (props:{headers:APIHANDLER.HeaderProps,id:number})=>{
     return APIHANDLER.del(Globals.DELETE_TASKS+props.id,{
             Authorization:"Bearer "+props.headers.token
         
