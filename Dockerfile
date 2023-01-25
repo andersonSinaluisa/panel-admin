@@ -1,5 +1,4 @@
-FROM node:14.19.0-alpine3.12 as build-stage
-
+FROM node:14.19.0-stretch
 
 # source of project
 
