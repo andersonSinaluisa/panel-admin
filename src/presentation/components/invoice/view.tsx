@@ -135,6 +135,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
                 page: page
               })
             }}
+            meta={invoices.meta}
             
           />
         </div>

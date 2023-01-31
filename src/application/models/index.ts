@@ -10,6 +10,7 @@ import {PRODUCTS} from './products'
 import {INVOICE} from './invoice'
 import {SEARCH} from './search'
 import {NOTIFICATIONS} from './notifications'
+import {CORE} from './core'
 
 export interface RootModel extends Models<RootModel> {
 	AUTH: typeof AUTH;
@@ -23,8 +24,9 @@ export interface RootModel extends Models<RootModel> {
 	INVOICE: typeof INVOICE;
 	SEARCH: typeof SEARCH;
 	NOTIFICATIONS: typeof NOTIFICATIONS;
+	CORE: typeof CORE;
 }
 
 export const models :RootModel = { AUTH,USERS,
 	CLIENTS,INSTALLATIONS,PERSONAL,JOBS,TASKS,PRODUCTS 
-	,INVOICE, SEARCH, NOTIFICATIONS};
+	,INVOICE, SEARCH, NOTIFICATIONS, CORE};

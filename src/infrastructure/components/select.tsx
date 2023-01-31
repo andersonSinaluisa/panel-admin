@@ -5,7 +5,7 @@ import React from "react";
 interface SelectProps {
     options: Array<{
         label: string;
-        value: number|string;
+        value: number|string|Object;
     }>;
     name: string;
     label: string;
@@ -27,7 +27,7 @@ const Select = (props: SelectProps) => {
                 {
                     props.options.map(e => {
                         
-                        return <option value={e.value} selected={e.value===props.selected}>{e.label}</option>
+                        return <option value={e.value.toString()} selected={e.value===props.selected}>{e.label}</option>
                     })
                 }
 

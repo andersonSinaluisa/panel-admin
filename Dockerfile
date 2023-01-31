@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the project files to the container
-COPY . .
+COPY ./build .
 
 # Build the project
 RUN npm run build

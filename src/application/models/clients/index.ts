@@ -11,24 +11,15 @@ interface GetClientsStateProps extends ResponseServer{
 }
 
 export interface CreateClientsStateProps extends ResponseServer{
-    data: {
-        message:string;
-        status:number;
-    }
+    data:clients_interface.CreateClientResponse;
 }
 
 export interface UpdateClientStateProps extends ResponseServer{
-    data:{
-        message:string;
-        status:number;
-    }
+    data: clients_interface.UpdateClientResponse;
 }
 
 export interface GetClientByIdStateProps extends ResponseServer{
-    data:{
-        message:clients_interface.Client,
-        status:number;
-    }
+    data: clients_interface.GetClientById;
 }
 
 //interface for delete state
@@ -151,42 +142,6 @@ export const initialClient = {
 }
 
 
-export const initialClientUpdate:ClientUpdateRequest ={
-    name:"",
-    secondaryEmail:"",
-    backupEmail:"",
-    mobilePhone:"",
-    documentValue:"",
-    province:"",
-    location:"",
-    direction:"",
-    postalCode:"",
-    landlinePhone:"",
-    firstContact:"",
-    secondContact:"",
-    contactSchedule:"",
-    discount:"",
-    tracing:"",
-    description:"",
-    personType:{
-        id:0
-    },
-    documentType:{
-        id:0
-    },
-    streetType:{
-        id:0
-    },
-    country:{
-        id:0
-    },
-    secondaryEmailRelationship:{
-        id:0
-    },
-    backupEmailRelationship:{
-        id:0
-    }
-}
 
 export const CLIENTS = createModel<RootModel>()({
     state:{
@@ -200,28 +155,27 @@ export const CLIENTS = createModel<RootModel>()({
         } as GetClientsStateProps,
         CreateClients:{
             data:{
-                status:0,
-                message:""
+                data:{},
+                ...APIHANDLER.initialMetaResponse
             },
             status:0,
             error:""
         } as CreateClientsStateProps,
         UpdateClient:{
             status:0,
-            data:{
-                message:"",
-                status:0
+            data:{ 
+                data:{},
+                ...APIHANDLER.initialMetaResponse
             },
             error:""
         } as UpdateClientStateProps,
         GetClientById:{
             status:0,
             data:{
-                message:{
-                    
-                },
-                status:0
-            }
+                data:initialClient,
+                ...APIHANDLER.initialMetaResponse
+            },
+            error:""
         } as GetClientByIdStateProps,
         DeleteClient:{
             status:0,
@@ -250,8 +204,8 @@ export const CLIENTS = createModel<RootModel>()({
                         data:[],
                         ...APIHANDLER.initialMetaResponse
                     },
-                    status:e.response.status??400,
-                    error:e.response.data.message??"Ocurrio un error"
+                    status:e.response?.status??400,
+                    error:e.response?.data.message??"Ocurrio un error"
                 })
 
             }
@@ -266,13 +220,16 @@ export const CLIENTS = createModel<RootModel>()({
                 })
 
             }catch(e:any){
+                
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.CLIENTS.onCreateClients({
                     data:{
-                        status:0,
-                        message:""
+                       data:{},
+                       ...APIHANDLER.initialMetaResponse
                     },
-                    status:e.response.status??400,
-                    error:e.response.data.message??"Ocurrio un error"
+                    status:e.response?.status??400,
+                    error:error
                 })
             }     
 
@@ -286,13 +243,16 @@ export const CLIENTS = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.CLIENTS.onUpdateClient({
                     data:{
-                        status:0,
-                        message:""
+                        data:{},
+                        ...APIHANDLER.initialMetaResponse
                     },
-                    status:e.response.status??400,
-                    error:e.response.data?.message??"Ocurrio un error"
+                    status:e.response?.status??400,
+                    error:error
                 })
             }
         },
@@ -305,40 +265,15 @@ export const CLIENTS = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.CLIENTS.onGetClientById({
                     data:{
-                        status:0,
-                        message:{
-                            personType: "",
-                            documentType: "",
-                            document: "",
-                            name: "",
-                            customerType: "",
-                            roadType: "",
-                            direction: "",
-                            postalCode: "",
-                            location: "",
-                            province: "",
-                            country: "",
-                            phone: "",
-                            mobilePhone: "",
-                            contact: "",
-                            contact2: "",
-                            email: "",
-                            webpage: "",
-                            contactSchedule: "",
-                            discount: "0",
-                            note: "",
-                            _id: "",
-                            createdAt: "",
-                            identityCounter: "",
-                            installations: [],
-                            userId: "",
-                            lastname: ""
-                        }
+                       data:initialClient,
+                       ...APIHANDLER.initialMetaResponse
                     },
-                    status:e.response.status??400,
-                    error:e.response.data?.message??"Ocurrio un error"
+                    status:e.response?.status??400,
+                    error:error
                 })
             }
         },
@@ -356,8 +291,8 @@ export const CLIENTS = createModel<RootModel>()({
                         status:0,
                         message:""
                     },
-                    status:e.response.status??400,
-                    error:e.response.data?.message??"Ocurrio un error"
+                    status:e.response?.status??400,
+                    error:e.response?.data?.message??"Ocurrio un error"
                 })
             }
         },
@@ -372,36 +307,8 @@ export const CLIENTS = createModel<RootModel>()({
             })
             dispatch.CLIENTS.onGetClientById({
                 data:{
-                    status:0,
-                    message:{
-                        personType: "",
-                        documentType: "",
-                        document: "",
-                        name: "",
-                        customerType: "",
-                        roadType: "",
-                        direction: "",
-                        postalCode: "",
-                        location: "",
-                        province: "",
-                        country: "",
-                        phone: "",
-                        mobilePhone: "",
-                        contact: "",
-                        contact2: "",
-                        email: "",
-                        webpage: "",
-                        contactSchedule: "",
-                        discount: "0",
-                        note: "",
-                        _id: "",
-                        createdAt: "",
-                        identityCounter: "",
-                        installations: [],
-                        userId: "",
-                        lastname: ""
-                    }
-                
+                    data:initialClient,
+                    ...APIHANDLER.initialMetaResponse
                 },
                 status:0,
                 error:""
@@ -418,7 +325,7 @@ export const CLIENTS = createModel<RootModel>()({
                 data:{
                     status:0,
                     message:""
-                },
+                },  
                 status:0,
                 error:""
             })

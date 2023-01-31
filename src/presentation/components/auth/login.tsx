@@ -34,8 +34,12 @@ const Login = () => {
         visible: true,
       });
     }
-    setLoad(false);
+    //SLEEP 1 SEGUNDO
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
 
+  
   }, [error, load]);
 
   const handleChange = (e: React.ChangeEvent) => {
@@ -51,7 +55,7 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (load){
+    if (load) {
       return;
     }
     setLoad(true);

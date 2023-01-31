@@ -182,7 +182,7 @@ const DataTable = (props: DataTableProps) => {
             </tr>
           </thead>
           <tbody>
-            {data_table.map((item: any, index) => (
+            {data_table?.map((item: any, index) => (
               <tr key={index}>
                 {columns.map((column, index) => (
                   <td key={index}>

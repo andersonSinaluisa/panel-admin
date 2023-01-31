@@ -77,6 +77,17 @@ const UserView = (props: UsersViewProps) => {
       },
     },)
 
+
+    actions.push({
+      color:'warning',
+      icon:'bx bx-show',
+      label: 'Ver',
+      name:'edit',
+      onClick:(item:any)=>{
+        navigate('/inicio/usuarios/'+item.id)
+      }
+    })
+
     return actions;
   }
 

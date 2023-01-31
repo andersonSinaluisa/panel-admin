@@ -11,7 +11,6 @@ const GetClients = (props:APIHANDLER.HeaderProps)=>{
     return APIHANDLER.get(Globals.GET_CLIENTS+"?perPage="+perPage+"&page="+page,{
         headers:{
             Authorization: "Bearer "+props.token
-
         }
     })
 }

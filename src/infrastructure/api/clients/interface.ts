@@ -1,6 +1,6 @@
 import { MetaResponse } from "../api-handler";
 
-interface Client{
+interface Client {
 
 
     id: number;
@@ -33,7 +33,7 @@ interface Client{
     discount: string;
     tracing: string;
     description: string;
-        
+
     state: {
         id: number;
         createdAt: string;
@@ -102,80 +102,150 @@ interface Client{
 }
 
 
-interface GetClientsResponse extends MetaResponse{
+interface GetClientsResponse extends MetaResponse {
     data: Client[]
 }
 
-interface CreateClientRequest{
-    userId: string;
-    personType: string;
-    documentType: string;
-    document: string;
-    name: string;
-    lastname: string;
-    customerType:string;
-    roadType: string;
-    direction: string;
-    postalCode: string;
-    location: string;
-    province: string;
-    country: string;
-    phone: string;
-    mobilePhone: string;
-    contact: string;
-    contact2: string;
+interface CreateClientRequest {
+
+    nickName: string;
+    firstName: string;
+    secondName: string;
+    firstSurname: string;
+    secondSurname: string;
     email: string;
-    webpage: string;
-    contactSchedule: string;
-    discount: string;
-    note: string;
-}
-
-
-interface ClientUpdateRequest{
-    name: string;
     secondaryEmail: string;
     backupEmail: string;
-    mobilePhone: string;
+    password: string;
     documentValue: string;
     province: string;
     location: string;
     direction: string;
     postalCode: string;
     landlinePhone: string;
+    mobilePhone: string;
     firstContact: string;
     secondContact: string;
     contactSchedule: string;
     discount: string;
     tracing: string;
     description: string;
+    state: {
+        id: number
+    };
+    availability: {
+        id: number
+    };
+    role: {
+        id: number,
+        role:{
+            id:number;
+        }
+    };
     personType: {
-        id: number;
+        id: number
     };
     documentType: {
-        id: number;
+        id: number
     };
     streetType: {
-        id: number;
+        id: number
     };
     country: {
-        id: number;
+        id: number
+    };
+    createdBy: {
+        id: number
     };
     secondaryEmailRelationship: {
-        id: number;
-    };
+        id: number
+    } | null;
     backupEmailRelationship: {
-        id: number;
-    };
+        id: number
+    } | null;
+    perPage?: number;
 
 
-    
 }
 
 
-export type{
+interface CreateClientResponse extends MetaResponse {
+    data: Client| any;
+}
+interface UpdateClientResponse extends MetaResponse {
+    data: Client | any;
+}
+
+interface GetClientById extends MetaResponse {
+    data: Client;
+
+
+}
+interface ClientUpdateRequest {
+    nickName: string;
+    firstName: string;
+    secondName: string;
+    firstSurname: string;
+    secondSurname: string;
+    email: string;
+    secondaryEmail: string;
+    backupEmail: string;
+    documentValue: string;
+    province: string;
+    location: string;
+    direction: string;
+    postalCode: string;
+    landlinePhone: string;
+    mobilePhone: string;
+    firstContact: string;
+    secondContact: string;
+    contactSchedule: string;
+    discount: string;
+    tracing: string;
+    description: string;
+    state: {
+        id: number
+    };
+    availability: {
+        id: number
+    };
+    role: {
+        id: number,
+
+    };
+    personType: {
+        id: number
+    };
+    documentType: {
+        id: number
+    };
+    streetType: {
+        id: number
+    };
+    country: {
+        id: number
+    };
+    createdBy: {
+        id: number
+    };
+    secondaryEmailRelationship: {
+        id: number
+    } | null;
+    backupEmailRelationship: {
+        id: number
+    } | null;
+    perPage?: number;
+
+
+}
+
+
+export type {
     GetClientsResponse,
     Client,
     CreateClientRequest,
-    ClientUpdateRequest
+    ClientUpdateRequest,
+    CreateClientResponse,
+    GetClientById,
+    UpdateClientResponse
 }

@@ -1,3 +1,4 @@
+import { MetaResponse } from "../api-handler"
 
   
   export interface State {
@@ -224,4 +225,8 @@ export interface PaymentMethod{
   type: Type
   name: string
   code: string
+}
+
+export interface GetCataloguesResponse extends MetaResponse{
+  data: State[]
 }

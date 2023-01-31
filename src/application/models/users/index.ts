@@ -29,7 +29,12 @@ export interface DeleteUserStateProps extends ResponseServer {
 
 
 export interface GetUserProps {
-    data: user_interface.User | null;
+    data: {
+        data: user_interface.User;
+        message: {
+            status: number;
+        }
+    }
 }
 
 
@@ -158,7 +163,12 @@ export const USERS = createModel<RootModel>()({
             status: 0
         } as DeleteUserStateProps,
         GetUser: {
-            data: null,
+            data: {
+                data:initUser,
+                message: {
+                    status:0
+                }
+            },
             error: "",
             status: 0
 
@@ -195,13 +205,15 @@ export const USERS = createModel<RootModel>()({
                     error: ""
                 })
             } catch (e: any) {
+                let error = e.response.data.message?.summary ?? "Ocurrio un error"
+                error += e.response.data.message?.detail ?? ""
                 dispatch.USERS.onCreateUser({
                     data: {
                         message: "",
                         status: 0
                     },
                     status: e.response.status ?? 400,
-                    error: e.response.data.message ?? "Ocurrio un error"
+                    error: error
                 })
             }
         },
@@ -243,7 +255,7 @@ export const USERS = createModel<RootModel>()({
                 status: 0
             })
         },
-        async onGetUserAsync(props: { headers: APIHANDLER.HeaderProps, id: string }) {
+        async onGetUserAsync(props: { headers: APIHANDLER.HeaderProps, id: number }) {
             try {
                 const res = await user_request.GetUser(props).toPromise();
                 dispatch.USERS.onGetUser({
@@ -254,15 +266,10 @@ export const USERS = createModel<RootModel>()({
             } catch (e: any) {
                 dispatch.USERS.onGetUser({
                     data: {
+                        data:initUser,
                         message: {
-                            _id: "",
-                            identityCounter: "",
-                            email: "",
-                            role: "",
-                            personalData: "",
-                            createdAt: ""
-                        },
-                        status: 0
+                            status: 0,
+                        }
                     },
                     status: e.response.status ?? 400,
                     error: e.response.data.message ?? "Ocurrio un error"

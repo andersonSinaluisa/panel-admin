@@ -23,6 +23,7 @@ export interface PrivateLayoutProps{
     search:SearchResponse;
     addNotification:(payload:notification)=>void;
     notifications:notification[];
+    getCataloguesAsync: (props: HeaderProps) => void;
 }
 
 
@@ -35,7 +36,7 @@ const mapSatateToProps = ({AUTH,SEARCH,NOTIFICATIONS}:any)=>(
 )
 
 
-const mapDispatchToProps = ({ AUTH , SEARCH,NOTIFICATIONS}: any) => ({
+const mapDispatchToProps = ({ AUTH , SEARCH,NOTIFICATIONS,CORE}: any) => ({
     clearSession:(props:HeaderProps)=>AUTH.clearSession(props),
     connectToWebSocket:()=>AUTH.connectToWebSocket(),
     onSearchAsync:(props:{
@@ -43,6 +44,7 @@ const mapDispatchToProps = ({ AUTH , SEARCH,NOTIFICATIONS}: any) => ({
         identityCounter:string
     })=>SEARCH.onSearchAsync(props),
     addNotification:(payload:notification)=>NOTIFICATIONS.addNotification(payload),
+    getCataloguesAsync:(props:HeaderProps)=>CORE.getCataloguesAsync(props)
 })
 
 export default connect(mapSatateToProps, mapDispatchToProps)(PrivateLayout)

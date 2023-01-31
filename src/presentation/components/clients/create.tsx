@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
 import {
   useBreadcrumbs,
   useTitle,
@@ -11,8 +10,8 @@ import Select from "infrastructure/components/select";
 import { CreateClientProps } from "presentation/container/clients/create-container";
 import { clients_interface } from "infrastructure/api/clients";
 import { user_interface } from "infrastructure/api/users";
-import SelectReact from 'react-select';
-import json from 'application/common/utils/datos.json';
+import { CATALOGUE_TYPE_COUNTRY, CATALOGUE_TYPE_DOCUMENT, CATALOGUE_TYPE_MAIN_ROL_CLIENT, CATALOGUE_TYPE_MAIN_ROL_STAFF, CATALOGUE_TYPE_ORGANISATION_OR_ENTITY_WITH_PERSONALITY_LEGAL, CATALOGUE_TYPE_RECORD_AVAILABILITY, CATALOGUE_TYPE_SECONDARY_ROL_CLIENT, CATALOGUE_TYPE_SECONDARY_ROL_STAFF, CATALOGUE_TYPE_STREET, CATALOGUE_TYPE_USER_STATE, SUCCESS_HTTP_CODE_CREATED } from "application/common";
+import { interface_core } from "infrastructure/api/core";
 
 
 const CreateClient = (props: CreateClientProps) => {
@@ -33,28 +32,58 @@ const CreateClient = (props: CreateClientProps) => {
 
   const [form, setForm] = useState<clients_interface.CreateClientRequest>(
     {
-      userId: "",
-      personType: "",
-      documentType: "",
-      document: "",
-      name: "",
-      lastname: "",
-      customerType: "",
-      roadType: "",
-      direction: "",
-      postalCode: "",
-      location: "",
-      province: "",
-      country: "",
-      phone: "",
-      mobilePhone: "",
-      contact: "",
-      contact2: "",
-      email: "",
-      webpage: "",
-      contactSchedule: "",
-      discount: "0",
-      note: "",
+      
+    nickName: "",
+    firstName: "",
+    secondName: "",
+    firstSurname: "",
+    secondSurname: "",
+    email: "",
+    secondaryEmail: "",
+    backupEmail: "",
+    password: "",
+    documentValue: "",
+    province: "",
+    location: "",
+    direction: "",
+    postalCode: "",
+    landlinePhone: "",
+    mobilePhone: "",
+    firstContact: "",
+    secondContact: "",
+    contactSchedule: "",
+    discount: "",
+    tracing: "",
+    description: "",
+    state: {
+      id: 0
+    },
+    availability: {
+      id: 0
+    },
+    role: {
+      id: 0,
+      role:{
+        id:0
+      }
+    },
+    personType: {
+      id: 0
+    },
+    documentType: {
+      id: 0
+    },
+    streetType: {
+      id: 0
+    },
+    country: {
+      id: 0
+    },
+    createdBy: {
+      id: 0
+    },
+    secondaryEmailRelationship: null,
+    backupEmailRelationship: null,
     }
   );
 
@@ -91,7 +120,36 @@ const CreateClient = (props: CreateClientProps) => {
     }
   }, [props.CreateClients])
 
+  const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
 
+
+  useEffect(() => {
+
+    if (props.catalogues.status == 200) {
+      setCatalogues(props.catalogues.data.data)
+      return;
+    } 
+    if(props.catalogues.status!=0){
+      setMessage({
+        description: props.catalogues.error,
+        title: "Error",
+        type: "danger",
+        visible: true
+      })
+      return;
+    }
+
+  }, [props.catalogues])
+
+  
+  const getListByCode = (code: string) => {
+    return catalogue.filter((item) => item.type.code === code).map((item) => {
+      return {
+        label: item.name,
+        value: item.id
+      }
+    })
+  }
   const handleChange = (
     event: React.FormEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -135,254 +193,279 @@ const CreateClient = (props: CreateClientProps) => {
 
   };
 
+
+  const handleChangeSelect = (
+    event: React.FormEvent<HTMLSelectElement>
+  ) => {
+    setForm({
+      ...form,
+      [event.currentTarget.name]: {
+        id: event.currentTarget.value
+      },
+    });
+  };
+
+
   return (
     <section id="basic-vertical-layouts">
-      <div className="col-12 row bg-cover">
-        <div className="row p-2 col-12">
-          <div className="col-lg-6">
-            <label htmlFor="userId">Usuario</label>
-            <SelectReact
-              isSearchable={true}
-              name="userId"
-              options={users.map(e => ({
-                value: e.id,
-                label: e.email
-              }))}
-              placeholder="Seleccione un usuario"
-              onChange={
-                (e: any) => {
-                  setForm({
-                    ...form,
-                    userId: e.value
-                  })
-                }
-              }
+    <div className="col-12 row bg-cover">
+      <div className="row p-2 col-12">
 
-            />
-
-          </div>
-          <div className="col-lg-6">
-
-            <Select
-              label="Tipo de Persona"
-              name="personType"
-              onChange={handleChange}
-              options={[
-                { label: 'Física', value: 'fisica' },
-                { label: 'Jurídica', value: 'juridica' }
-              ]}
-            />
-          </div>
-          <div className="col-lg-6">
-
-            <Select
-              label="Tipo de Documento"
-              name="documentType"
-              onChange={handleChange}
-              options={[
-                { label: 'DNI', value: 'DNI' },
-                { label: 'Otro', value: 'Otro' }
-              ]}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Documento"
-              name="document"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Nombre"
-              name="name"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Apellido"
-              name="lastname"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Select
-              label="Tipo de Cliente"
-              name="customerType"
-              onChange={handleChange}
-              options={[
-                { label: 'propietario', value: 'propietario' },
-                { label: 'invitado', value: 'invitado' }
-              ]}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Select
-              label="Tipo de Vía"
-              name="roadType"
-              onChange={handleChange}
-              options={[
-                { label: 'Calle', value: 'Calle' },
-                { label: 'Avenida', value: 'Avenida' },
-                { label: 'Ctra', value: 'Ctra' },
-                { label: 'Plaza', value: 'Plaza' }
-              ]}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Dirección con numero y piso"
-              name="direction"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-              <label htmlFor="">Codigo Postal</label>
-            <SelectReact
-              isSearchable={true}
-              name="postalCode"
-              options={json.map(e => ({
-                value: e.codigo_postal,
-                label: e.municipio_nombre+ " "+ e.codigo_postal
-              }))}
-              
-              placeholder="Seleccione el codigo postal"
-              onChange={
-                (e: any) => {
-                  setForm({
-                    ...form,
-                    postalCode: e.value
-                  })
-                }
-              }
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Localidad"
-              name="location"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="País"
-              name="country"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Provincia"
-              name="province"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Teléfono"
-              name="phone"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Teléfono movil"
-              name="mobilePhone"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Contacto"
-              name="contact"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Contacto 2"
-              name="contact2"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Correo"
-              name="email"
-              type={"email"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Sitio web"
-              name="webpage"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Descuento"
-              name="discount"
-              type={"number"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Horario de contacto"
-              name="contactSchedule"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-lg-6">
-            <Input
-              label="Notas"
-              name="note"
-              type={"text"}
-              onChange={handleChange}
-            />
-          </div>
+        <div className="col-lg-6">
+          <Input
+            label="Primer Nombre"
+            name="firstName"
+            type={"text"}
+            onChange={handleChange}
+          />
         </div>
-        <div className="col-12 row ">
-          <div className="col-12 justify-content-end d-md-flex ">
-            <Link
-              type="button"
-              className="btn btn-lg btn-outline-dark m-2"
-              to={`/inicio/clientes/`}
-            >
-              Atrás
-            </Link>
-            <button
-              type="submit"
-              className="btn btn-lg btn-primary m-2"
-              value={"Agregar"}
-              onClick={handleSubmit}
-            >
-              Guardar
-            </button>
-          </div>
+        <div className="col-lg-6">
+          <Input
+            label="Segundo Nombre"
+            name="secondName"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Primer Apellido"
+            name="firstSurname"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Segundo Apellido"
+            name="secondSurname"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Tipo de Persona"
+            name="personType"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_ORGANISATION_OR_ENTITY_WITH_PERSONALITY_LEGAL)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Tipo de Documento"
+            name="documentType"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_DOCUMENT)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Documento"
+            name="documentValue"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Pais"
+            name="country"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_COUNTRY)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Estado/Pronvincia"
+            name="province"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Localidad"
+            name="location"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Dirección"
+            name="direction"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Tipo de Calle"
+            name="streetType"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_STREET)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Codigo Postal"
+            name="postalCode"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono Fijo"
+            name="landlinePhone"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono Celular"
+            name="mobilePhone"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono de contacto"
+            name="firstContact"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono de contacto secundario"
+            name="secondContact"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Horario de contacto"
+            name="contactSchedule"
+            type={"text"}
+            onChange={handleChange}
+          />
         </div>
       </div>
-      <div className="toast-bs-container">
-        <Toast {...message} />
+      <hr />
+      <div className="col-12 row p-2">
+        <div className="col-lg-6">
+          <Input
+            label="Nombre de usuario"
+            name="nickName"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Email"
+            name="email"
+            type={"email"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Email Secundario"
+            name="secondaryEmail"
+            type={"email"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Email de respaldo"
+            name="backupEmail"
+            type={"email"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Contraseña"
+            name="password"
+            type={"password"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Rol"
+            name="role"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_MAIN_ROL_CLIENT)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Rol"
+            name="role"
+            onChange={(e)=>{
+              console.log(e.target.value)
+              setForm({
+                ...form,
+                role:{
+                  ...form.role,
+                  role:{
+                    id: parseInt(e.target.value)
+                  }
+                }
+              })
+            }}
+            options={getListByCode(CATALOGUE_TYPE_SECONDARY_ROL_CLIENT)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Activo"
+            name="state"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_USER_STATE)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Disponibilidad"
+            name="availability"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_RECORD_AVAILABILITY)}
+          />
+        </div>
       </div>
-    </section>
+      <div className="col-12 r.ow ">
+        <div className="col-12 justify-content-end d-md-flex ">
+          <Link
+            type="button"
+            className="btn btn-lg btn-outline-dark m-2"
+            to={`/inicio/usuarios/`}
+          >
+            Atrás
+          </Link>
+          <button
+            type="submit"
+            className="btn btn-lg btn-primary m-2"
+            value={"Agregar"}
+            onClick={handleSubmit}
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div className="toast-bs-container">
+      <Toast {...message} />
+    </div>
+  </section>
   );
 };
 

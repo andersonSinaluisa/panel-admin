@@ -89,7 +89,7 @@ const ClientsView = (props: ClientsViewProps) => {
         label: "Editar",
         name: "edit",
         onClick: (item: any) => {
-            navigate(`/inicio/clientes/${item._id}`)
+            navigate(`/inicio/clientes/${item.id}`)
         },
       })
       

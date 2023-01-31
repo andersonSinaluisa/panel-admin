@@ -12,18 +12,18 @@ export interface UserDetailProps{
     title: string;
     breadcrumbs: string[];
     GetUser:user_interface.User;
-    onGetUserAsync:(props:{headers:HeaderProps,id:string})=>void;
+    onGetUserAsync:(props:{headers:HeaderProps,id:number})=>void;
 }
        
 const mapSatateToProps = ({ AUTH,USERS, Groups}: any, ownProps: any) => ({
-    token: AUTH.Session.data.message.token,
+    token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
-    GetUser:USERS.GetUser.data.message
+    GetUser:USERS.GetUser.data.data
 })
 
 const mapDispatchToProps = ({USERS}: any) => ({
-    onGetUserAsync:(props:{headers:HeaderProps,id:string})=>USERS.onGetUserAsync(props),
+    onGetUserAsync:(props:{headers:HeaderProps,id:number})=>USERS.onGetUserAsync(props),
 })
 
 export default connect(mapSatateToProps, mapDispatchToProps)(DetailUser)

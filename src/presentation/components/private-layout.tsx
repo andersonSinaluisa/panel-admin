@@ -17,13 +17,13 @@ import { PrivateLayoutProps } from '../container/private-layout-container';
  * represente la barra de navegación, la barra lateral y el contenido.
  */
 
-const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
-    const { token ,dataLogin, onLogout} = useAuth();
+const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
+    const { token, dataLogin, onLogout } = useAuth();
 
     let navigate = useNavigate();
     const [showOverlay, setShowOverlay] = useState(false);
     const [onpenSearch, setOnpenSearch] = useState(false);
-    const [userData,setUserData] = useState<auth_interfaces.LoginResponse>(initLogin)
+    const [userData, setUserData] = useState<auth_interfaces.LoginResponse>(initLogin)
 
 
     useEffect(() => {
@@ -46,26 +46,31 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
             products: [],
             tasks: [],
         },
-        status:0
+        status: 0
     });
 
 
- 
-    useEffect(()=>{
-        if(title){
-            document.title=title;
+
+    useEffect(() => {
+        if (title) {
+            document.title = title;
+        }
+
+    }, [title])
+
+
+    useEffect(() => {
+        if (token){
+            props.getCataloguesAsync({
+                token: token as string
+            })
         }
         
-    },[title])
+    }, [])
 
 
-    useEffect(()=>{
-        setSearch(props.search);
-    },[props.search])
 
 
-   
-    
 
 
 
@@ -75,18 +80,18 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
     }
 
 
-    const handleSearch = (value:string,type:string)=>{
+    const handleSearch = (value: string, type: string) => {
         props.onSearchAsync({
-            headers:{
-                token:token
+            headers: {
+                token: token
             },
-            identityCounter:value,
-            type:type
+            identityCounter: value,
+            type: type
         })
     }
 
     //connecto to websocket
-    
+
 
     return (
         <>
@@ -94,11 +99,11 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
 
             <Navbar dataLogin={dataLogin} onLogout={onLogout}
                 dataSearch={search} onSearch={handleSearch} onOpenSearch={setOnpenSearch} openSearch={onpenSearch}
-                    notifications={props.notifications}
-                />
-        
-            <Sidebar dataLogin={dataLogin}/>
-            <div className={`app-content content ${onpenSearch?'show-overlay':''}`} >
+                notifications={props.notifications}
+            />
+
+            <Sidebar dataLogin={dataLogin} />
+            <div className={`app-content content ${onpenSearch ? 'show-overlay' : ''}`} >
                 <div className="content-overlay"></div>
                 <div className="content-wrapper">
                     <div className="content-header row">
@@ -108,7 +113,7 @@ const PrivateLayout = (props:PrivateLayoutProps): JSX.Element => {
                                     <h5 className="content-header-title float-left pr-1 mb-0">{title}</h5>
                                     <div className="breadcrumb-wrapper col-12">
                                         <ol className="breadcrumb p-0 mb-0">
-                                     
+
                                             {
                                                 breadcrumbs.map(e => {
                                                     return <li className="breadcrumb-item"><a href="#">{e}</a>

@@ -14,7 +14,7 @@ const GetUsers = (props:APIHANDLER.HeaderProps)=>{
     })
 }
 
-const GetUser = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
+const GetUser = (props:{headers:APIHANDLER.HeaderProps,id:number})=>{
     return APIHANDLER.get(Globals.GET_USERS+"/"+props.id,{
         headers:{
             Authorization: "Bearer "+props.headers.token

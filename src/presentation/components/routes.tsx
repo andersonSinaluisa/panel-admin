@@ -34,9 +34,20 @@ interface RoutesProps{
 
 const routes:RoutesProps[] =[
     //SearchView
+    
     /*{
+        name:"Dashboard",
+        relative_path:"/inicio/",
+        path:"/inicio/",
+        element:<DashboardView title="Estadisticas" breadcrumbs={["Estadisticas"]}/>,
+        permissions:[],
+        visible_in_menu:true,
+        icon:"bx bx-home",
+        order:1
+    },*/
+    {
         name:'Buscador',
-        relative_path:'',
+        relative_path:'/inicio',
         path:'/inicio/',
         element:<SearchView title="Buscar" breadcrumbs={["Buscar"]}/>,
         permissions:[
@@ -47,16 +58,6 @@ const routes:RoutesProps[] =[
         icon:'bx bx-search',
         order:1,
     },
-    /*{
-        name:"Dashboard",
-        relative_path:"",
-        path:"",
-        element:<DashboardView title="Estadisticas" breadcrumbs={["Estadisticas"]}/>,
-        permissions:[],
-        visible_in_menu:true,
-        icon:"bx bx-home",
-        order:1
-    },*/
     {   
         name:'Usuarios',
         relative_path:'usuarios',
