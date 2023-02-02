@@ -50,16 +50,12 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
       
     }, [id])
 
-
-
-
     useEffect(() => {
-        setProducts(props.GetProducts)
-    }, [props.GetProducts])
+        setInvoice(props.GetInvoice)
+    }, [props.GetInvoice])
 
-    useEffect(() => {
-        setClient(props.GetClientById)
-    }, [props.GetClientById])
+
+
 
 
     return (
@@ -94,7 +90,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="Código Cliente"
                                             type="text"
                                             name="code"
-                                            value={client.documentValue}
+                                            value={invoice.data.client.documentValue}
                                             enabled={true}
 
                                         />
@@ -103,6 +99,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             type="text"
                                             name="code"
                                             enabled={true}
+                                            value={invoice.data.taxIdentificationNumber}
 
                                         />
                                     </div>
@@ -114,14 +111,14 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="Cliente"
                                             type="text"
                                             name="direction"
-                                            value={client.firstName+" "+client.secondName}
+                                            value={invoice.data.client?.firstName+" "+invoice.data.client?.firstSurname}
                                             enabled={true}
                                         />
                                         <Input
                                             label="Dirección"
                                             type="text"
                                             name="direction"
-                                            value={client.direction}
+                                            value={invoice.data.client?.direction}
                                             enabled={true}
                                         />
 
@@ -129,21 +126,21 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             label="Código Postal"
                                             type="text"
                                             name="direction"
-                                            value={client.postalCode}
+                                            value={invoice.data.client?.postalCode}
                                             enabled={true}
                                         />
                                         <Input
                                             label="Provincia"
                                             type="text"
                                             name="direction"
-                                            value={client.province}
+                                            value={invoice.data.client?.direction}
                                             enabled={true}
                                         />
                                         <Input
                                             label="C.I.F. / N.I.F."
                                             type="text"
                                             name="direction"
-                                            value={client.documentValue}
+                                            value={invoice.data.client?.documentValue}
                                             enabled={true}
                                         />
                                     </div>
@@ -167,48 +164,65 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                                         <div className="col-1 ml-2 col-md-1 invoice-item-title">Ref</div>
 
                                                         <div className="col-2 invoice-item-title">Nº Serie</div>
-                                                        <div className="col-4 invoice-item-title">Descripcion</div>
-                                                        <div className="col-1 col-md-1 invoice-item-title">Precio</div>
-                                                        <div className="col-1 col-md-1 invoice-item-title">Total</div>
+                                                        <div className="col-3 invoice-item-title">Descripcion</div>
+                                                        <div className="col-2 col-md-1 invoice-item-title">Precio</div>
+                                                        <div className="col-2 col-md-1 invoice-item-title">Total</div>
                                                     </div>
                                                     <div className=" d-flex border rounded mb-1 row col-12">
-                                                        <div className="invoice-item-filed row col-12 ">
 
-                                                                    <>
-                                                                        <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <p className="invoice-item-title align-middle">
-                                                                                0
-                                                                            </p>
-                                                                        </div>
-                                                                        <div className="col-md-1 col-12  form-group mt-2">
-                                                                            00000
-                                                                        </div>
+                                                        {
+                                                            invoice.data.invoiceDetails?.map((item, index) => {
+                                                                return <div className="invoice-item-filed row col-12 ">
+                                                                    
+                                                                <>
+                                                                    <div className="col-md-1 col-12 form-group mt-2">
+                                                                        <p className="invoice-item-title align-middle">
+                                                                            {
+                                                                                item.amount
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="col-md-1 col-12  form-group mt-2">
+                                                                        {
+                                                                            item.product?.id
+                                                                        }
+                                                                    </div>
 
-                                                                        <div className="col-md-2 col-12 form-group mt-2">
-                                                                            <p className="invoice-item-title align-middle">
-                                                                                00001   
-                                                                            </p>
-                                                                        </div>
-                                                                        <div className="col-md-5 col-12 form-group mt-2">
-                                                                           DESCRIPCION
-                                                                        </div>
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
+                                                                        <p className="invoice-item-title align-middle">
+                                                                            {
+                                                                                item.product?.code
+                                                                            }   
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="col-md-3 col-12 form-group mt-2">
+                                                                       {item.product?.name} / {item.product?.description}
+                                                                    </div>
 
-                                                                        <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ 0.00 </strong>
-                                                                        </div>
-                                                                        <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ 0.00</strong>
-                                                                        </div>
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
+                                                                        <strong className="text-primary align-middle">
+                                                                            $ {item.product?.priceForPublic}
+                                                                        </strong>
+                                                                    </div>
+                                                                    <div className="col-md-2 col-12 form-group mt-2">
+                                                                        <strong className="text-primary align-middle">
+                                                                            $ {parseInt(item.product?.priceForPublic||"0")*item.amount}
+                                                                        </strong>
+                                                                    </div>
 
-                                                                        <div className="col-12">
-                                                                            <hr />
+                                                                    <div className="col-12">
+                                                                        <hr />
 
-                                                                        </div>
+                                                                    </div>
 
-                                                                    </>
+                                                                </>
 
-                                                               
-                                                        </div>
+                                                           
+                                                    </div>
+
+                                                            })
+                                                        }
+                                                        
                                                         <div className="invoice-icon d-flex flex-column justify-content-between border-left p-25">
 
 
@@ -232,30 +246,38 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             </p>
                                             <h6>Notas de la factura</h6>
                                             <p>
-                                               nota agregar aqui
+                                               
                                             </p>
                                         </div>
                                         <div className="col-4 mt-2">
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Importe Neto</span>
-                                                    <span className="invoice-value">0.00</span>
+                                                    <span className="invoice-value">
+                                                        $ {invoice.data.invoiceDetails.map((item, index) => {
+                                                            return parseInt(item.product?.priceForPublic||"0")*item.amount
+                                                        }).reduce((a, b) => a + b, 0)
+                                                        }
+                                                    </span>
                                                 </div>
 
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Descuento </span>
-                                                    <span className="invoice-value">{
-                                                        invoice.data.clientDiscount
-                                                    }</span>
+                                                    <span className="invoice-value">$ {invoice.data.clientDiscount}</span>
                                                 </div>
                                                 <div className="invoice-calc d-flex justify-content-between">
-                                                    <span className="invoice-title">IVA</span>
-                                                    <span className="invoice-value">21%</span>
+                                                    <span className="invoice-title">IVA (12%)</span>
+                                                    <span className="invoice-value">$ {invoice.data.iva}</span>
                                                 </div>
                                                 <hr />
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Total</span>
-                                                    <span className="invoice-value">$ 0.00</span>
+                                                    <span className="invoice-value">
+                                                        $ {invoice.data.invoiceDetails.map((item, index) => {
+                                                            return parseInt(item.product?.priceForPublic||"0")*item.amount- invoice.data.clientDiscount - invoice.data.iva
+                                                        }).reduce((a, b) => a + b, 0)
+                                                        }
+                                                    </span>
                                                 </div>
 
                                             </div>

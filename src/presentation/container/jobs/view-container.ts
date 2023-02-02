@@ -21,12 +21,13 @@ export interface ViewJobsProps {
     title: string;
     breadcrumbs: string[];
     GetClients:GetClientsResponse;
+    isLoading:boolean;
 }
 
 
 
 //connect to redux
-const mapStateToProps = ({ JOBS , AUTH,CLIENTS}: any, ownProps:any) => {
+const mapStateToProps = ({ JOBS , AUTH,CLIENTS,loading}: any, ownProps:any) => {
     return {
         GetJobs: JOBS.GetJobs.data,
         CreateJob: JOBS.CreateJob,
@@ -35,7 +36,8 @@ const mapStateToProps = ({ JOBS , AUTH,CLIENTS}: any, ownProps:any) => {
         token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
-        GetClients: CLIENTS.GetClients.data
+        GetClients: CLIENTS.GetClients.data,
+        isLoading:loading.effects.JOBS.onGetJobsAsync
 
     };
 }

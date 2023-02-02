@@ -26,7 +26,7 @@ export interface DetailInvoiceProps {
 
 const mapStateToProps = ({ INVOICE , AUTH,CLIENTS,PRODUCTS}: any, ownProps:any) => {
     return {
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetInvoice: INVOICE.GetInvoice.data,

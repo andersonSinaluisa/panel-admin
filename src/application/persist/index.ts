@@ -8,4 +8,6 @@ export const persistPlugin = createRematchPersist({
   version: 1,
   storage: storage,
   transforms: AllFilters,
+  debug: true,
+  
 });

@@ -1,5 +1,7 @@
 import { MetaResponse } from "../api-handler";
-import { Availability, Client, PaymentMethod, State } from "../core/interface";
+import { Client } from "../clients/interface";
+import { Availability, PaymentMethod, State } from "../core/interface";
+import { Product } from "../products/interface";
 
 interface Invoice {
 
@@ -20,8 +22,20 @@ interface Invoice {
     availability:Availability;
     client:Client;
     paymentMethod:PaymentMethod;
+   
+    invoiceDetails: InvoiceDetail[];
 }
+interface InvoiceDetail{
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+    amount: number;
+    state: State;
+    availability: Availability;
+    product: Product;
 
+}
 
 interface GetInvoicesResponse  extends MetaResponse{
     data: Invoice[];

@@ -148,6 +148,7 @@ export interface Priority{
   deletedAt: any
   type: Type
   name: string
+  code: string
 }
 
 export interface Name{

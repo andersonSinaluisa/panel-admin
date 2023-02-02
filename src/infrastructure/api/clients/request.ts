@@ -1,14 +1,16 @@
 import * as Globals from 'application/common';
+import { GetClientsStateProps } from 'application/models/clients';
 import { Observable } from 'rxjs';
 import * as APIHANDLER from '../api-handler';
 import { ClientUpdateRequest, CreateClientRequest } from './interface';
 
 
 
-const GetClients = (props:APIHANDLER.HeaderProps)=>{
+const GetClients = (props:APIHANDLER.HeaderProps):Observable<GetClientsStateProps>=>{
     let perPage = props.perPage?props.perPage:15;
     let page = props.page?props.page:1;
-    return APIHANDLER.get(Globals.GET_CLIENTS+"?perPage="+perPage+"&page="+page,{
+    
+    return APIHANDLER.get(`${Globals.GET_CLIENTS}?perPage=${perPage}&page=${page}${props.search?"&search="+props.search:""}  `,{
         headers:{
             Authorization: "Bearer "+props.token
         }

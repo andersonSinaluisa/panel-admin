@@ -69,7 +69,7 @@ export const CREATE_USER = "/auth/users"
  * @type {string}
  * @memberof Constants
  */
-export const DELETE_USER = "/users/delete/"
+export const DELETE_USER = "/auth/users/"
 
 
 
@@ -119,7 +119,7 @@ export const UPDATE_CLIENT = "/core/clients/"
  * @type {string}
  * @memberof Constants
  */
-export const DELETE_CLIENT = "/core/clients"
+export const DELETE_CLIENT = "/core/clients/"
 
 
 /**
@@ -146,7 +146,7 @@ export const CREATE_INSTALLATION = "/core/installations"
  * @type {string}
  * @memberof Constants
  */
-export const DELETE_INSTALLATION = "/core/installations"
+export const DELETE_INSTALLATION = "/core/installations/"
 
 /**
  * @constant UPDATE_STATE_INSTALLATION
@@ -154,7 +154,7 @@ export const DELETE_INSTALLATION = "/core/installations"
  * @type {string}
  * @memberof Constants
  */
-export const UPDATE_STATE_INSTALLATION = "/installations/state/"
+export const UPDATE_STATE_INSTALLATION = "/core/installations/"
 
 /**
  * @constant GET_PERSONAL
@@ -178,7 +178,7 @@ export const CREATE_PERSONAL = "/core/staff"
  * @type {string}
  * @memberof Constants
  */
-export const GET_BY_ID_PERSONAL = "/core/staff"
+export const GET_BY_ID_PERSONAL = "/core/staff/"
 
 /**
  * @constant DELETE_PERSONAL
@@ -186,30 +186,129 @@ export const GET_BY_ID_PERSONAL = "/core/staff"
  * @type {string}
  * @memberof Constants
  */
-export const DELETE_PERSONAL = "/core/staff"
+export const DELETE_PERSONAL = "/core/staff/"
+
+/**
+ * @constant UPDATE_PERSONAL
+ * @description Actualizar un personal
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
+export const UPDATE_PERSONAL = "/core/staff/"
+
+/**
+ * @constant GET_WHAREHOUSES
+ * @description Obtener los almacenes
+ * @type {string}
+ * @memberof Constants
+ */
+export const GET_WHAREHOUSES = "/core/warehouses";
 
 
+/**
+ * 
+ * @constant GET_JOBS
+ * @description Obtener los trabajos
+ * @type {string}
+ * @memberof Constants
+ */
 export const GET_JOBS = "/core/jobs";
+
+/**
+ * @constant CREATE_JOBS
+ * @description Crear un trabajo
+ * @type {string}
+ * @memberof Constants
+ */
 export const CREATE_JOBS = "/core/jobs";
+
+/**
+ * @constant CLOSE_JOBS
+ * @description Cerrar un trabajo
+ * @type {string}
+ * @memberof Constants
+ */
 export const CLOSE_JOBS = "/core/jobs";
+
+/**
+ * @constant DELETE_JOBS
+ * @description Eliminar un trabajo
+ * @type {string}
+ */
 export const DELETE_JOBS = "/core/jobs";
 
+
+/**
+ * @constant GET_TASKS
+ * @description Obtener las tareas
+ * @type {string}
+ * @memberof Constants
+ */
 export const GET_TASKS = "/core/tasks";
+
+/**
+ * @constant CREATE_TASKS
+ * @description Crear una tarea
+ * @type {string}
+ * @memberof Constants
+ */
 export const CREATE_TASKS = "/core/tasks";
+
+/**
+ * @constant CLOSE_TASKS
+ * @description Cerrar una tarea
+ * @type {string}
+ * @memberof Constants
+ */
 export const CLOSE_TASKS = "/core/tasks";
+
+/**
+ * @constant DELETE_TASKS
+ * @description Eliminar una tarea
+ * @type {string}
+ * @memberof Constants
+ */
 export const DELETE_TASKS = "/core/tasks";
 
 
 
 
-
+/**
+ * @constant GET_PRODUCTS
+ * @description Obtener los productos
+ * @type {string}
+ * @memberof Constants
+ */
 export const GET_PRODUCTS = "/core/products";
-export const CREATE_CATALOGED_PRODUCTS = "/products/cataloged";
-export const CREATE_UNCATALOGED_PRODUCTS = "/products/uncataloged";
-export const UPDATE_PRODUCTS = "/products/update/";
+/**
+ * @constant CREATE_PRODUCTS
+ * @description Crear un producto
+ * @type {string}
+ * @memberof Constants
+ */
+export const CREATE_PRODUCTS = "/core/products";
+
+/**
+ * @constant UPDATE_PRODUCTS
+ * @description Actualizar un producto
+ * @type {string}
+ * @memberof Constants
+ */
+export const UPDATE_PRODUCTS = "/core/products/";
+
+
 export const UPDATE_STOCK_PRODUCT = "/products/update-stock/";
 export const CATALOGE_PRODUCT = "/products/catalog/";
-export const DELETE_PRODUCT = "/products/delete/";
+
+
+/**
+ * @constant DELETE_PRODUCT
+ * @description Eliminar un producto
+ * @type {string}
+ * @memberof Constants
+ */
+export const DELETE_PRODUCT = "/core/products/";
 
 
 export const SEARCH = "/searcher/";
@@ -225,45 +324,50 @@ export const errorEncountered = 'Error was encountered processing this request';
 export const timeoutMessage = "We are unable to fetch data at this time, kindly check your internet connection and we'll reconnect you.";
 export const timeoutDuration = 30000;
 
-export const SUCCESS_HTTP_CODE_CREATED = 201
+export const SUCCESS_HTTP_CODE_CREATED = 200
 
 export const APP_NAME = "Panel"
 
 
+/*    { color: 'primary', label: "ACTIVO",id:'type_installation_state_armed' },
+    { color: 'primary', label: "ACTIVO",id:'type_installation_state_disarmed' },
+    { color: 'warning', label: "Dormir",id:'type_installation_state_asleep' },
+    { color: 'secondary', label: "Bloqueado",id:'type_installation_state_locked' },
+    { color: 'danger', label: "Apagado",id:'type_installation_state_switchedOff' },*/
 
-export const getStatusInstallation = (id: number) => {
+
+export const INSTALLATION_STATUS_ARMED = 'type_installation_state_armed'
+export const INSTALLATION_STATUS_DISARMED = 'type_installation_state_disarmed'
+export const INSTALLATION_STATUS_ASLEEP = 'type_installation_state_asleep'
+export const INSTALLATION_STATUS_LOCKED = 'type_installation_state_locked'
+export const INSTALLATION_STATUS_SWITCHEDOFF = 'type_installation_state_switchedOff'
+
+
+export const getStatusInstallation = (id: string) => {
     switch (id) {
-        case 1:
-            return { color: 'primary', label: "ACTIVO" };
-        case 2:
-            return { color: 'primary', label: "ACTIVO" };
-        case 3:
-            return { color: 'warning', label: "Dormir" };
-        case 4:
-            return { color: 'secondary', label: "Bloqueado" };
-        case 5:
-            return { color: 'danger', label: "Apagado" };
-        case 6:
-            return { color: 'success', label: "Autocierre" };
-        case 7:
-            return { color: 'secondary', label: "Antipánico" };
-        case 8:
-            return { color: 'warning', label: "Antibaby" };
+        case  INSTALLATION_STATUS_ARMED:
+            return { color: 'primary', label: "ACTIVO",id:'type_installation_state_armed' }
+        case  INSTALLATION_STATUS_DISARMED:
+            return { color: 'primary', label: "ACTIVO",id:'type_installation_state_disarmed' }
+        case  INSTALLATION_STATUS_ASLEEP:
+            return { color: 'warning', label: "Dormir",id:'type_installation_state_asleep' }
+        case  INSTALLATION_STATUS_LOCKED:
+            return { color: 'secondary', label: "Bloqueado",id:'type_installation_state_locked' }
+        case  INSTALLATION_STATUS_SWITCHEDOFF:
+            return { color: 'danger', label: "Apagado",id:'type_installation_state_switchedOff' }
         default:
-            return { color: 'primary', label: "Armado" };
+            return { color: 'primary', label: "ACTIVO",id:'type_installation_state_armed' }
     }
 }
 
 
 export const status = [
-    { color: 'primary', label: "ACTIVO",id:1 },
-    { color: 'primary', label: "ACTIVO",id:2 },
-    { color: 'warning', label: "Dormir",id:3 },
-    { color: 'secondary', label: "Bloqueado",id:4 },
-    { color: 'danger', label: "Apagado",id:5 },
-    { color: 'success', label: "Autocierre",id:6 },
-    { color: 'secondary', label: "Antipánico",id:7 },
-    { color: 'warning', label: "Antibaby",id:8 }
+    { color: 'primary', label: "ACTIVO",id:'type_installation_state_armed' },
+    { color: 'primary', label: "ACTIVO",id:'type_installation_state_disarmed' },
+    { color: 'warning', label: "Dormir",id:'type_installation_state_asleep' },
+    { color: 'secondary', label: "Bloqueado",id:'type_installation_state_locked' },
+    { color: 'danger', label: "Apagado",id:'type_installation_state_switchedOff' },
+    
 ]
 
 /**
@@ -282,6 +386,45 @@ export const TASK_OPEN = "type_task_status_opened";
  */
 export const TASK_CLOSE = "type_task_status_closed";
 
+
+//type_task_priority_high
+/**
+ * @constant TASK_PRIORITY_HIGH
+ * @description Tipo de tarea alta
+ * @type {string}
+ * @memberof Constants
+ */
+export const TASK_PRIORITY_HIGH = "type_task_priority_high";
+
+
+//type_task_priority_half
+/**
+ * @constant TASK_PRIORITY_HALF
+ * @description Tipo de tarea media
+ * @type {string}
+ * @memberof Constants
+ */
+export const TASK_PRIORITY_HALF = "type_task_priority_half";
+
+//type_task_priority_low
+/**
+ * @constant TASK_PRIORITY_LOW
+ * @description Tipo de tarea baja
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
+export const TASK_PRIORITY_LOW = "type_task_priority_low";
+
+
+//type_job_priority_high
+export const JOB_PRIORITY_HIGH = "type_job_priority_high";
+
+//type_job_priority_half
+export const JOB_PRIORITY_HALF = "type_job_priority_half";
+
+//type_job_priority_low
+export const JOB_PRIORITY_LOW = "type_job_priority_low";
 
 
 /**
@@ -379,3 +522,11 @@ export const CATALOGUE_TYPE_MAIN_ROL_CLIENT = "catalogue_type_main_rol_client";
  * @memberof Constants
  * */
 export const CATALOGUE_TYPE_SECONDARY_ROL_CLIENT = "catalogue_type_secondary_rol_client";
+
+/**
+ * @constant CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE
+ * @description Tipo de producto en almacén
+ * @type {string}
+ * @memberof Constants
+ */
+export const  CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE = "catalogue_type_product_in_warehouse";

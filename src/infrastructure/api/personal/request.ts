@@ -1,6 +1,6 @@
 import * as Globals from 'application/common';
 import * as APIHANDLER from '../api-handler';
-import { CreatePersonalRequest } from './interface';
+import { CreatePersonalRequest, UpdatePersonalRequest } from './interface';
 
 
 const GetPersonal = (props: APIHANDLER.HeaderProps) => {
@@ -37,10 +37,17 @@ const DeletePersonal = (props: { headers: APIHANDLER.HeaderProps, id: string }) 
 }
 
 
+const UpdatePersonal = (props: { headers: APIHANDLER.HeaderProps, id: number, body: UpdatePersonalRequest }) => {
+    return APIHANDLER.put(Globals.UPDATE_PERSONAL + props.id, props.body, {
+        Authorization: "Bearer " + props.headers.token
+    })
+}
+
 
 export {
     GetPersonal,
     CreatePersonal,
     GetPersonalById,
-    DeletePersonal
+    DeletePersonal,
+    UpdatePersonal
 }

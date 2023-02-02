@@ -1,6 +1,6 @@
 import * as Globals from 'application/common';
 import * as APIHANDLER from '../api-handler';
-import { CreateInstallationRequest, UpdateStateInstallationsRequest } from './interface';
+import { CreateInstallationRequest, UpdateInstallationsRequest } from './interface';
 
 
 const GetInstallations = (props:APIHANDLER.HeaderProps)=>{
@@ -22,21 +22,21 @@ const CreateInstallation = (props:{headers:APIHANDLER.HeaderProps,body:CreateIns
 }
 
 //delete
-const DeleteInstallation = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
+const DeleteInstallation = (props:{headers:APIHANDLER.HeaderProps,id:number})=>{
     return APIHANDLER.del(Globals.DELETE_INSTALLATION+props.id,{
             Authorization: "Bearer "+props.headers.token
     })
 }
 
 //update status
-const UpdateStateInstallation = (props:{headers:APIHANDLER.HeaderProps,id:string,body:UpdateStateInstallationsRequest})=>{
+const UpdateStateInstallation = (props:{headers:APIHANDLER.HeaderProps,id:number,body:UpdateInstallationsRequest})=>{
     return APIHANDLER.put(Globals.UPDATE_STATE_INSTALLATION+props.id,props.body,{
             Authorization: "Bearer "+props.headers.token
     })
 }
 
 const GetInstallation = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{	
-    return APIHANDLER.get(Globals.GET_INSTALLATIONS+props.id,{	
+    return APIHANDLER.get(Globals.GET_INSTALLATIONS+"/"+props.id,{	
         headers:{	
             Authorization: "Bearer "+props.headers.token	
         }	

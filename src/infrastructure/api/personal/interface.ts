@@ -49,12 +49,39 @@ import { MetaResponse } from "../api-handler";
 }
 
  interface Role {
+
     id: number;
     createdAt: string;
     updatedAt: string;
     deletedAt?: any;
-    role: string;
+    role: {
+
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt?: any;
+        type: Type2;
+        name: string;
+        code: string;
+    };
+    roleChild: {
+        id: number;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt?: any;
+        role: {
+            id: number;
+            createdAt: string;
+            updatedAt: string;
+            deletedAt?: any;
+            type: Type2;
+            name: string;
+            code: string;
+        };
+    };
 }
+
+
 
  interface Type3 {
     id: number;
@@ -229,30 +256,126 @@ interface GetPersonalResponse extends MetaResponse{
     data: Personal[];
 }
 interface GetPersonalByIdResponse {
-    message: string;
+    message: {
+        status:number;
+    }
     data: Personal;
 }
 
 interface CreatePersonalRequest {
-    userId: string;
-    documentType: string;
-    document: string;
-    name: string;
-    lastname1: string;
-    type: string;
+    nickName: string;
+    firstName: string;
+    secondName: string;
+    firstSurname: string;
+    secondSurname: string;
+    email: string;
+    secondaryEmail: string;
+    backupEmail: string;
+    password: string;
+    documentValue: string;
+    province: string;
+    location: string;
     direction: string;
     postalCode: string;
-    location: string;
-    province: string;
-    country: string;
-    phone: string;
+    landlinePhone: string;
     mobilePhone: string;
-    contact: string;
-    contact2: string;
-    email: string;
+    firstContact: string;
+    secondContact: string;
     contactSchedule: string;
-    note: string;
-    createdBy: string;
+    discount: string;
+    tracing: string;
+    description: string;
+    state: {
+        id: number
+    };
+    availability: {
+        id: number
+    };
+    role: {
+        id: number,
+        role:{
+            id:number;
+        }
+    };
+    personType: {
+        id: number
+    };
+    documentType: {
+        id: number
+    };
+    streetType: {
+        id: number
+    };
+    country: {
+        id: number
+    };
+    createdBy: {
+        id: number
+    };
+    secondaryEmailRelationship: {
+        id: number
+    } | null;
+    backupEmailRelationship: {
+        id: number
+    } | null;
+    perPage?: number;
+}
+
+
+interface UpdatePersonalRequest {
+    nickName: string;
+    firstName: string;
+    secondName: string;
+    firstSurname: string;
+    secondSurname: string;
+    email: string;
+    secondaryEmail: string;
+    backupEmail: string;
+    documentValue: string;
+    province: string;
+    location: string;
+    direction: string;
+    postalCode: string;
+    landlinePhone: string;
+    mobilePhone: string;
+    firstContact: string;
+    secondContact: string;
+    contactSchedule: string;
+    discount: string;
+    tracing: string;
+    description: string;
+    state: {
+        id: number
+    };
+    availability: {
+        id: number
+    };
+    role: {
+        id: number,
+        role:{
+            id:number;
+        }
+    };
+    personType: {
+        id: number
+    };
+    documentType: {
+        id: number
+    };
+    streetType: {
+        id: number
+    };
+    country: {
+        id: number
+    };
+    
+    secondaryEmailRelationship: {
+        id: number
+    } | null;
+    backupEmailRelationship: {
+        id: number
+    } | null;
+    perPage?: number;
 }
 
 
@@ -261,5 +384,6 @@ interface CreatePersonalRequest {
     Permission,
     GetPersonalResponse,
     CreatePersonalRequest,
-    GetPersonalByIdResponse
+    GetPersonalByIdResponse,
+    UpdatePersonalRequest
 }

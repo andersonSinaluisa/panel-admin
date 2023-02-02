@@ -1,29 +1,49 @@
 import { connect } from 'react-redux'
 import { HeaderProps } from 'infrastructure/api/api-handler'
-import {  PersonalStateProps } from "application/models/personal";
+import {  GetPersonalByIdStateProps, UpdatePersonalStateProps } from "application/models/personal";
 import DetailPersonal from "presentation/components/personal/detail";
+import { UpdatePersonalRequest } from 'infrastructure/api/personal/interface';
+import { CatalogueState } from 'application/models/core';
 
 export interface   DetailPersonalProps{
     token: string;
     title: string;
     breadcrumbs: string[];
-    GetPersonalById: PersonalStateProps;
-    onGetPersonalByIdAsync:(payload:{ headers: HeaderProps, id: string })=>void;
+    GetPersonalById: GetPersonalByIdStateProps;
+    onGetPersonalByIdAsync:(payload:{ headers: HeaderProps, id: number })=>void;
+    onUpdatePersonalAsync:(payload:{
+        headers: HeaderProps,
+        id:number,
+        body:UpdatePersonalRequest
+    })=>void;
+    UpdatePersonal:UpdatePersonalStateProps;
+    isLoading:boolean;
+    catalogues: CatalogueState;
+
 }
 //connect to redux
-const mapStateToProps = ({PERSONAL,AUTH,USERS}:any,ownProps:any) => {
+const mapStateToProps = ({PERSONAL,AUTH,loading,CORE}:any,ownProps:any) => {
     return {
         GetPersonalById:PERSONAL.GetPersonalById,
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
+        isLoading: loading.effects.PERSONAL.onUpdatePersonalAsync,
+        UpdatePersonal: PERSONAL.UpdatePersonal,
+        catalogues: CORE.catalogues,
 
     };
 }
 
 const mapDispatchToProps = ({PERSONAL}: any) => {
     return {
-        onGetPersonalByIdAsync:(payload:{ headers: HeaderProps, id: string })=>PERSONAL.onGetPersonalByIdAsync(payload),
+        onGetPersonalByIdAsync:(payload:{ headers: HeaderProps, id: number })=>PERSONAL.onGetPersonalByIdAsync(payload),
+        onUpdatePersonalAsync:(payload:{
+            headers: HeaderProps,
+            id:number,
+            body:UpdatePersonalRequest
+        })=>PERSONAL.onUpdatePersonalAsync(payload)
+    
     };
 }
 

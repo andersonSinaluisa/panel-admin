@@ -5,18 +5,24 @@ import Toast, { ToastProps } from "infrastructure/components/toast";
 import { CreateInstallationProps } from "presentation/container/installations/create-container";
 import { Link, useNavigate } from "react-router-dom";
 import { installations_interface } from "infrastructure/api/installation";
-import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
+import { CATALOGUE_TYPE_COUNTRY, SUCCESS_HTTP_CODE_CREATED } from "application/common";
 import Select from "infrastructure/components/select";
-import { clients_interface } from "infrastructure/api/clients";
+import { clients_interface, clients_request } from "infrastructure/api/clients";
 import SelectReact from 'react-select';
 import json from 'application/common/utils/datos.json';
 import { initialMetaResponse } from "infrastructure/api/api-handler";
+import { interface_core } from "infrastructure/api/core";
+import AsyncSelect from 'react-select/async';
+import { Client } from "infrastructure/api/clients/interface";
 
 const CreateInstallation = (props: CreateInstallationProps) => {
   useTitle(props.title);
   useBreadcrumbs(props.breadcrumbs);
 
   let navigate = useNavigate();
+
+  let [load,setLoad] = useState(false);
+
 
   const [message, setMessage] = useState<ToastProps>({
     type: "info",
@@ -27,20 +33,35 @@ const CreateInstallation = (props: CreateInstallationProps) => {
 
   const [form, setForm] =
     useState<installations_interface.CreateInstallationRequest>({
+
       name: "",
-      owner: "",
       postalCode: "",
-      location: "",
       province: "",
-      country: "",
-      note: "",
+      location: "",
+      direction: "",
+      description: "",
+      country: {
+        id: 0,
+      },
+      client: {
+        id: 0,
+      },
+      clients: [],
     });
 
 
   const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-   data: [],
-   ...initialMetaResponse
+    data: [],
+    ...initialMetaResponse
   })
+
+
+  useEffect(() => {
+    console.log(props.isLoading)
+    setLoad(props.isLoading);
+  }, [props.isLoading])
+
+
 
   useEffect(() => {
     if (props.CreateInstallation.status === 200) {
@@ -61,6 +82,14 @@ const CreateInstallation = (props: CreateInstallationProps) => {
         type: "danger",
         visible: true,
       });
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 8000);
     }
   }, [props.CreateInstallation]);
 
@@ -69,14 +98,54 @@ const CreateInstallation = (props: CreateInstallationProps) => {
   }, [props.GetClients])
 
   useEffect(() => {
-    
+
     props.onGetClientsAsync({
       token: props.token
     })
   }, [])
 
+  const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
 
 
+  useEffect(() => {
+
+    if (props.catalogues.status == 200) {
+      setCatalogues(props.catalogues.data.data)
+      return;
+    }
+    if (props.catalogues.status != 0) {
+      setMessage({
+        description: props.catalogues.error,
+        title: "Error",
+        type: "danger",
+        visible: true
+      })
+      return;
+    }
+
+  }, [props.catalogues])
+
+
+  const searchClient = (inputValue: string,callback: (options: any[]) => void)  => {
+    
+      if (inputValue.length > 3) {
+        clients_request.GetClients({
+          token: props.token,
+          page: 1,
+          perPage: 100,
+          search: inputValue
+        }).toPromise().then((res) => {
+          callback(res?.data?.data?.map((item) => {
+            return {
+              label: item.firstName+" "+item.firstSurname+" / "+item.documentValue,
+              value: item.id
+            }
+          }) || [])
+        }) 
+      }
+    
+    
+  }
 
   const handleChange = (
     event: React.FormEvent<
@@ -91,72 +160,31 @@ const CreateInstallation = (props: CreateInstallationProps) => {
 
   const handleSubmit = () => {
     //validate form fields
-    if (form.country == "") {
-      setMessage({
-        description: "El campo pais es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.location == "") {
-      setMessage({
-        description: "El campo localidad es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.name == "") {
-      setMessage({
-        description: "El campo nombre es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.owner == "") {
-      setMessage({
-        description: "El campo propietario es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
-    if (form.postalCode == "") {
-      setMessage({
-        description: "El campo codigo postal es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-
-      return;
-    }
-
-    if (form.province == "") {
-      setMessage({
-        description: "El campo provincia es requerido",
-        title: "Error",
-        type: "danger",
-        visible: true,
-      });
-      return;
-    }
-
+    setLoad(true);
     props.CreateInstallationAsync({
       headers: {
         token: props.token,
       },
       body: form,
+    });
+  };
+
+  const getListByCode = (code: string) => {
+    return catalogue.filter((item) => item.type.code === code).map((item) => {
+      return {
+        label: item.name,
+        value: item.id
+      }
+    })
+  }
+  const handleChangeSelect = (
+    event: React.FormEvent<HTMLSelectElement>
+  ) => {
+    setForm({
+      ...form,
+      [event.currentTarget.name]: {
+        id: event.currentTarget.value
+      },
     });
   };
 
@@ -172,40 +200,19 @@ const CreateInstallation = (props: CreateInstallationProps) => {
               onChange={handleChange}
             />
           </div>
-          <div className="col-lg-5">
-          
-            <label htmlFor="userId">Propietario</label>
-            <SelectReact
-              isSearchable={true}
-              name="owner"
-              options={clients.data.map(e => ({
-                value: e.id,
-                label: e.firstName + " " + e.secondName
-              }))}
-              placeholder="Seleccione un propietario"
-              onChange={
-                (e: any) => {
-                  setForm({
-                    ...form,
-                    owner: e.value,
-                  })
-                }
-              }
-
-            />
-          </div>
           <div className="col-lg-6">
-            <Input
-              label="Código Postal"
-              name="postalCode"
-              type={"text"}
+            <label htmlFor="description">Descripción</label>
+            <textarea
+              className="form-control"
+              name="description"
               onChange={handleChange}
-            />
+              placeholder="Descripción"
+            ></textarea>
           </div>
           <div className="col-lg-6">
             <Input
-              label="Localidad"
-              name="location"
+              label="Codigo Postal"
+              name="postalCode"
               type={"text"}
               onChange={handleChange}
             />
@@ -220,28 +227,49 @@ const CreateInstallation = (props: CreateInstallationProps) => {
           </div>
           <div className="col-lg-6">
             <Input
-              label="País"
-              name="country"
+              label="Localidad"
+              name="location"
               type={"text"}
               onChange={handleChange}
             />
           </div>
           <div className="col-lg-6">
-
-            <div className="form-group row align-items-center">
-              <div className="col-sm-1 col-4">
-                <label className="col-form-label">Notas</label>
-              </div>
-              <div className="col-sm-11 col-8">
-                <textarea className="form-control" id="note"
-                  name="note"
-                  onChange={handleChange}
-                  rows={3} placeholder="Agrega detalles aqui"></textarea>
-              </div>
-            </div>
+            <Input
+              label="Dirección"
+              name="direction"
+              type={"text"}
+              onChange={handleChange}
+            />
           </div>
-
-          <div className="col-lg-6"></div>
+          <div className="col-lg-6">
+            <Select
+              label="País"
+              name="country"
+              onChange={handleChangeSelect}
+              options={getListByCode(CATALOGUE_TYPE_COUNTRY)}
+            />
+          </div>
+          <div className="col-lg-6">
+            <label htmlFor="client">Cliente</label>
+            <AsyncSelect 
+            
+              loadOptions={(inputValue, callback) => {
+                searchClient(inputValue,callback)
+              
+              }}
+              name="client"
+              onChange={
+                (newValue:any) => {
+                  setForm({
+                    ...form,
+                    client: {
+                      id: newValue.value
+                    },
+                  });
+                }
+              }
+            />
+          </div>
         </div>
         <div className="col-12 row ">
           <div className="col-12 justify-content-end d-md-flex ">
@@ -252,14 +280,19 @@ const CreateInstallation = (props: CreateInstallationProps) => {
             >
               Atrás
             </Link>
-            <button
+            {
+              !load ? <button
               type="submit"
               className="btn btn-lg btn-primary m-2"
               value={"Agregar"}
               onClick={handleSubmit}
             >
               Guardar
-            </button>
+            </button>: <div className="spinner-border text-primary m-2" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+            }
+            
           </div>
         </div>
       </div>

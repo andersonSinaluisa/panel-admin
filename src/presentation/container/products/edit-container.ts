@@ -3,6 +3,7 @@ import { HeaderProps } from "infrastructure/api/api-handler"
 import { connect } from 'react-redux'
 import { GetProductResponse, UpdateProductRequest } from "infrastructure/api/products/interface"
 import { UpdateProductStateProps } from "application/models/products";
+import { CatalogueState } from "application/models/core";
 
 
 export interface EditProductProps{
@@ -12,16 +13,22 @@ export interface EditProductProps{
     onUpdateProductAsync:(props:{headers:HeaderProps, body:UpdateProductRequest,id:string})=>void;
     UpdateProduct:UpdateProductStateProps;
     onGetProductAsync:(props:{headers:HeaderProps, id:string})=>void;
-    GetProduct: GetProductResponse
+    GetProduct: GetProductResponse;
+    catalogue: CatalogueState;
+    isLoading:boolean;
+
 }
 
-const mapStateToProps = ({AUTH,PRODUCTS}:any,ownProps:any) => {
+const mapStateToProps = ({AUTH,PRODUCTS,CORE,loading}:any,ownProps:any) => {
     return {
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         UpdateProduct: PRODUCTS.UpdateProduct,
-        GetProduct: PRODUCTS.GetProduct.data
+        GetProduct: PRODUCTS.GetProduct.data,
+        catalogue: CORE.catalogues,
+        isLoading:  loading.effects.PRODUCTS.onUpdateProductAsync
+
     }
 }
 

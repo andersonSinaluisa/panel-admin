@@ -1,5 +1,6 @@
-import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
+import { CATALOGUE_TYPE_COUNTRY, CATALOGUE_TYPE_DOCUMENT, CATALOGUE_TYPE_MAIN_ROL_CLIENT, CATALOGUE_TYPE_MAIN_ROL_STAFF, CATALOGUE_TYPE_ORGANISATION_OR_ENTITY_WITH_PERSONALITY_LEGAL, CATALOGUE_TYPE_RECORD_AVAILABILITY, CATALOGUE_TYPE_SECONDARY_ROL_CLIENT, CATALOGUE_TYPE_STREET, CATALOGUE_TYPE_USER_STATE, SUCCESS_HTTP_CODE_CREATED } from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
+import { interface_core } from "infrastructure/api/core";
 import { personal_interface } from "infrastructure/api/personal";
 import { user_interface } from "infrastructure/api/users";
 import Input from "infrastructure/components/input";
@@ -23,181 +24,73 @@ const CreatePersonal = (props: CreatePersonalProps) => {
     title: "",
     description: "",
   });
-  const [users, setUsers] = useState<user_interface.User[]>([])
 
-
-  const [form, setForm] = useState<personal_interface.CreatePersonalRequest>({
-    contact: "",
-    contact2: "",
-    contactSchedule: "",
-    country: "",
-    createdBy: "",
-    direction: "",
-    document: "",
-    documentType: "",
-    email: "",
-    location: "",
-    mobilePhone: "",
-    name: "",
-    phone: "",
-    note: "",
-    postalCode: "",
-    province: "",
-    type: "",
-    userId: "",
-    lastname1: ""
-  });
-
-  //create array with fields name, type, label, options and value
-  const fields = [
-
+  const [load,setLoad] = useState<boolean>(false)
+  const [form, setForm] = useState<personal_interface.CreatePersonalRequest>(
     {
-      name: "name",
-      type: "text",
-      label: "Nombre",
-      options: [],
-      value: form.name,
-    },
-    {
-      name: "lastname1",
-      type: "text",
-      label: "Apellido",
-      options: [],
-      value: form.lastname1,
-    },
-
-    {
-      name: "documentType",
-      type: "select",
-      label: "Tipo de documento",
-      options: [
-        { label: 'DNI', value: 'DNI' },
-        { label: 'Otro', value: 'Otro' }
-      ],
-      value: form.documentType,
-    },
-
-    {
-      name: "document",
-      type: "text",
-      label: "Documento",
-      options: [],
-      value: form.document,
-    },
-
-    {
-      name: "country",
-      type: "text",
-      label: "País",
-      options: [],
-      value: form.country,
-    },
-
-    {
-      name: "direction",
-      type: "text",
-      label: "Dirección",
-      options: [],
-      value: form.direction,
-    },
-
-    {
-      name: "location",
-      type: "text",
-      label: "Localidad",
-      options: [],
-      value: form.location,
-    },
-    {
-      name: "email",
-      type: "text",
-      label: "Email",
-      options: [],
-      value: form.email,
-    },
-    {
-      name: "mobilePhone",
-      type: "text",
-      label: "Teléfono móvil",
-      options: [],
-      value: form.mobilePhone,
-    },
-    {
-      name: "phone",
-      type: "text",
-      label: "Teléfono",
-      options: [],
-      value: form.phone,
-    },
-    {
-      name: "note",
-
-      type: "text",
-      label: "Nota",
-      options: [],
-      value: form.note,
-    },
-    {
-      name: "postalCode",
-      type: "text",
-      label: "Código postal",
-      options: [],
-      value: form.postalCode,
-    },
-    {
-      name: "province",
-      type: "text",
-      label: "Provincia",
-      options: [],
-      value: form.province,
-    },
-    {
-      name: "type",
-      type: "select",
-      label: "Tipo",
-      options: [
-        { label: 'interno', value: 'interno' },
-        { label: 'externo', value: 'externo' },
-
-      ],
-      value: form.type,
-    },
-
-    {
-      name: "contact",
-      type: "text",
-      label: "Contacto",
-      options: [],
-      value: form.contact,
-    },
-    {
-
-      name: "contact2",
-      type: "text",
-      label: "Contacto 2",
-      options: [],
-      value: form.contact2,
-    },
-    {
-      name: "contactSchedule",
-      type: "text",
-      label: "Horario de contacto",
-      options: [],
-      value: form.contactSchedule,
-    },
-    {
-      name: "createdBy",
-      type: "text",
-      label: "Creado por",
-      options: [],
-      value: form.createdBy,
-    },
-
-  ];
+      
+      nickName: "",
+      firstName: "",
+      secondName: "",
+      firstSurname: "",
+      secondSurname: "",
+      email: "",
+      secondaryEmail: "",
+      backupEmail: "",
+      password: "",
+      documentValue: "",
+      province: "",
+      location: "",
+      direction: "",
+      postalCode: "",
+      landlinePhone: "",
+      mobilePhone: "",
+      firstContact: "",
+      secondContact: "",
+      contactSchedule: "",
+      discount: "",
+      tracing: "",
+      description: "",
+      state: {
+        id: 0
+      },
+      availability: {
+        id: 0
+      },
+      role: {
+        id: 0,
+        role:{
+          id:0
+        }
+      },
+      personType: {
+        id: 0
+      },
+      documentType: {
+        id: 0
+      },
+      streetType: {
+        id: 0
+      },
+      country: {
+        id: 0
+      },
+      createdBy: {
+        id: 0
+      },
+      secondaryEmailRelationship: null,
+      backupEmailRelationship: null,
+      }
+  );
+  const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
 
   useEffect(() => {
-    setUsers(props.GetUsers);
-  }, [props.GetUsers])
+    setCatalogues(props.catalogue.data.data);
+  }, [props.catalogue])
+
+  useEffect(() => {
+    setLoad(props.isLoading);
+  }, [props.isLoading])
 
 
   useEffect(() => {
@@ -219,6 +112,14 @@ const CreatePersonal = (props: CreatePersonalProps) => {
         type: "danger",
         visible: true
       })
+      setTimeout(() => {
+        setMessage({
+          description: "",
+          title: "",
+          type: "danger",
+          visible: false
+        })
+      }, 5000);
     }
   }, [props.CreatePersonal])
 
@@ -234,27 +135,6 @@ const CreatePersonal = (props: CreatePersonalProps) => {
 
   const handleSubmit = () => {
 
-    let error = ""
-
-
-    Object.values(form).forEach(e => {
-      if (e == "") {
-        error = "Complete todos los campos"
-        return;
-      }
-    })
-
-
-
-    if (error !== "") {
-      setMessage({
-        description: error,
-        title: "Error",
-        type: "danger",
-        visible: true
-      })
-      return;
-    }
 
     props.onCreatePersonalAsync({
       headers: {
@@ -266,91 +146,296 @@ const CreatePersonal = (props: CreatePersonalProps) => {
 
   };
 
+  const getListByCode = (code: string) => {
+    return catalogue.filter((item) => item.type.code === code).map((item) => {
+      return {
+        label: item.name,
+        value: item.id
+      }
+    })
+  }
+
+
+  
+
+
+  const handleChangeSelect = (
+    event: React.FormEvent<HTMLSelectElement>
+  ) => {
+    setForm({
+      ...form,
+      [event.currentTarget.name]: {
+        id: event.currentTarget.value
+      },
+    });
+  };
+
+
   return (
     <section id="basic-vertical-layouts">
-      <div className="col-12 row bg-cover">
-        <div className="row p-2 col-12">
-          {
-            //create fields from form
-            fields.map((field, index) => {
-              if (field.type === "select") {
-                return (
-                  <div className="col-md-6 col-12" key={index}>
-                    <Select
-                      label={field.label}
-                      name={field.name}
-                      options={field.options}
+    <div className="col-12 row bg-cover">
+      <div className="row p-2 col-12">
 
-                      selected={field.value}
-                      onChange={handleChange}
-                    />
-                  </div>
-                )
-              } else {
-                return (
-                  <div className="col-12 col-md-6" key={index}>
-                    <Input
-                      name={field.name}
-                      type={field.type}
-                      label={field.label}
-                      value={field.value}
-                      onChange={handleChange}
-
-                    />
-                  </div>
-                )
-              }
-
-            })
-
-
-          }
-          <div className="col-3">
-            <label htmlFor="userId">Usuario</label>
-            <SelectReact
-              isSearchable={true}
-              name="userId"
-              options={users.map(e => ({
-                value: e.id,
-                label: e.email
-              }))}
-              placeholder="Seleccione un usuario"
-              onChange={
-                (e: any) => {
-                  setForm({
-                    ...form,
-                    userId: e.value
-                  })
+        <div className="col-lg-6">
+          <Input
+            label="Primer Nombre"
+            name="firstName"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Segundo Nombre"
+            name="secondName"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Primer Apellido"
+            name="firstSurname"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Segundo Apellido"
+            name="secondSurname"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Tipo de Persona"
+            name="personType"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_ORGANISATION_OR_ENTITY_WITH_PERSONALITY_LEGAL)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Tipo de Documento"
+            name="documentType"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_DOCUMENT)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Documento"
+            name="documentValue"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Pais"
+            name="country"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_COUNTRY)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Estado/Pronvincia"
+            name="province"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Localidad"
+            name="location"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Dirección"
+            name="direction"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Tipo de Calle"
+            name="streetType"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_STREET)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Codigo Postal"
+            name="postalCode"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono Fijo"
+            name="landlinePhone"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono Celular"
+            name="mobilePhone"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono de contacto"
+            name="firstContact"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Telefono de contacto secundario"
+            name="secondContact"
+            type={"tel"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Horario de contacto"
+            name="contactSchedule"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      <hr />
+      <div className="col-12 row p-2">
+        <div className="col-lg-6">
+          <Input
+            label="Nombre de usuario"
+            name="nickName"
+            type={"text"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Email"
+            name="email"
+            type={"email"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Email Secundario"
+            name="secondaryEmail"
+            type={"email"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Email de respaldo"
+            name="backupEmail"
+            type={"email"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Input
+            label="Contraseña"
+            name="password"
+            type={"password"}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Rol"
+            name="role"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_MAIN_ROL_STAFF)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Rol"
+            name="role"
+            onChange={(e)=>{
+              setForm({
+                ...form,
+                role:{
+                  ...form.role,
+                  role:{
+                    id: parseInt(e.target.value)
+                  }
                 }
-              }
-
-            />
-          </div>
+              })
+            }}
+            options={getListByCode(CATALOGUE_TYPE_SECONDARY_ROL_CLIENT)}
+          />
         </div>
-        <div className="col-12 row ">
-          <div className="col-12 justify-content-end d-md-flex ">
-            <Link
-              type="button"
-              className="btn btn-lg btn-outline-dark m-2"
-              to={`/inicio/usuarios/`}
-            >
-              Atrás
-            </Link>
-            <button
-              type="submit"
-              className="btn btn-lg btn-primary m-2"
-              value={"Agregar"}
-              onClick={handleSubmit}
-            >
-              Guardar
-            </button>
-          </div>
+        <div className="col-lg-6">
+          <Select
+            label="Activo"
+            name="state"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_USER_STATE)}
+          />
+        </div>
+        <div className="col-lg-6">
+          <Select
+            label="Disponibilidad"
+            name="availability"
+            onChange={handleChangeSelect}
+            options={getListByCode(CATALOGUE_TYPE_RECORD_AVAILABILITY)}
+          />
         </div>
       </div>
-      <div className="toast-bs-container">
-        <Toast {...message} />
+      <div className="col-12 r.ow ">
+        <div className="col-12 justify-content-end d-md-flex ">
+          <Link
+            type="button"
+            className="btn btn-lg btn-outline-dark m-2"
+            to={`/inicio/personal/`}
+          >
+            Atrás
+          </Link>
+          {
+            load? <button type="button" className="btn btn-lg btn-primary m-2" disabled>
+            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Cargando...
+          </button>:    <button
+            type="submit"
+            className="btn btn-lg btn-primary m-2"
+            value={"Agregar"}
+            onClick={handleSubmit}
+          >
+            Guardar
+          </button>
+          }
+      
+        </div>
       </div>
-    </section>
+    </div>
+    <div className="toast-bs-container">
+      <Toast {...message} />
+    </div>
+  </section>
   );
 };
 

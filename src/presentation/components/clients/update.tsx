@@ -33,9 +33,8 @@ const UpdateClient = (props: UpdateClientProps) => {
   });
 
 
-  const [users, setUsers] = useState<user_interface.User[]>([])
   const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
-
+  const [load, setLoad] = useState<boolean>(false)
 
 
 
@@ -45,6 +44,10 @@ const UpdateClient = (props: UpdateClientProps) => {
       initialClient
     );
 
+
+  useEffect(() => {
+    setLoad(props.isLoading)
+  }, [props.isLoading])
 
   useEffect(() => {
     let _id = id as string;
@@ -65,15 +68,23 @@ const UpdateClient = (props: UpdateClientProps) => {
     if (props.catalogues.status != 0) {
       setMessage({
         description: props.catalogues.error,
-        title: "Error",
+        title: "Error la obtener catalogo",
         type: "danger",
         visible: true
       })
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 8000);
       return;
     }
 
   }, [props.catalogues])
-  
+
   useEffect(() => {
     if (props.GetClientById.status === 200) {
 
@@ -101,6 +112,14 @@ const UpdateClient = (props: UpdateClientProps) => {
         type: "danger",
         visible: true
       })
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 8000);
     }
   }, [props.UpdateClient])
 
@@ -204,6 +223,7 @@ const UpdateClient = (props: UpdateClientProps) => {
               name="personType"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_ORGANISATION_OR_ENTITY_WITH_PERSONALITY_LEGAL)}
+              selected={form.personType.id}
             />
           </div>
           <div className="col-lg-6">
@@ -212,6 +232,7 @@ const UpdateClient = (props: UpdateClientProps) => {
               name="documentType"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_DOCUMENT)}
+              selected={form.documentType.id}
             />
           </div>
 
@@ -231,6 +252,7 @@ const UpdateClient = (props: UpdateClientProps) => {
               name="country"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_COUNTRY)}
+              selected={form.country.id}
             />
           </div>
           <div className="col-lg-6">
@@ -269,6 +291,7 @@ const UpdateClient = (props: UpdateClientProps) => {
               name="streetType"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_STREET)}
+              selected={form.streetType.id}
             />
           </div>
           <div className="col-lg-6">
@@ -382,22 +405,17 @@ const UpdateClient = (props: UpdateClientProps) => {
               name="role"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_MAIN_ROL_CLIENT)}
+              selected={form.role.id}
             />
           </div>
-          <div className="col-lg-6">
-            <Select
-              label="Rol"
-              name="role"
-              
-              options={getListByCode(CATALOGUE_TYPE_SECONDARY_ROL_CLIENT)}
-            />
-          </div>
+
           <div className="col-lg-6">
             <Select
               label="Activo"
               name="state"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_USER_STATE)}
+              selected={form.state.id}
             />
           </div>
           <div className="col-lg-6">
@@ -406,6 +424,7 @@ const UpdateClient = (props: UpdateClientProps) => {
               name="availability"
               onChange={handleChangeSelect}
               options={getListByCode(CATALOGUE_TYPE_RECORD_AVAILABILITY)}
+              selected={form.availability.id}
             />
           </div>
         </div>
@@ -414,18 +433,24 @@ const UpdateClient = (props: UpdateClientProps) => {
             <Link
               type="button"
               className="btn btn-lg btn-outline-dark m-2"
-              to={`/inicio/usuarios/`}
+              to={`/inicio/clientes/`}
             >
               Atrás
             </Link>
-            <button
-              type="submit"
-              className="btn btn-lg btn-primary m-2"
-              value={"Agregar"}
-              onClick={handleSubmit}
-            >
-              Guardar
-            </button>
+            {
+              load ? <button type="button" className="btn btn-lg btn-primary m-2" disabled>
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cargando...
+              </button> : <button
+                type="submit"
+                className="btn btn-lg btn-primary m-2"
+                value={"Agregar"}
+                onClick={handleSubmit}
+              >
+                Guardar
+              </button>
+            }
+
           </div>
         </div>
       </div>

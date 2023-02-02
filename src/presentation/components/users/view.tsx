@@ -28,11 +28,15 @@ const UserView = (props: UsersViewProps) => {
     description: "",
   });
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [load,setLoad] = useState<boolean>(false)
 
   useEffect(() => {
     setUsers(props.UsersData);
   }, [props.UsersData]);
 
+  useEffect(() => {
+    setLoad(props.isLoading)
+  },[props.isLoading])
 
   useEffect(() => {
     if (props.DeleteUser.status === 200) {
@@ -146,6 +150,7 @@ const UserView = (props: UsersViewProps) => {
                 page: page
               });
             }}
+            isLoading={load}
           />
         </div>
       </div>

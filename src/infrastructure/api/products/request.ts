@@ -1,6 +1,6 @@
 import * as Globals from 'application/common';
 import * as APIHANDLER from '../api-handler';
-import { CatalogProductRequest, CreateProductCatalogRequest, CreateProductUncatalogRequest, UpdateProductRequest, UpdateStockProductRequest } from './interface';
+import { CatalogProductRequest, CreateProductRequest, UpdateProductRequest, UpdateStockProductRequest } from './interface';
 
 
 
@@ -15,26 +15,20 @@ const GetProducts = (props:APIHANDLER.HeaderProps)=>{
 }
 
 const GetProduct = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
-    return APIHANDLER.get(Globals.GET_PRODUCTS+props.id,{
+    return APIHANDLER.get(Globals.GET_PRODUCTS+"/"+props.id,{
         headers:{
             Authorization:"Bearer "+props.headers.token
         }
     })
 }
 
-const CreateCatalogedProduct = (props:{headers:APIHANDLER.HeaderProps,body:CreateProductCatalogRequest})=>{
-    return APIHANDLER.post(Globals.CREATE_CATALOGED_PRODUCTS,props.body,{
+const CreateProduct = (props:{headers:APIHANDLER.HeaderProps,body:CreateProductRequest})=>{
+    return APIHANDLER.post(Globals.CREATE_PRODUCTS,props.body,{
             Authorization:"Bearer "+props.headers.token
         
     })
 }
 
-const CreateUncatalogedProduct = (props:{headers:APIHANDLER.HeaderProps,body:CreateProductUncatalogRequest})=>{
-    return APIHANDLER.post(Globals.CREATE_UNCATALOGED_PRODUCTS,props.body,{
-            Authorization:"Bearer "+props.headers.token
-        
-    })
-}
 
 const UpdateProduct = (props:{headers:APIHANDLER.HeaderProps,body:UpdateProductRequest,id:string})=>{
     return APIHANDLER.put(Globals.UPDATE_PRODUCTS+props.id,props.body,{
@@ -64,8 +58,7 @@ const DeleteProduct = (props:{headers:APIHANDLER.HeaderProps,id:string})=>{
 
 export {
     GetProducts,
-    CreateCatalogedProduct,
-    CreateUncatalogedProduct,
+    CreateProduct,
     UpdateProduct,
     UpdateStockProduct,
     CatalogProduct,

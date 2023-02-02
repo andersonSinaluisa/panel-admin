@@ -1,23 +1,21 @@
 import { MetaResponse } from "../api-handler";
 import { Availability, State, Warehouse } from "../core/interface";
 
-interface CreateProductCatalogRequest {
+interface CreateProductRequest {
+    warehouse:{
+        id:number
+    };
+    type:{
+        id:number
+    };
     name: string;
-    description: string;
-    precioVentaPublico: number;
-    note: string;
-    nroSerie:string;
-    assigned: boolean;
-    createdBy: string;
-}
-
-interface CreateProductUncatalogRequest {
-    name: string;
-    description: string;
-    precioVentaPublico: number;
+    code: string;
+    onSale: boolean;
     stock: number;
-    note: string;
-    createdBy:string;
+    priceForPublic: string;
+    initialUnitPurchasePrice: string;
+    description: string;
+    
 }
 
 
@@ -35,10 +33,10 @@ interface Product {
     priceForPublic: string;
     initialUnitPurchasePrice: string;
     description: string;
-    
+    type?: State;
     state:State;
     availability:Availability;
-    wharehouse:Warehouse;
+    warehouse:Warehouse;
 
 };
 
@@ -48,22 +46,27 @@ interface GetProductsResponse extends MetaResponse {
 }
 
 interface GetProductResponse {
-    code: number;
-    status: number;
-    message:Product;
+    data: Product;
+    message:{
+        status:number;
+    }
 }
 
 interface UpdateProductRequest{
 
+    warehouse:{
+        id:number
+    };
+    type:{
+        id:number
+    };
     name: string;
-    nroSerie: string;
-    description: string;
-    precioVentaPublico: number;
-    cataloged: boolean;
+    code: string;
+    onSale: boolean;
     stock: number;
-    assigned: boolean;
-    assignedTo: string;
-    note: string;
+    priceForPublic: string;
+    initialUnitPurchasePrice: string;
+    description: string;
 
 }
 
@@ -79,8 +82,7 @@ interface CatalogProductRequest{
 export type {
     GetProductsResponse,
     Product,
-    CreateProductCatalogRequest,
-    CreateProductUncatalogRequest,
+    CreateProductRequest,
     GetProductResponse,
     UpdateProductRequest,
     CatalogProductRequest,

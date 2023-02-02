@@ -25,9 +25,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
       ...initialMetaResponse
     });
 
-    const [state,setState] = useState<installations_interface.UpdateStateInstallationsRequest>({
-      state:0
-    })
+
   
     const [clients,setClients] = useState<clients_interface.GetClientsResponse>({
       data: [],
@@ -47,9 +45,10 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
 
     const [installation,setInstallation] = useState<installations_interface.Installation>(initialInstallation)
 
+    const [load,setLoad] = useState<boolean>(false)
+
 
     useEffect(() => {
-        console.log(props.GetInstallations)
      setInstallations(props.GetInstallations)
     }, [props.GetInstallations]);
 
@@ -57,11 +56,13 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
       setClients(props.GetClients)
     }, [props.GetClients]);
 
+    useEffect(() => {
+      setLoad(props.isLoading)
+    }, [props.isLoading]);
     
   
   
     useEffect(()=>{
-      console.log(message)
       if(props.DeleteInstallation.status===200){
         setMessage({
           type: "success",
@@ -70,16 +71,31 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
           description: "La instalación se ha eliminado correctamente",
         });
         props.ClearState()
-
+        setTimeout(() => {
+          setMessage({
+            type: "info",
+            visible: false,
+            title: "",
+            description: "",
+          });
+        }, 3000);
         return;
       }
-      if(props.DeleteInstallation.status===400){
+      if(props.DeleteInstallation.status!==0){
         setMessage({
           type: "danger",
           visible: true,
           title: "Error al eliminar la instalación",
-          description: "La instalación no se ha eliminado correctamente",
+          description: props.DeleteInstallation.error,
         });
+        setTimeout(() => {
+          setMessage({
+            type: "info",
+            visible: false,
+            title: "",
+            description: "",
+          });
+        }, 3000);
         props.ClearState()
 
         return;
@@ -87,33 +103,6 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
     },[props.DeleteInstallation])
 
 
-    useEffect(()=>{
-      console.log(message)
-
-      if(props.UpdateStateInstallation.status===200){
-        setMessage({
-          type: "success",
-          visible: true,
-          title: "Instalación actualizada",
-          description: "La instalación se ha actualizado correctamente",
-        });
-        props.ClearState()
-
-        return;
-      }
-      if(props.UpdateStateInstallation.status===400){
-        setMessage({
-          type: "danger",
-          visible: true,
-          title: "Error al actualizar la instalación",
-          description: "La instalación no se ha actualizado correctamente",
-        });
-        props.ClearState()
-
-        return;
-      }
-      
-    },[props.UpdateStateInstallation])
 
     
   
@@ -140,24 +129,13 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
               setShowModal(true)
               setInstallation(item)
           },
-        },/*{
-          color: "warning",
-          icon: "bx bx-edit",
-          label: "Actualizar estado",
-          name: "update",
-          onClick: (item: any) => {
-              SetShowModalStatus(true)
-              setShowModal(false)
-
-              setInstallation(item)
-          },
-        },*/{
+        },{
           color: "warning",
           icon: "bx bx-edit",
           label: "Editar",
           name: "edit",
           onClick: (item: any) => {
-              navigate(`/inicio/instalaciones/${item._id}`)
+              navigate(`/inicio/instalaciones/${item.id}`)
           }
           
         })
@@ -172,7 +150,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
         headers:{
           token:props.token
         },
-        id:item._id
+        id:item.id
       })
       props.GetInstallationsAsync({
         token: props.token,
@@ -180,19 +158,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
     }
 
     //handle status update
-    const handleStatus=(item:any)=>{
-      SetShowModalStatus(false)
-      props.UpdateStateInstallationAsync({
-        body:state,
-        headers:{
-          token:props.token
-        },
-        id:item._id
-      })
-      props.GetInstallationsAsync({
-        token: props.token,
-      });
-    }
+
   
     return (
       <div className="row" id="table-borderless">
@@ -209,7 +175,18 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
               actions={getActions()}
               columns={[
                
-                
+                {
+                  name: "client",
+                  label: "Cliente",
+                  type: "render",
+                  render: (item: any) => {
+                    return (
+                      <div className="d-flex justify-content-center">
+                        {item?.firstName} {item?.firstSurname}
+                      </div>
+                    );
+                  }
+                },
                 {
                   name: "postalCode",
                   label: "Codigo postal",
@@ -225,6 +202,22 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
                     label: "Provincia",
                     type: "text",
                 },
+                {
+                  label:"Estado",
+                  name:"state",
+                  type:"render",
+                  render:(item:any)=>{
+                    return(
+                      <div className="d-flex justify-content-center">
+                        <div className={
+                          "badge badge-pill badge-"+getStatusInstallation(item.code).color+" font-size-12"
+                        }  >
+                          {getStatusInstallation(item.code).label}
+                          </div>
+                      </div>
+                    )
+                  }
+                }
               ]}
               dataLimit={15}
               pageLimit={2}
@@ -235,6 +228,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
                   page: page,
                 });
               }}
+              isLoading={load}
             />
           </div>
         </div>
@@ -242,7 +236,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
         <Modal className="modal-main" show={showModal} style={{}}>
           <div className="card">
             <div className="card-header">
-                <h3>¿Desea eliminar la instalación ?</h3>
+                <h3>¿Desea eliminar la instalación del cliente {installation.client.firstName+" "+installation.client.firstSurname} ?</h3>
             </div>
             <div className="card-footer d-flex justify-content-md-end">
                 <button type="button" 
@@ -255,36 +249,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
             </div>
           </div>
         </Modal>
-        <Modal className="modal-main" show={showModalStatus} style={{}}>
-        <div className="card">
-            <div className="card-header">
-                <h3>Actualizar estado de la instalación</h3>
-            </div>
-            <div className="card-body">
-              <Select
-                label="Seleccione el estado"
-                name="status"
-                options={status.map(x=>{
-                  return {label:x.label,value:x.id}
-                })}
-                onChange={(e:any)=>{
-                  setState({
-                    state:e.currentTarget.value
-                  })
-                }}
-              />
-            </div>
-            <div className="card-footer d-flex justify-content-md-end">
-                <button type="button" 
-                className="btn btn-secondary"
-                onClick={()=>SetShowModalStatus(false)}
-                >Cancelar</button>
-                <button type="button" 
-                onClick={()=>handleStatus(installation)}
-                className="btn btn-success ml-md-3">Actualizar</button>
-            </div>
-          </div>
-          </Modal>
+        
         {/* modal for update status*/}
         
           <div className="toast-bs-container">

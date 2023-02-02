@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
-import { ToastProps } from "infrastructure/components/toast";
+import Toast, { ToastProps } from "infrastructure/components/toast";
 import { ClientsViewProps } from "presentation/container/clients/view-container";
 import { clients_interface } from "infrastructure/api/clients";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
@@ -28,9 +28,14 @@ const ClientsView = (props: ClientsViewProps) => {
   });
   const [showModal,setShowModal] = useState<boolean>(false);
 
+  const [load,setLoad] = useState<boolean>(false)
   useEffect(() => {
     setClients(props.ClientsData);
   }, [props.ClientsData]);
+
+  useEffect(() => {
+    setLoad(props.isLoading)
+  },[props.isLoading])
 
   
 
@@ -47,6 +52,14 @@ const ClientsView = (props: ClientsViewProps) => {
         token: props.token,
       });
       props.onClear()
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 3000);
       return;
     }
 
@@ -57,8 +70,18 @@ const ClientsView = (props: ClientsViewProps) => {
         title: "Error",
         description: props.DeleteClient.error,
       });
+
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 3000);
       return;
     }
+    
 
   },[props.DeleteClient])
 
@@ -153,6 +176,14 @@ const ClientsView = (props: ClientsViewProps) => {
             dataLimit={5}
             pageLimit={2}
             meta={clients.meta}
+            onChangePage={(page: number) => {
+              props.onGetClientsAsync({
+                token: props.token,
+                page: page,
+                
+              })
+            }}
+            isLoading={load}
           />
         </div>
       </div>
@@ -160,7 +191,7 @@ const ClientsView = (props: ClientsViewProps) => {
       <Modal className="modal-main" show={showModal} style={{}}>
         <div className="card">
           <div className="card-header">
-              <h3>¿Desea eliminar el Cliente { itemSeleted?.nickName } ?</h3>
+              <h3>¿Desea eliminar el Cliente { itemSeleted?.firstName +" "+itemSeleted?.firstSurname + " / "+itemSeleted?.documentValue}  ?</h3>
           </div>
           <div className="card-footer d-flex justify-content-md-end">
               <button type="button" 
@@ -175,6 +206,9 @@ const ClientsView = (props: ClientsViewProps) => {
           </div>
         </div>
       </Modal>
+      <div className="toast-bs-container">
+        <Toast {...message} />
+      </div>
     </div>
   );
 };

@@ -93,6 +93,7 @@ interface HeaderProps{
   token:string;
   perPage?:number;
   page?:number;
+  search?:string;
 }
 
 interface MetaResponse{

@@ -76,6 +76,7 @@ export const initJob :Job = {
     priority:{
         id:0,
         name:"",
+        code:"",
         createdAt:"",
         updatedAt:"",
         deletedAt:"",

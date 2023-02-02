@@ -4,6 +4,7 @@ import { HeaderProps } from 'infrastructure/api/api-handler'
 import { CreatePersonalStateProps } from "application/models/personal";
 import { CreatePersonalRequest } from "infrastructure/api/personal/interface";
 import { user_interface } from "infrastructure/api/users";
+import { CatalogueState } from "application/models/core";
 
 export interface   CreatePersonalProps{
     token: string;
@@ -11,19 +12,20 @@ export interface   CreatePersonalProps{
     breadcrumbs: string[];
     CreatePersonal: CreatePersonalStateProps;
     onCreatePersonalAsync:(payload:{ headers: HeaderProps, body: CreatePersonalRequest })=>void;
-    GetUsers: user_interface.User[]
-
-
+    GetUsers: user_interface.User[];
+    catalogue: CatalogueState;
+    isLoading: boolean;
 }
 //connect to redux
-const mapStateToProps = ({PERSONAL,AUTH,USERS}:any,ownProps:any) => {
+const mapStateToProps = ({PERSONAL,AUTH,USERS,CORE,loading}:any,ownProps:any) => {
     return {
         CreatePersonal:PERSONAL.CreatePersonal,
         token: AUTH.Session.data.message.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
-        GetUsers:USERS.GetUsers.status===200?USERS.GetUsers.data.message:[]
-
+        GetUsers:USERS.GetUsers.status===200?USERS.GetUsers.data.message:[],
+        catalogue: CORE.catalogues,
+        isLoading: loading.effects.PERSONAL.onCreatePersonalAsync
     };
 }
 

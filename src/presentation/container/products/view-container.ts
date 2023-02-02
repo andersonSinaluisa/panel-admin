@@ -19,6 +19,7 @@ export interface ProductsViewProps{
     DeleteProduct:DeleteProductStateProps;
     onClearProducts:()=>void;
     errorGetProducts:string;
+    isLoading:boolean;
 }
 
 //connect to redux
@@ -32,6 +33,7 @@ const mapStateToProps = ({AUTH,PRODUCTS,loading}:any,ownProps:any) => {
         CatalogProduct:PRODUCTS.CatalogProduct,
         DeleteProduct:PRODUCTS.DeleteProduct,
         errorGetProducts:PRODUCTS.GetProducts.error,
+        isLoading:  loading.effects.PRODUCTS.onGetProductsAsync
     }
 }
 

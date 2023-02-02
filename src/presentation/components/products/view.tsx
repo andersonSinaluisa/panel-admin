@@ -31,14 +31,15 @@ const ProductView = (props: ProductsViewProps) => {
         props.onGetProductsAsync({
             token: props.token
         })
-        setLoad(true)
+        
         props.onClearProducts()
     }, [props.token])
 
-
+    useEffect(()=>{
+        setLoad(props.isLoading)
+    },[props.isLoading])
 
     useEffect(() => {
-        setLoad(false)
         setProducts(props.GetProducts);
     }, [props.GetProducts])
 
@@ -75,7 +76,7 @@ const ProductView = (props: ProductsViewProps) => {
             headers: {
                 token: props.token
             },
-            id: item._id
+            id: item.id
         })
         props.onGetProductsAsync({
             token: props.token

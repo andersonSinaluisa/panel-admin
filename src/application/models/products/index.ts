@@ -1,7 +1,7 @@
 import { createModel } from "@rematch/core";
 import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { products_request } from "infrastructure/api/products";
-import { CatalogProductRequest, CreateProductCatalogRequest, CreateProductUncatalogRequest, GetProductResponse, GetProductsResponse, Product, UpdateProductRequest, UpdateStockProductRequest } from "infrastructure/api/products/interface";
+import { CatalogProductRequest, CreateProductRequest, GetProductResponse, GetProductsResponse, Product, UpdateProductRequest, UpdateStockProductRequest } from "infrastructure/api/products/interface";
 import { RootModel } from "..";
 
 export interface GetProductsStateProps extends ResponseServer {
@@ -9,25 +9,16 @@ export interface GetProductsStateProps extends ResponseServer {
 }
 
 export interface GetProductStateProps extends ResponseServer {
-    data: {
-        status: number;
-        message: "",
-    };
+    data: GetProductResponse
 }
 
-export interface CreateProductCatalogStateProps extends ResponseServer {
+export interface CreateProductStateProps extends ResponseServer {
     data: {
         status: number;
         message: "",
     }
 }
 
-export interface CreateProductUncatalogStateProps extends ResponseServer {
-    data: {
-        status: number;
-        message: "",
-    }
-}
 
 export interface UpdateStockProductStateProps extends ResponseServer {
     data: {
@@ -105,7 +96,7 @@ export const initProduct: Product = {
         name: "",
         code: ""
     },
-    wharehouse: {
+    warehouse: {
         id: 0,
         updatedAt: "",
         availability: {
@@ -175,22 +166,14 @@ export const PRODUCTS = createModel<RootModel>()({
             error: "",
             status: 0
         } as GetProductsStateProps,
-        CreateProductCatalog: {
+        CreateProduct: {
             error: "",
             data: {
                 status: 0,
                 message: ""
             },
             status: 0
-        } as CreateProductCatalogStateProps,
-        CreateProductUncatalog: {
-            error: "",
-            data: {
-                status: 0,
-                message: ""
-            },
-            status: 0
-        } as CreateProductUncatalogStateProps,
+        } as CreateProductStateProps,
         UpdateStockProduct: {
             error: "",
             data: {
@@ -225,7 +208,12 @@ export const PRODUCTS = createModel<RootModel>()({
         } as DeleteProductStateProps,
         GetProduct: {
             error: "",
-            data: {},
+            data: {
+                data:initProduct,
+                message:{
+                    status:0,
+                }
+            },
             status: 0
         } as GetProductStateProps
 
@@ -238,18 +226,13 @@ export const PRODUCTS = createModel<RootModel>()({
                 GetProducts: payload
             }
         },
-        onCreateProductCatalog: (state, payload: CreateProductCatalogStateProps) => {
+        onCreateProduct: (state, payload: CreateProductStateProps) => {
             return {
                 ...state,
-                CreateProductCatalog: payload
+                CreateProduct: payload
             }
         },
-        onCreateProductUncatalog: (state, payload: CreateProductUncatalogStateProps) => {
-            return {
-                ...state,
-                CreateProductUncatalog: payload
-            }
-        },
+        
         onUpdateStockProduct: (state, payload: UpdateStockProductStateProps) => {
             return {
                 ...state,
@@ -304,48 +287,26 @@ export const PRODUCTS = createModel<RootModel>()({
                 });
             }
         },
-        async onCreateProductCatalogAsync(props: { headers: HeaderProps, body: CreateProductCatalogRequest }) {
+        async onCreateProductAsync(props: { headers: HeaderProps, body: CreateProductRequest }) {
             try {
 
-                const response = await products_request.CreateCatalogedProduct(props).toPromise();
-                dispatch.PRODUCTS.onCreateProductCatalog({
+                const response = await products_request.CreateProduct(props).toPromise();
+                dispatch.PRODUCTS.onCreateProduct({
                     data: response.data,
                     error: "",
                     status: response.status
                 });
 
             } catch (e: any) {
-                dispatch.PRODUCTS.onCreateProductCatalog({
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
+                dispatch.PRODUCTS.onCreateProduct({
                     data: {
                         status: 0,
                         message: ""
                     },
-                    error: e.message,
-                    status: 0
-                });
-            }
-        },
-        async onCreateProductUncatalogAsync(props: {
-            headers: HeaderProps,
-            body: CreateProductUncatalogRequest
-        }) {
-            try {
-
-                const response = await products_request.CreateUncatalogedProduct(props).toPromise();
-                dispatch.PRODUCTS.onCreateProductUncatalog({
-                    data: response.data,
-                    error: "",
-                    status: response.status
-                });
-
-            } catch (e: any) {
-                dispatch.PRODUCTS.onCreateProductUncatalog({
-                    data: {
-                        status: 0,
-                        message: ""
-                    },
-                    error: e.message,
-                    status: 0
+                    error: error,
+                    status: e.response?e.response.status:400
                 });
             }
         },
@@ -391,27 +352,6 @@ export const PRODUCTS = createModel<RootModel>()({
                 });
             }
         },
-        async onCatalogProductAsync(props: { headers: HeaderProps, body: CatalogProductRequest, id: string }) {
-            try {
-
-                const response = await products_request.CatalogProduct(props).toPromise();
-                dispatch.PRODUCTS.onCatalogProduct({
-                    data: response.data,
-                    error: "",
-                    status: response.status
-                });
-
-            } catch (e: any) {
-                dispatch.PRODUCTS.onCatalogProduct({
-                    data: {
-                        status: 0,
-                        message: ""
-                    },
-                    error: e.message,
-                    status: 0
-                });
-            }
-        },
         async onDeleteProductAsync(props: { headers: HeaderProps, id: string }) {
             try {
 
@@ -446,8 +386,10 @@ export const PRODUCTS = createModel<RootModel>()({
             } catch (e: any) {
                 dispatch.PRODUCTS.onGetProduct({
                     data: {
-                        status: 0,
-                        message: ""
+                        data: initProduct,
+                        message: {
+                            status:0,
+                        }
                     },
                     error: e.message,
                     status: 0
@@ -457,15 +399,8 @@ export const PRODUCTS = createModel<RootModel>()({
 
         onClearProducts() {
 
-            dispatch.PRODUCTS.onCreateProductCatalog({
-                data: {
-                    status: 0,
-                    message: ""
-                },
-                error: "",
-                status: 0
-            });
-            dispatch.PRODUCTS.onCreateProductUncatalog({
+            
+            dispatch.PRODUCTS.onCreateProduct({
                 data: {
                     status: 0,
                     message: ""

@@ -3,8 +3,6 @@ import { Availability, Client, Client2, Country, Peripheral, State } from "../co
 
   
 interface Installation {
-
-  
     id: number
     createdAt: string
     updatedAt: string
@@ -22,19 +20,22 @@ interface Installation {
     peripherals: Peripheral[]
     clients: Client2[]
     devices: any[]
-
-    
-    
 }
 
 interface CreateInstallationRequest{
     name: string;
-    owner: string;
     postalCode: string;
-    location: string;
     province: string;
-    country: string;
-    note: string;
+    location: string;
+    direction: string;
+    description: string;
+    country: {
+        id: number;
+    };
+    client: {
+        id: number;
+    };
+    clients: number[];
 }
 
 interface GetInstallationsResponse extends MetaResponse{
@@ -48,8 +49,22 @@ interface GetInstallationResponse{
 }
 
 
-interface UpdateStateInstallationsRequest{
-    state:number;
+interface UpdateInstallationsRequest{
+    name: string;
+    postalCode: string;
+    province: string;
+    location: string;
+    direction: string;
+    description: string;
+    country: {
+        id: number;
+    };
+    client: {
+        id: number;
+    };
+    state: {
+        id: number;
+    };
 }
 
 
@@ -58,6 +73,6 @@ export type{
     GetInstallationsResponse,
     Installation,
     CreateInstallationRequest,
-    UpdateStateInstallationsRequest,
+    UpdateInstallationsRequest,
     GetInstallationResponse
 }

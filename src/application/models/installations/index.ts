@@ -29,7 +29,12 @@ export interface DeleteInstallationStateProps extends ResponseServer {
 }
 
 export interface GetInstallationStateProps extends ResponseServer {
-    data: GetInstallationsResponse;
+    data: {
+        data:Installation,
+        message:{
+            status: number;
+        }
+    }
 }
 
 
@@ -164,7 +169,12 @@ export const INSTALLATIONS = createModel<RootModel>()({
             error: ""
         } as DeleteInstallationStateProps,
         GetInstallation: {
-            data: {},
+            data: {
+                data:initialInstallation,
+                message:{
+                    status: 0,
+                }
+            },
             status: 0,
             error: ""
 
@@ -201,7 +211,7 @@ export const INSTALLATIONS = createModel<RootModel>()({
                 DeleteInstallation: payload
             }
         },
-        onGetInstallation(state: any, payload: any) {
+        onGetInstallation(state: any, payload: GetInstallationStateProps) {
             return {
                 ...state,
                 GetInstallation: payload
@@ -222,14 +232,16 @@ export const INSTALLATIONS = createModel<RootModel>()({
                     error: ""
                 });
             } catch (e: any) {
+                
+                let error = e.response.data.message?.summary ?? "Ocurrio un error"
+                error += e.response.data.message?.detail ?? "" 
                 dispatch.INSTALLATIONS.onGetInstallations({
                     data: {
-                        code: "",
-                        message: [],
-                        status: 0,
+                       data:[],
+                       ...initialMetaResponse
                     },
                     status: e.response.status ?? 400,
-                    error: e.response.data.message ?? "Ocurrio un error"
+                    error: error
                 });
             }
         },
@@ -243,18 +255,17 @@ export const INSTALLATIONS = createModel<RootModel>()({
                     error: ""
                 });
             } catch (e: any) {
+                let error = e.response.data.message?.summary ?? "Ocurrio un error"
+                error += e.response.data.message?.detail ?? "" 
                 dispatch.INSTALLATIONS.onCreateInstallation({
-                    data: {
-                        status: e.response.status ?? 400,
-                        message: e.response.data.message ?? "Ocurrio un error"
-                    },
+                    data: {},
                     status: e.response.status ?? 400,
-                    error: e.response.data.message ?? "Ocurrio un error"
+                    error: error
                 });
             }
         },
         //effect for UpdateStateInstallation
-        async UpdateStateInstallationAsync(payload: { headers: HeaderProps, id: string, body: installations_interface.UpdateStateInstallationsRequest }) {
+        async UpdateStateInstallationAsync(payload: { headers: HeaderProps, id: number, body: installations_interface.UpdateInstallationsRequest }) {
             try {
                 const response = await installations_request.UpdateStateInstallation(payload).toPromise();
                 dispatch.INSTALLATIONS.onUpdateStateInstallation({
@@ -263,18 +274,22 @@ export const INSTALLATIONS = createModel<RootModel>()({
                     error: ""
                 });
             } catch (e: any) {
+                let error = e.response.data.message?.summary ?? "Ocurrio un error"
+                error += e.response.data.message?.detail ?? "" 
                 dispatch.INSTALLATIONS.onUpdateStateInstallation({
                     data: {
-                        status: e.response.status ?? 400,
-                        message: e.response.data.message ?? "Ocurrio un error"
+                        data:initialInstallation,
+                        message:{
+                            status:0
+                        }
                     },
                     status: e.response.status ?? 400,
-                    error: e.response.data.message ?? "Ocurrio un error"
+                    error: error
                 });
             }
         },
         //effect for DeleteInstallation
-        async DeleteInstallationAsync(payload: { headers: HeaderProps, id: string }) {
+        async DeleteInstallationAsync(payload: { headers: HeaderProps, id: number }) {
             try {
                 const response = await installations_request.DeleteInstallation(payload).toPromise();
                 dispatch.INSTALLATIONS.onDeleteInstallation({
@@ -302,26 +317,17 @@ export const INSTALLATIONS = createModel<RootModel>()({
                     error: ""
                 });
             } catch (e: any) {
+                
+                let error = e.response.data.message?.summary ?? "Ocurrio un error"
+                error += e.response.data.message?.detail ?? "" 
                 dispatch.INSTALLATIONS.onGetInstallation({
                     data: {
-                        status: e.response.status ?? 400,
-                        message: {
-                            _id: "",
-                            country: "",
-                            createdAt: "",
-                            devices: "",
-                            identityCounter: "",
-                            location: "",
-                            name: "",
-                            note: "",
-                            owner: "",
-                            postalCode: "",
-                            province: "",
-                            state: 0,
-                            users: []
+                        data:initialInstallation,
+                        message:{
+                            status:0
                         }
                     },
-                    error: e.response.data.message ?? "Ocurrio un error",
+                    error: error,
                     status: e.response.data.status ?? 600
                 });
             }

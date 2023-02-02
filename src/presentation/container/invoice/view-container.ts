@@ -21,17 +21,19 @@ export interface ViewInvoicesProps {
     onGetClientsAsync:(props:HeaderProps)=>void;
     clear: () => void;
     clearClients: ()=>void;
+    isLoading: boolean;
 }
 
 
-const mapStateToProps = ({ INVOICE , AUTH,CLIENTS}: any, ownProps:any) => {
+const mapStateToProps = ({ INVOICE , AUTH,CLIENTS, loading}: any, ownProps:any) => {
     return {
         GetInvoices: INVOICE.GetInvoices.data,
         token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         DeleteInvoice: INVOICE.DeleteInvoice,
-        GetClients: CLIENTS.GetClients.data
+        GetClients: CLIENTS.GetClients.data,
+        isLoading  : loading.effects.INVOICE.onGetInvoicesAsync
 
 
     };

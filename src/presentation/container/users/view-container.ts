@@ -15,14 +15,16 @@ export interface UsersViewProps{
     onDeleteUserAsync:(props:{headers:HeaderProps,id:number})=>void;
     DeleteUser:DeleteUserStateProps;
     onClear:()=>void;
+    isLoading:boolean;
 }
        
-const mapSatateToProps = ({ AUTH,USERS, Groups}: any, ownProps: any) => ({
+const mapSatateToProps = ({ AUTH,USERS, loading}: any, ownProps: any) => ({
     token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
     UsersData:USERS.GetUsers.data,
-    DeleteUser:USERS.DeleteUser
+    DeleteUser:USERS.DeleteUser,
+    isLoading :loading.effects.USERS.onGetUsersAync
 })
 
 const mapDispatchToProps = ({USERS}: any) => ({

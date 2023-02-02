@@ -1,4 +1,4 @@
-import { TASK_OPEN } from "application/common";
+import { TASK_OPEN ,TASK_PRIORITY_HALF,TASK_PRIORITY_LOW,TASK_PRIORITY_HIGH} from "application/common";
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initTask } from "application/models/tasks";
@@ -501,7 +501,6 @@ const TaskView = (props: TasksViewProps) => {
                                         {/* task list start */}
                                         <TaskList
                                             fetchData={() => {
-                                                console.log("fetchData")
                                                 if (tasks.data.length < props.GetTasks.meta.total ) {
 
                                                     props.onGetTasksAsync({
@@ -517,7 +516,7 @@ const TaskView = (props: TasksViewProps) => {
                                                     onClick: () => handleSelect(item),
                                                     tags: [
                                                         {
-                                                            color: item.priority.name === "Alta" ? "warning" : item.priority.name === "Media" ? "info" : "success",
+                                                            color: item.priority.code === TASK_PRIORITY_HIGH ? "warning" : item.priority.code === TASK_PRIORITY_HALF ? "info" : "success",
                                                             label: "prioridad: " + item.priority.name
                                                         },
                                                         {

@@ -182,7 +182,7 @@ const DataTable = (props: DataTableProps) => {
             </tr>
           </thead>
           <tbody>
-            {data_table?.map((item: any, index) => (
+            {data_table!=null && !load ? data_table.map((item: any, index) => (
               <tr key={index}>
                 {columns.map((column, index) => (
                   <td key={index}>
@@ -219,7 +219,7 @@ const DataTable = (props: DataTableProps) => {
                       item[column.name]
                     ) : column.type === "object" ? (
 
-                      JSON.stringify(item[column.name]) !== '{}' ? column.field_show ?
+                      JSON.stringify(item[column.name]) !== '{}' && item[column.name]!==null  ? column.field_show ?
                         item[column.name][column.field_show]
 
                         : "" : ""
@@ -241,9 +241,9 @@ const DataTable = (props: DataTableProps) => {
                     ))}
                   </td> : null}
               </tr>
-            ))}
+            )):null}
             {
-              load && error!="" ? <tr>
+              load ? <tr>
                 <td colSpan={columns.length + 1} className="text-center">
                   <div className="spinner-border text-primary" role="status">
                     <span className="sr-only">Loading...</span> 

@@ -262,6 +262,7 @@ export const initTask:Task = {
     },
     priority:{
         id:0,
+        code:"",
         createdAt:"",
         updatedAt:"",
         deletedAt:null,

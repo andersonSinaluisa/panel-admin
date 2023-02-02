@@ -1,41 +1,37 @@
 import { HeaderProps } from "infrastructure/api/api-handler"
-import { CreateProductCatalogRequest, CreateProductUncatalogRequest } from "infrastructure/api/products/interface"
+import { CreateProductRequest } from "infrastructure/api/products/interface"
 import { connect } from 'react-redux'
 import CreateProduct from "presentation/components/products/create"
-import { CreateProductCatalogStateProps, CreateProductUncatalogStateProps } from "application/models/products";
+import { CreateProductStateProps } from "application/models/products";
+import { CatalogueState } from "application/models/core";
 
 
 export interface CreateProductProps{
     token: string;
     title: string;
     breadcrumbs: string[];
-    onCreateProductCatalogAsync:(props:{headers:HeaderProps, body:CreateProductCatalogRequest})=>void;
-    CreateProductCatalog:CreateProductCatalogStateProps;
+    onCreateProductAsync:(props:{headers:HeaderProps, body:CreateProductRequest})=>void;
+    CreateProduct:CreateProductStateProps;
     idUser:string;
-    onCreateProductUncatalogAsync:(props:{
-        headers:HeaderProps,
-        body:CreateProductUncatalogRequest
-    })=>void;
-    CreateProductUncatalog:CreateProductUncatalogStateProps;
+    catalogue: CatalogueState;
+    isLoading:boolean;
 }
 
-const mapStateToProps = ({AUTH,PRODUCTS}:any,ownProps:any) => {
+const mapStateToProps = ({AUTH,PRODUCTS,CORE,loading}:any,ownProps:any) => {
     return {
-        token: AUTH.Session.data.message.token,
-        idUser:AUTH.Session.data.message.idUser,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
-        CreateProductCatalog:PRODUCTS.CreateProductCatalog,
-        CreateProductUncatalog:PRODUCTS.CreateProductUncatalog
+        CreateProduct:PRODUCTS.CreateProduct,
+        catalogue: CORE.catalogues,
+        isLoading:  loading.effects.PRODUCTS.onCreateProductAsync
+
     }
 }
 
 const mapDispatchToProps = ({PRODUCTS}: any) => ({
-    onCreateProductCatalogAsync:(props:{headers:HeaderProps, body:CreateProductCatalogRequest})=>PRODUCTS.onCreateProductCatalogAsync(props),
-    onCreateProductUncatalogAsync:(props:{
-        headers:HeaderProps,
-        body:CreateProductUncatalogRequest
-    })=>PRODUCTS.onCreateProductUncatalogAsync(props)
+    onCreateProductAsync:(props:{headers:HeaderProps, body:CreateProductRequest})=>PRODUCTS.onCreateProductAsync(props),
+    
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateProduct)

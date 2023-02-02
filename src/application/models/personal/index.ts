@@ -1,6 +1,7 @@
 import { createModel } from "@rematch/core";
 import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
-import { CreatePersonalRequest, GetPersonalByIdResponse, GetPersonalResponse, Personal } from "infrastructure/api/personal/interface";
+import { personal_request } from "infrastructure/api/personal";
+import { CreatePersonalRequest, GetPersonalByIdResponse, GetPersonalResponse, Personal, UpdatePersonalRequest } from "infrastructure/api/personal/interface";
 import { CreatePersonal, DeletePersonal, GetPersonal, GetPersonalById } from "infrastructure/api/personal/request";
 import { RootModel } from "..";
 
@@ -25,6 +26,16 @@ export interface DeletePersonalStateProps extends ResponseServer{
     }
 }
 
+
+export interface UpdatePersonalStateProps extends ResponseServer{
+    data:{
+        message:{
+            status:number;
+            detail:string;
+            summary:string;
+        }
+    }
+}
 export interface PersonalStateProps extends ResponseServer{
     data:{
         message:Personal;
@@ -110,7 +121,44 @@ export const initPersonal:Personal = {
             createdAt: "",
             updatedAt: "",
             deletedAt: null,
-            role: ""
+            role: {
+               code: "",
+               createdAt:"",
+               id:0,
+               name:"",
+               type:{
+                code:"",
+                created_at:"",
+                id:0,
+                name:"",
+                updated_at:"",
+                deleted_at:""
+               },
+               updatedAt:"",
+               deletedAt:""
+            },
+            roleChild:{
+                createdAt:"",
+                id:0,
+                role:{
+                    code:"",
+                    createdAt:"",
+                    id:0,
+                    name:"",
+                    type:{
+                        code:"",
+                        created_at:"",
+                        id:0,
+                        name:"",
+                        updated_at:"",
+                        deleted_at:""
+                    },
+                    updatedAt:"",
+                    deletedAt:""
+                },
+                updatedAt:"",
+                deletedAt:""
+            }
         },
         streetType: {
             id: 0,
@@ -245,11 +293,22 @@ export const PERSONAL = createModel<RootModel>()({
         GetPersonalById:{
             data:{
                 data:initPersonal,
-                message:""
+                message:{
+                    status:0,
+                }
             },
             error:"",
             status:0
         } as GetPersonalByIdStateProps,
+        UpdatePersonal:{
+            data:{
+                message:{
+                    status:0,
+                    detail:"",
+                    summary:""
+                }
+            }
+        } as UpdatePersonalStateProps
                         
     },
     reducers: {
@@ -277,6 +336,12 @@ export const PERSONAL = createModel<RootModel>()({
                 DeletePersonal:payload
             }
         },
+        onUpdatePersonal(state:any,payload:any){
+            return {
+                ...state,
+                UpdatePersonal:payload
+            }
+        }
         
     },
     effects: (dispatch) => ({
@@ -316,13 +381,15 @@ export const PERSONAL = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
                 dispatch.PERSONAL.onCreatePersonal({
                     data:{
                         message:"",
                         status:0
                     },
-                    status:0,
-                    error:e.message
+                    status:e.response?e.response.status:400,
+                    error:error
                 })
             }
         },
@@ -340,7 +407,9 @@ export const PERSONAL = createModel<RootModel>()({
                 dispatch.PERSONAL.onGetPersonalById({
                     data:{
                         data:initPersonal,
-                        message:""
+                        message:{
+                            status:0,
+                        }
                     },
                     status:0,
                     error:error
@@ -359,6 +428,7 @@ export const PERSONAL = createModel<RootModel>()({
                     error:""
                 })
             }catch(e:any){
+                
                 dispatch.PERSONAL.onDeletePersonal({
                     data:{
                         message:"",
@@ -369,7 +439,35 @@ export const PERSONAL = createModel<RootModel>()({
                 })
             }
         },
-        
+        async onUpdatePersonalAsync(payload:{
+            headers: HeaderProps,
+            id:number,
+            body:UpdatePersonalRequest
+        }){
+            try{
+                const res = await personal_request.UpdatePersonal(payload).toPromise()
+                dispatch.PERSONAL.onUpdatePersonal({
+                    data:res.data,
+                    status:res.status,
+                    error:""
+                })
+            }catch(e:any){
+                let error = e.response?e.response.data?.message?.summary:"Ocurrió un error"
+                error+=e.response?e.response.data?.message?.detail:""
+                dispatch.PERSONAL.onUpdatePersonal({
+                    data:{
+                        message:{
+                            status:0,
+                            summary:"",
+                            detail:""
+                        }
+                    },
+                    status:e.response?.status??400,
+                    error:error
+                     
+                })
+            }
+        },
         clear(){
             
             dispatch.PERSONAL.onCreatePersonal({
@@ -382,8 +480,10 @@ export const PERSONAL = createModel<RootModel>()({
             })
             dispatch.PERSONAL.onGetPersonalById({
                 data:{
-                    message:[],
-                    status:0
+                    data:initPersonal,
+                    messsage:{
+                        status:0,
+                    }
                 },
                 status:0,
                 error:""
@@ -392,6 +492,17 @@ export const PERSONAL = createModel<RootModel>()({
                 data:{
                     message:"",
                     status:0
+                },
+                status:0,
+                error:""
+            })
+            dispatch.PERSONAL.onUpdatePersonal({
+                data:{
+                    message:{
+                        status:0,
+                        summary:"",
+                        detail:""
+                    }
                 },
                 status:0,
                 error:""

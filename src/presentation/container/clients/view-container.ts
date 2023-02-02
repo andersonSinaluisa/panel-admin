@@ -15,14 +15,16 @@ export interface ClientsViewProps{
     onGetClientsAsync:(props:HeaderProps)=>void;
     onClear: ()=>void;
     onDeleteClientAsync:(props:{headers:HeaderProps,id:number})=>void;
+    isLoading:boolean;
 }
        
-const mapSatateToProps = ({ AUTH,CLIENTS, Groups}: any, ownProps: any) => ({
+const mapSatateToProps = ({ AUTH,CLIENTS, loading}: any, ownProps: any) => ({
     token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
     ClientsData:CLIENTS.GetClients.data,
-    DeleteClient:CLIENTS.DeleteClient
+    DeleteClient:CLIENTS.DeleteClient,
+    isLoading :loading.effects.CLIENTS.onGetClientsAsync
 })
 
 const mapDispatchToProps = ({CLIENTS}: any) => ({

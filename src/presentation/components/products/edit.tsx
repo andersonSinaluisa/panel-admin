@@ -1,30 +1,29 @@
+import { CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE } from "application/common";
+import { initProduct } from "application/models/products";
+import { interface_core } from "infrastructure/api/core";
 import { products_interface } from "infrastructure/api/products";
+import { UpdateProductRequest } from "infrastructure/api/products/interface";
+import { wharehouse_request } from "infrastructure/api/wharehouse";
+import Checkbox from "infrastructure/components/checkbox";
 import Input from "infrastructure/components/input";
 import Select from "infrastructure/components/select";
 import Toast, { ToastProps } from "infrastructure/components/toast";
 import { EditProductProps } from "presentation/container/products/edit-container";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import AsyncSelect from "react-select/async";
 
 
 const EditProduct = (props: EditProductProps) => {
 
 
-    const {id} = useParams();
+    const { id } = useParams();
 
     const navigate = useNavigate();
 
-    const [form, setForm] = useState<products_interface.UpdateProductRequest>({
-        assigned: false,
-        assignedTo: "",
-        cataloged: false,
-        description: "",
-        name: "",
-        note: "",
-        nroSerie: "",
-        precioVentaPublico: 0,
-        stock: 0,
-    })
+    const [form, setForm] = useState<products_interface.Product>(initProduct)
+    const [load, setLoad] = useState<boolean>(false);
+
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
         visible: false,
@@ -33,8 +32,18 @@ const EditProduct = (props: EditProductProps) => {
     });
 
 
+    const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
+
     useEffect(() => {
-        if(props.UpdateProduct.status === 200){
+        setCatalogues(props.catalogue.data.data);
+    }, [props.catalogue])
+
+    useEffect(() => {
+        setLoad(props.isLoading);
+    }, [props.isLoading]);
+
+    useEffect(() => {
+        if (props.UpdateProduct.status === 200) {
             setMessage({
                 type: "success",
                 visible: true,
@@ -45,69 +54,98 @@ const EditProduct = (props: EditProductProps) => {
             navigate("/inicio/productos");
             return;
         }
-        
-        if(props.UpdateProduct.status !== 0){
+
+        if (props.UpdateProduct.status !== 0) {
             setMessage({
                 type: "danger",
                 visible: true,
                 title: "Error al actualizar el producto",
                 description: "El producto no se ha actualizado correctamente",
             });
+            setTimeout(() => {
+                setMessage({
+                    type: "danger",
+                    visible: false,
+                    title: "",
+                    description: "",
+                });
+            }, 3000);
             return;
         }
     }, [props.UpdateProduct.status])
 
 
-    useEffect(()=>{
-        
+    useEffect(() => {
+
         props.onGetProductAsync({
-            headers:{
+            headers: {
                 token: props.token
             },
             id: id as string
         })
 
-    },[])
+    }, [])
 
 
-    useEffect(()=>{
-        
-    },[props.GetProduct])
+    useEffect(() => {
+        setForm(props.GetProduct.data)
+    }, [props.GetProduct])
 
 
 
     const handleChange = (
         event: React.FormEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
     ) => {
-        const { name, value } = event.currentTarget;
-        //if precioVentaPublico is a number
-        if (name === "precioVentaPublico") {
-            setForm({ ...form, [name]: Number(value) });
-        } else {
-            setForm({
-                ...form,
-                [event.currentTarget.name]: event.currentTarget.value,
-            });
-        }
+
+        setForm({
+            ...form,
+            [event.currentTarget.name]: event.currentTarget.value,
+        });
+
 
 
     };
 
-    const handleSubmit = () => {
+    /**
+ * @memberof  EditProduct
+ * @method handleChangeSelect
+ * @description funcion que se ejecuta cuando se cambia el valor de un select
+ * @param {React.FormEvent<HTMLSelectElement>} event
+ * @returns {void}
+ * 
+ */
+    const handleChangeSelect = (
+        event: React.FormEvent<HTMLSelectElement>
+    ) => {
+        setForm({
+            ...form,
+            [event.currentTarget.name]: {
+                id: event.currentTarget.value
+            },
+        });
+    };
 
-        //validate fields
-        if (form.name === "" || form.description === "" || form.note === "" || form.precioVentaPublico === 0) {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Todos los campos son obligatorios",
-            });
-            return;
+
+    const handleSubmit = () => {
+        let data: UpdateProductRequest = {
+            code: form.code,
+            description: form.description,
+            initialUnitPurchasePrice: form.initialUnitPurchasePrice,
+            name: form.name,
+            onSale: form.onSale,
+            priceForPublic: form.priceForPublic,
+            stock: form.stock,
+            type: {
+                id: form.type?.id || 0
+            },
+            warehouse: {
+                id: form.warehouse?.id
+            }
         }
 
+
         props.onUpdateProductAsync({
-            body: form,
+            body: data,
             headers: {
                 token: props.token
             },
@@ -115,12 +153,45 @@ const EditProduct = (props: EditProductProps) => {
         })
 
     }
+    const getListByCode = (code: string) => {
+        return catalogue.filter((item) => item.type.code === code).map((item) => {
+            return {
+                label: item.name,
+                value: item.id
+            }
+        })
+    }
 
+
+    const searchWharehouse = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            wharehouse_request.GetWharehouse({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.name + " / " + item.location + " / " + item.country?.name,
+                        value: item.id,
+                        item: item
+                    }
+                }) || [])
+            })
+        }
+
+
+    }
 
     return (
         <section id="basic-vertical-layouts">
             <div className="col-12 row bg-cover">
                 <div className="row p-2 col-12">
+
+
+
                     <div className="col-lg-6">
                         <Input
                             label="Nombre"
@@ -130,59 +201,17 @@ const EditProduct = (props: EditProductProps) => {
                             value={form.name}
                         />
                     </div>
-                  
+
+
                     <div className="col-lg-6">
-                        <Select
-                            label="Tipo de producto"
-                            name="type"
-                            options={[
-                                { value: 'catalog', label: 'Catalogado' },
-                                { value: 'uncatalog', label: 'No catalogado' }
-                            ]}
-                            onChange={
-                                (event: React.FormEvent<HTMLSelectElement>) => {
-                                   if(event.currentTarget.value === "catalog"){
-                                       setForm({
-                                           ...form,
-                                           cataloged:true
-                                       })
-                                    }else{
-                                        setForm({
-                                            ...form,
-                                            cataloged:false
-                                        })
-                                    }
-                                }
-                            }
-                            selected={form.cataloged ? "catalog" : "uncatalog"}
+                        <Input
+                            label="Codigo"
+                            name="code"
+                            type={"text"}
+                            onChange={handleChange}
+                            value={form.code}
                         />
                     </div>
-
-                    {
-                        form.cataloged ? (
-                            <div className="col-lg-6">
-                                <Input
-                                    label="Nro de serie"
-                                    name="nroSerie"
-                                    type={"text"}
-                                    onChange={handleChange}
-                                    value={form.nroSerie}
-                                />
-                            </div>
-                        ) :
-                            (
-                                <div className="col-lg-6">
-                                    <Input
-                                        label="Stock"
-                                        name="stock"
-                                        type={"text"}
-                                        onChange={handleChange}
-                                        value={form.stock+""}
-
-                                    />
-                                </div>
-                            )
-                    }
 
 
                     <div className="col-lg-6">
@@ -197,25 +226,81 @@ const EditProduct = (props: EditProductProps) => {
                             value={form.description}
                         />
                     </div>
+
+                    <div className="col-lg-6 p-5">
+                        <Checkbox
+                            label="En venta"
+                            name="onSale"
+                            onChange={(event) => {
+                                setForm({
+                                    ...form,
+                                    onSale: event.currentTarget.checked,
+                                });
+                            }}
+                            checked={form.onSale}
+                        />
+
+                    </div>
                     <div className="col-lg-6">
                         <Input
-                            label="Nota"
-                            name="note"
-                            type={"text"}
+                            label="Precio de compra"
+                            name="initialUnitPurchasePrice"
+                            type={"number"}
                             onChange={handleChange}
-                            value={form.note}
+                            value={form.initialUnitPurchasePrice}
                         />
                     </div>
-
                     <div className="col-lg-6">
                         <Input
                             label="Precio de venta al publico"
-                            name="precioVentaPublico"
+                            name="priceForPublic"
                             type={"number"}
                             onChange={handleChange}
-                            value={form.precioVentaPublico+""}
+                            value={form.priceForPublic}
                         />
                     </div>
+                    <div className="col-lg-6">
+                        <Select
+                            label="Tipo de producto"
+                            name="type"
+                            options={getListByCode(CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE)}
+                            onChange={handleChangeSelect}
+                            selected={form.type?.id}
+                        />
+                    </div>
+                    <div className="col-lg-6">
+                        <Input
+                            label="Stock"
+                            name="stock"
+                            type={"number"}
+                            onChange={handleChange}
+                            value={form.stock + ""}
+                        />
+                    </div>
+                    <div className="col-lg-6">
+                        <label htmlFor="client">Almacén</label>
+                        <AsyncSelect
+
+                            loadOptions={(inputValue, callback) => {
+                                searchWharehouse(inputValue, callback)
+
+                            }}
+                            name="wharehouse"
+                            onChange={
+                                (newValue: any) => {
+                                    setForm({
+                                        ...form,
+                                        warehouse: newValue.item
+                                    });
+                                }
+                            }
+                            value={form.warehouse?.id ? {
+                                label: form.warehouse.name + " / " + form.warehouse.location + " / " + form.warehouse.country?.name, value: form.warehouse.id
+                            } : null
+                            }
+                        />
+                    </div>
+
 
                 </div>
                 <div className="col-12 row ">
@@ -227,14 +312,19 @@ const EditProduct = (props: EditProductProps) => {
                         >
                             Atrás
                         </Link>
-                        <button
-                            type="submit"
-                            className="btn btn-lg btn-primary m-2"
-                            value={"Agregar"}
-                            onClick={handleSubmit}
-                        >
-                            Guardar
-                        </button>
+                        {
+                            load ? <button type="button" className="btn btn-lg btn-primary m-2" disabled>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Cargando...
+                            </button> : <button
+                                type="submit"
+                                className="btn btn-lg btn-primary m-2"
+                                value={"Agregar"}
+                                onClick={handleSubmit}
+                            >
+                                Guardar
+                            </button>
+                        }
                     </div>
                 </div>
             </div>

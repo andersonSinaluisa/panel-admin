@@ -66,7 +66,7 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
             })
         }
         
-    }, [])
+    }, [token])
 
 
 

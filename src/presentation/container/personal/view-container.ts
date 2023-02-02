@@ -14,16 +14,18 @@ export interface PersonalViewProps{
     DeletePersonal: DeletePersonalStateProps;
     onDeletePersonalAsync:(payload:{ headers: HeaderProps, id: number })=>void;
     clear: ()=>void;
+    isLoading: boolean;
 }
 
 
-const mapStateToProps = ({PERSONAL,AUTH}:any,ownProps:any) => {
+const mapStateToProps = ({PERSONAL,AUTH,loading}:any,ownProps:any) => {
     return {
         GetPersonal: PERSONAL.GetPersonal.data,
         token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
-        DeletePersonal: PERSONAL.DeletePersonal
+        DeletePersonal: PERSONAL.DeletePersonal,
+        isLoading:  loading.effects.PERSONAL.onGetPersonalAsync
     }
 }
 

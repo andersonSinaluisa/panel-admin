@@ -20,6 +20,7 @@ import { ViewJobsProps } from "presentation/container/jobs/view-container";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SelectReact from 'react-select';
+import { JOB_PRIORITY_HIGH,JOB_PRIORITY_HALF,JOB_PRIORITY_LOW } from "application/common";
 
 
 
@@ -690,7 +691,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                                                     tags: [
                                                         {
                                                             label: "prioridad: " + item.priority.name,
-                                                            color: item.priority.name === "Alta" ? "warning" : item.priority.name === "Media" ? "info" : "success"
+                                                            color: item.priority.code === JOB_PRIORITY_HIGH ? "warning" : item.priority.code === JOB_PRIORITY_HALF ? "info" : item.priority.code === JOB_PRIORITY_LOW ? "success" : "danger" 
                                                         },
                                                         {
                                                             label: "Estado: " + item.state.name,

@@ -104,6 +104,14 @@ const CreateUser = (props: UserCreateProps) => {
         type: "danger",
         visible: true
       })
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 8000);
       return;
     }
 
@@ -113,7 +121,7 @@ const CreateUser = (props: UserCreateProps) => {
   useEffect(() => {
     if (props.CreateUser.status === SUCCESS_HTTP_CODE_CREATED) {
       setMessage({
-        description: "Proveedor Creado correctamente",
+        description: "Usuario Creado correctamente",
         title: "",
         type: "success",
         visible: true

@@ -1,11 +1,15 @@
-import { SUCCESS_HTTP_CODE_CREATED } from "application/common";
+import { CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE, SUCCESS_HTTP_CODE_CREATED } from "application/common";
+import { interface_core } from "infrastructure/api/core";
 import { products_interface } from "infrastructure/api/products";
+import { wharehouse_request } from "infrastructure/api/wharehouse";
+import Checkbox from "infrastructure/components/checkbox";
 import Input from "infrastructure/components/input";
 import Select from "infrastructure/components/select";
 import Toast, { ToastProps } from "infrastructure/components/toast";
 import { CreateProductProps } from "presentation/container/products/create-container";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AsyncSelect from "react-select/async";
 
 
 const CreateProduct = (props: CreateProductProps) => {
@@ -13,19 +17,24 @@ const CreateProduct = (props: CreateProductProps) => {
 
     const navigate = useNavigate();
 
-    const [form, setForm] = useState<products_interface.CreateProductCatalogRequest | products_interface.CreateProductUncatalogRequest>({
-        name: "",
+    const [form, setForm] = useState<products_interface.CreateProductRequest>({
+        code: "",
         description: "",
-        note: "",
-        precioVentaPublico: 0,
-        nroSerie: "",
-        assigned: false,
-        createdBy: "",
+        initialUnitPurchasePrice: "",
+        name: "",
+        onSale: false,
+        priceForPublic: "",
         stock: 0,
+        type: {
+            id: 0,
+        },
+        warehouse: {
+            id: 0,
+        },
     })
 
 
-    const [type, setType] = useState("catalog");
+    const [load, setLoad] = useState<boolean>(false)
 
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
@@ -34,58 +43,55 @@ const CreateProduct = (props: CreateProductProps) => {
         description: "",
     });
 
+    const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
+
+    useEffect(() => {
+        setCatalogues(props.catalogue.data.data);
+    }, [props.catalogue])
+
+
+
+
+    useEffect(() => {
+        setLoad(props.isLoading)
+
+    }, [props.isLoading])
 
     useEffect(() => {
 
-        if (props.CreateProductCatalog.status === 200) {
+        if (props.CreateProduct.status === 200) {
             setMessage({
                 type: "success",
                 visible: true,
                 title: "Producto creado",
                 description: "El producto se ha creado correctamente",
             });
+
             navigate("/inicio/productos");
             return;
         }
 
-        if (props.CreateProductCatalog.status !== 0) {
+        if (props.CreateProduct.status !== 0) {
             setMessage({
                 type: "danger",
                 visible: true,
                 title: "Error al crear el producto",
                 description: "El producto no se ha creado correctamente",
             });
+            setTimeout(() => {
+                setMessage({
+                    type: "info",
+                    visible: false,
+                    title: "",
+                    description: "",
+                });
+            }, 3000);
             return;
         }
 
 
-    }, [props.CreateProductCatalog]);
+    }, [props.CreateProduct]);
 
-    useEffect(() => {
-
-        if (props.CreateProductUncatalog.status === 200) {
-            setMessage({
-                type: "success",
-                visible: true,
-                title: "Producto creado",
-                description: "El producto se ha creado correctamente",
-            });
-            navigate("/inicio/productos");
-            return;
-        }
-
-        if (props.CreateProductUncatalog.status !== 0) {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error al crear el producto",
-                description: "El producto no se ha creado correctamente",
-            });
-            return;
-        }
-
-
-    }, [props.CreateProductUncatalog]);
 
 
 
@@ -93,54 +99,55 @@ const CreateProduct = (props: CreateProductProps) => {
         event: React.FormEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
     ) => {
         const { name, value } = event.currentTarget;
-        //if precioVentaPublico is a number
-        if (name === "precioVentaPublico") {
-            setForm({ ...form, [name]: Number(value) });
-        } else {
-            setForm({
-                ...form,
-                [event.currentTarget.name]: event.currentTarget.value,
-            });
-        }
+
+        setForm({
+            ...form,
+            [event.currentTarget.name]: event.currentTarget.value,
+        });
+
 
 
     };
 
 
+    const searchWharehouse = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            wharehouse_request.GetWharehouse({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.name + " / " + item.location + " / " + item.country?.name,
+                        value: item.id
+                    }
+                }) || [])
+            })
+        }
+
+
+    }
+
     const handleSubmit = () => {
 
-        form.createdBy = props.idUser;
-        //validate fields
-        if (form.name === "" || form.description === "" || form.note === "" || form.precioVentaPublico === 0) {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Todos los campos son obligatorios",
-            });
-            return;
-        }
+        props.onCreateProductAsync({
+            body: form,
+            headers: {
+                token: props.token
+            }
+        })
+    }
 
-
-        if (type === "catalog") {
-
-
-            //call api
-            props.onCreateProductCatalogAsync({
-                body: form as products_interface.CreateProductCatalogRequest,
-                headers: {
-                    token: props.token
-                }
-            })
-        } else {
-            props.onCreateProductUncatalogAsync({
-                body: form as products_interface.CreateProductUncatalogRequest,
-                headers: {
-                    token: props.token
-                }
-            })
-        }
-
+    const getListByCode = (code: string) => {
+        return catalogue.filter((item) => item.type.code === code).map((item) => {
+            return {
+                label: item.name,
+                value: item.id
+            }
+        })
     }
 
     return (
@@ -149,7 +156,7 @@ const CreateProduct = (props: CreateProductProps) => {
                 <div className="row p-2 col-12">
 
 
-                    
+
                     <div className="col-lg-6">
                         <Input
                             label="Nombre"
@@ -159,29 +166,17 @@ const CreateProduct = (props: CreateProductProps) => {
                         />
                     </div>
 
-                    {
-                        type === "catalog" ? (
-                            <div className="col-lg-6">
-                                <Input
-                                    label="Nro de serie"
-                                    name="nroSerie"
-                                    type={"text"}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        ) :
-                            (
-                                <div className="col-lg-6">
-                                    <Input
-                                        label="Stock"
-                                        name="stock"
-                                        type={"text"}
-                                        onChange={handleChange}
 
-                                    />
-                                </div>
-                            )
-                    }
+                    <div className="col-lg-6">
+                        <Input
+                            label="Codigo"
+                            name="code"
+                            type={"text"}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+
                     <div className="col-lg-6">
                         <label htmlFor="description">Descripción</label>
                         <textarea
@@ -193,11 +188,33 @@ const CreateProduct = (props: CreateProductProps) => {
                             onChange={handleChange}
                         />
                     </div>
+
+                    <div className="col-lg-6 p-5">
+                        <Checkbox
+                            label="En venta"
+                            name="onSale"
+                            onChange={(event) => {
+                                setForm({
+                                    ...form,
+                                    onSale: event.currentTarget.checked,
+                                });
+                            }}
+                        />
+
+                    </div>
                     <div className="col-lg-6">
                         <Input
-                            label="Nota"
-                            name="note"
-                            type={"text"}
+                            label="Precio de compra"
+                            name="initialUnitPurchasePrice"
+                            type={"number"}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="col-lg-6">
+                        <Input
+                            label="Precio de venta al publico"
+                            name="priceForPublic"
+                            type={"number"}
                             onChange={handleChange}
                         />
                     </div>
@@ -205,26 +222,49 @@ const CreateProduct = (props: CreateProductProps) => {
                         <Select
                             label="Tipo de producto"
                             name="type"
-                            options={[
-                                { value: 'catalog', label: 'Catalogado' },
-                                { value: 'uncatalog', label: 'No catalogado' }
-                            ]}
+                            options={getListByCode(CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE)}
                             onChange={
-                                (event: React.FormEvent<HTMLSelectElement>) => {
-                                    setType(event.currentTarget.value)
+                                (event) => {
+                                    setForm({
+                                        ...form,
+                                        type: {
+                                            id: parseInt(event.currentTarget.value)
+                                        }
+                                    });
                                 }
                             }
-
                         />
                     </div>
                     <div className="col-lg-6">
                         <Input
-                            label="Precio de venta al publico"
-                            name="precioVentaPublico"
+                            label="Stock"
+                            name="stock"
                             type={"number"}
                             onChange={handleChange}
                         />
                     </div>
+                    <div className="col-lg-6">
+                        <label htmlFor="client">Almacén</label>
+                        <AsyncSelect
+
+                            loadOptions={(inputValue, callback) => {
+                                searchWharehouse(inputValue, callback)
+
+                            }}
+                            name="wharehouse"
+                            onChange={
+                                (newValue: any) => {
+                                    setForm({
+                                        ...form,
+                                        warehouse: {
+                                            id: newValue.value
+                                        },
+                                    });
+                                }
+                            }
+                        />
+                    </div>
+
 
                 </div>
                 <div className="col-12 row ">
@@ -236,14 +276,19 @@ const CreateProduct = (props: CreateProductProps) => {
                         >
                             Atrás
                         </Link>
-                        <button
-                            type="submit"
-                            className="btn btn-lg btn-primary m-2"
-                            value={"Agregar"}
-                            onClick={handleSubmit}
-                        >
-                            Guardar
-                        </button>
+                        {
+                            load ? <button type="button" className="btn btn-lg btn-primary m-2" disabled>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Cargando...
+                            </button> : <button
+                                type="submit"
+                                className="btn btn-lg btn-primary m-2"
+                                value={"Agregar"}
+                                onClick={handleSubmit}
+                            >
+                                Guardar
+                            </button>
+                        }
                     </div>
                 </div>
             </div>

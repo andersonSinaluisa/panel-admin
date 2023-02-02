@@ -16,15 +16,17 @@ export interface UpdateClientProps{
     onGetClientByIdAsync:(props:{headers:HeaderProps,id:number})=>void;
     GetClientById:GetClientByIdStateProps;
     catalogues: CatalogueState;
+    isLoading:boolean;
 }
        
-const mapSatateToProps = ({ AUTH,CLIENTS,CORE}: any, ownProps: any) => ({
+const mapSatateToProps = ({ AUTH,CLIENTS,CORE,loading}: any, ownProps: any) => ({
     token: AUTH.Session.data.token,
     title: ownProps.title,
     breadcrumbs: ownProps.breadcrumbs,
     UpdateClient:CLIENTS.UpdateClient,
     catalogues: CORE.catalogues,
-    GetClientById:CLIENTS.GetClientById
+    GetClientById:CLIENTS.GetClientById,
+    isLoading: CLIENTS.isLoading
 })
 
 const mapDispatchToProps = ({CLIENTS}: any) => ({

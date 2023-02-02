@@ -3,6 +3,7 @@ import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure
 import { invoice_interface, invoice_request } from "infrastructure/api/invoice";
 import { Invoice } from "infrastructure/api/invoice/interface";
 import { RootModel } from "..";
+import { initialClient } from "../clients";
 
 
 export interface GetInvoicesStateProps extends ResponseServer{
@@ -61,30 +62,7 @@ export const initInvoice :Invoice={
         code: ""
     },
     client: {
-        createdAt: "",
-        deletedAt:"",
-        firstName: "",
-        id: 0,
-        firstSurname: "",
-        secondSurname: "",
-        secondName: "",
-        nickName: "",
-        role: {
-            createdAt: "",
-            deletedAt: "",
-            id: 0,
-            name: "",
-            type: {
-                code: "",
-                createdAt: "",
-                deletedAt: "",
-                id: 0,
-                name: "",
-                updatedAt: ""
-            },
-            updatedAt: ""
-        },
-        updatedAt: "",
+       ...initialClient
     },
     paymentMethod: {
         code: "",
@@ -118,6 +96,7 @@ export const initInvoice :Invoice={
         },
         updatedAt: ""
     },
+    invoiceDetails: []
 }
 
 

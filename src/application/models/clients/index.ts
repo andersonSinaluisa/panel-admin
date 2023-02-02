@@ -6,7 +6,7 @@ import * as APIHANDLER from 'infrastructure/api/api-handler';
 import { ClientUpdateRequest } from "infrastructure/api/clients/interface";
 
 
-interface GetClientsStateProps extends ResponseServer{
+export interface GetClientsStateProps extends ResponseServer{
     data: clients_interface.GetClientsResponse;
 }
 
@@ -192,8 +192,8 @@ export const CLIENTS = createModel<RootModel>()({
             try{
                 const res = await clients_request.GetClients(props).toPromise()
                 dispatch.CLIENTS.onGetClients({
-                    data:res.data,
-                    status:res.status,
+                    data:res?.data,
+                    status:res?.status,
                     error:""
                 })
 
@@ -299,8 +299,8 @@ export const CLIENTS = createModel<RootModel>()({
         onClear(){
             dispatch.CLIENTS.onCreateClients({
                 data:{
-                    status:0,
-                    message:""
+                   data:{},
+                   ...APIHANDLER.initialMetaResponse
                 },
                 status:0,
                 error:""
@@ -315,8 +315,8 @@ export const CLIENTS = createModel<RootModel>()({
             })
             dispatch.CLIENTS.onUpdateClient({
                 data:{
-                    status:0,
-                    message:""
+                    data:{},
+                    ...APIHANDLER.initialMetaResponse
                 },
                 status:0,
                 error:""

@@ -27,17 +27,14 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [invoice, setInvoice] = React.useState<invoice_interface.Invoice>(initInvoice)
 
-
+  const [load, setLoad] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     props.onGetInvoicesAsync({
       token: props.token
     })
-    props.onGetClientsAsync({
-      token: props.token
-    })
+   
     props.clear();
-    props.clearClients()
   }, [])
 
   React.useEffect(() => {
@@ -50,6 +47,9 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
   }, [props.GetClients])
 
 
+  React.useEffect(() => {
+      setLoad(props.isLoading)
+  }, [props.isLoading])
 
 
   const handleDelete = (invoice: invoice_interface.Invoice) => {
@@ -77,7 +77,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
         label: "Ver",
         name: "view",
         onClick: (item: any) => {
-          navigate(`/inicio/facturas/${item._id}`)
+          navigate(`/inicio/facturas/${item.id}`)
         },
       },
      
@@ -136,7 +136,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
               })
             }}
             meta={invoices.meta}
-            
+            isLoading={load}
           />
         </div>
       </div>

@@ -92,11 +92,15 @@ const CreateClient = (props: CreateClientProps) => {
     setUsers(props.GetUsers);
   }, [props.GetUsers])
 
+
+  
   useEffect(() => {
     props.onGetUsersAync({
       token: props.token
     })
   }, [])
+
+
 
   useEffect(() => {
     if (props.CreateClients.status === SUCCESS_HTTP_CODE_CREATED) {
@@ -117,6 +121,14 @@ const CreateClient = (props: CreateClientProps) => {
         type: "danger",
         visible: true
       })
+      setTimeout(() => {
+        setMessage({
+          type: "info",
+          visible: false,
+          title: "",
+          description: "",
+        });
+      }, 8000);
     }
   }, [props.CreateClients])
 
