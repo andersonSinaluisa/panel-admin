@@ -2,13 +2,22 @@ import { MetaResponse } from "../api-handler";
 import { Availability, Name, Priority, Responsible, State, Type } from "../core/interface";
 
 interface CreateTaskRequest{
-    name: string;
-    type: string;
-    description: string;
-    priority: string;
-    interventionDate: string;
-    responsible: string;
-    observation: string;
+    
+    interventionAt: string;
+    description:    string;
+    observation:    string;
+    responsible:    {
+        id: number;
+    };
+    type:           {
+        id: number;
+    };
+    priority:       {
+        id: number;
+    };
+    name:           {
+        id: number;
+    };
 }
 
 
@@ -41,7 +50,9 @@ interface GetTaskByIdResponse{
 }
 
 interface CloseTaskRequest{
-    note:string;
+    state:{
+        id: number;
+    }
 }
 
 export type{

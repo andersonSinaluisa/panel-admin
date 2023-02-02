@@ -72,25 +72,37 @@ interface GetJobsResponse extends MetaResponse{
 
 
 interface CreateJobRequest{
-    idClient: string;
     direction: string;
     contactName: string;
     contactPhone: string;
-    obsContact: string;
-    type: string;
-    priority: string;
-    interventionDate: string;
+    interveneAt: string;
+    workReport: string;
     description: string;
-    material: string;
-    technical: string;
+    materials: string[];
+    type: {
+        id: number;
+    },
+    priority: {
+        id: number;
+    },
+    technical: {
+        id: number;
+    },
+    client: {
+        id: number;
+        
+    }
 }
 
 
 interface CloseJobRequest{
     
-    material: string;
+    materials: string[];
     workReport: string;
-    note: string;
+    description: string;
+    status: {
+        id: number;
+    }
 }
 
 

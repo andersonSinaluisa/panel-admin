@@ -1,9 +1,11 @@
 import * as Globals from 'application/common';
+import { GetPersonalStateProps } from 'application/models/personal';
+import { Observable } from 'rxjs';
 import * as APIHANDLER from '../api-handler';
 import { CreatePersonalRequest, UpdatePersonalRequest } from './interface';
 
 
-const GetPersonal = (props: APIHANDLER.HeaderProps) => {
+const GetPersonal = (props: APIHANDLER.HeaderProps):Observable<GetPersonalStateProps> => {
     let perPage = props.perPage ? props.perPage : 15;
     let page = props.page ? props.page : 1;
     return APIHANDLER.get(Globals.GET_PERSONAL+"?perPage="+perPage+"&page="+page, {

@@ -5,7 +5,7 @@ import { CreatePersonalRequest, GetPersonalByIdResponse, GetPersonalResponse, Pe
 import { CreatePersonal, DeletePersonal, GetPersonal, GetPersonalById } from "infrastructure/api/personal/request";
 import { RootModel } from "..";
 
-interface GetPersonalStateProps extends ResponseServer{
+export interface GetPersonalStateProps extends ResponseServer{
     data: GetPersonalResponse
 }
 
@@ -350,8 +350,8 @@ export const PERSONAL = createModel<RootModel>()({
             try{
                 const res = await GetPersonal(payload).toPromise()
                 dispatch.PERSONAL.onGetPersonal({
-                    data:res.data,
-                    status:res.status,
+                    data:res?.data,
+                    status:res?.status,
                     error:""
                 })
             }catch(e:any){

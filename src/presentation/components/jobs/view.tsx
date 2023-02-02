@@ -40,11 +40,13 @@ const ViewJobs = (props: ViewJobsProps) => {
 
 
     const [closeJob, SetCloseJob] = useState<jobs_interface.CloseJobRequest>({
-        material: "",
-        note: "",
-        workReport: ""
+        materials: [],
+        description: "",
+        status: {
+            id: 0
+        },
+        workReport: "",
     })
-    const [job, setJob] = useState<jobs_interface.Job>(initJob)
 
     const [jobs, setJobs] = useState<jobs_interface.GetJobsResponse>({
         data: [],
@@ -63,19 +65,7 @@ const ViewJobs = (props: ViewJobsProps) => {
     });
 
 
-    const [form, setForm] = useState<jobs_interface.CreateJobRequest>({
-        contactName: "",
-        contactPhone: "",
-        description: "",
-        direction: "",
-        idClient: "",
-        interventionDate: "",
-        material: "",
-        obsContact: "",
-        priority: "",
-        technical: "",
-        type: ""
-    })
+    const [form, setForm] = useState<jobs_interface.Job>(initJob)
 
     useEffect(() => {
         props.onGetJobsAsync({
@@ -87,7 +77,7 @@ const ViewJobs = (props: ViewJobsProps) => {
     }, [])
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(query.get("job")){
             jobs.data.filter((job) => {
                 if(job.id+"" === query.get("job")){
@@ -98,7 +88,48 @@ const ViewJobs = (props: ViewJobsProps) => {
             }
             )
         }
-    }, [jobs.message])
+    }, [jobs.message])*/
+    useEffect(() => {
+        if(props.DeleteJob.status === 200){
+            setMessage({
+                description: "Trabajo Eliminado correctamente",
+                title: "",
+                type: "success",
+                visible: true
+            })
+            setTimeout(() => {
+                setMessage({
+                    type: "info",
+                    visible: false,
+                    title: "",
+                    description: "",
+                })
+            }, 3000)
+            props.onGetJobsAsync({
+                token: props.token
+            })
+            return;
+        }
+        if(props.DeleteJob.status !== 0){
+            setMessage({
+                description: props.DeleteJob.error,
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            setTimeout(() => {
+                setMessage({
+                    type: "info",
+
+                    visible: false,
+                    title: "",
+                    description: "",
+                })
+            }, 3000)
+
+            return;
+        }
+    }, [props.DeleteJob])
 
 
     useEffect(() => {
@@ -184,133 +215,19 @@ const ViewJobs = (props: ViewJobsProps) => {
 
     const handleShowModal = (job: jobs_interface.Job) => {
         setShowModal(true)
-        setJob(job)
+        setForm(job)
     }
 
 
 
     const handleSave = () => {
 
-
-        //validate fields
-        if (form.contactName === "") {
-            setMessage({
-                description: "El campo Nombre de contacto es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.contactPhone === "") {
-            setMessage({
-                description: "El campo Teléfono de contacto es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.description === "") {
-            setMessage({
-                description: "El campo Descripción es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.direction === "") {
-            setMessage({
-                description: "El campo Dirección es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.idClient === "") {
-
-            setMessage({
-                description: "El campo Cliente es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.interventionDate === "") {
-            setMessage({
-                description: "El campo Fecha de intervención es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.material === "") {
-
-            setMessage({
-                description: "El campo Material es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.obsContact === "") {
-            setMessage({
-                description: "El campo Observaciones de contacto es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.priority === "") {
-            setMessage({
-                description: "El campo Prioridad es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.technical === "") {
-            setMessage({
-                description: "El campo Técnico es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (form.type === "") {
-            setMessage({
-                description: "El campo Tipo es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        props.onCreateJobAsync({
+       /* props.onCreateJobAsync({
             body: form,
             headers: {
                 token: props.token
             }
-        })
+        })*/
 
         props.onGetJobsAsync({
             token: props.token
@@ -321,20 +238,7 @@ const ViewJobs = (props: ViewJobsProps) => {
 
     const handleOpenCreateJob = () => {
         setShow(true)
-        setForm({
-            contactName: "",
-            contactPhone: "",
-            description: "",
-            direction: "",
-            idClient: "",
-            interventionDate: "",
-            material: "",
-            obsContact: "",
-            priority: "",
-            technical: "",
-            type: ""
-        })
-        setJob(initJob)
+        setForm(initJob)
     }
 
     const handleDeleteJob = (job: any) => {
@@ -343,7 +247,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             headers: {
                 token: props.token
             },
-            id: job._id
+            id: job.id
         })
         setShowModal(false)
         props.onGetJobsAsync({
@@ -354,69 +258,17 @@ const ViewJobs = (props: ViewJobsProps) => {
 
     const handleCloseJob = (job: any) => {
         setShowModalClose(true)
-        setJob(job)
+        setForm(job)
     }
 
     const handleSaveCloseJob = () => {
-        //validate fields
-        if (closeJob.material === "") {
-            setMessage({
-                description: "El campo Material es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (closeJob.note === "") {
-            setMessage({
-                description: "El campo Nota es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        if (closeJob.workReport === "") {
-            setMessage({
-                description: "El campo Reporte de trabajo es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true
-            })
-            return;
-        }
-
-        props.onCloseJobAsync({
-            body: closeJob,
-            headers: {
-                token: props.token
-            },
-            id: job.id
-        })
+       
         setShowModalClose(false)
 
     }
 
-    const handleSelect = (item: any) => {
-        setForm(
-            {
-                contactName: item.contactName,
-                contactPhone: item.contactPhone,
-                description: item.description,
-                direction: item.direction,
-                idClient: item.idClient,
-                interventionDate: item.interventionDate,
-                material: item.material,
-                obsContact: item.obsContact,
-                priority: item.priority,
-                technical: item.technical,
-                type: item.type
-            }
-        )
-        setJob(item)
+    const handleSelect = (item: jobs_interface.Job) => {
+        setForm(item)
         setShow(true)
     }
 
@@ -430,7 +282,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             <i className="bx bx-plus"></i>
                             <span>
                                 {
-                                    job.id === 0 ? "Nuevo Trabajo" : "Editar Trabajo"
+                                    form.id === 0 ? "Nuevo Trabajo" : "Ver Trabajo"
                                 }
                             </span>
                         </button>
@@ -525,7 +377,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                                 (e: any) => {
                                     setForm({
                                         ...form,
-                                        idClient: e.value,
+                                        //idClient: e.value,
                                     })
                                 }
                             }
@@ -562,7 +414,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             <textarea onChange={handleChange}
                                 name="obsContact"
                                 className="form-control" placeholder="Descripción" rows={3} value={
-                                    form.obsContact
+                                    form.contactName
                                 }></textarea>
                         </div>
 
@@ -572,7 +424,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             type="text"
                             name="type"
                             onChange={handleChange}
-                            value={form.type}
+                            value={form.type.id+""}
 
                         />
 
@@ -595,16 +447,16 @@ const ViewJobs = (props: ViewJobsProps) => {
                             ]}
                             name="priority"
                             onChange={handleChange}
-                            selected={form.priority}
+                            selected={form.priority.id}
 
                         />
                         <Input
                             label="Fecha intervención"
                             placeholder="Fecha intervención"
                             type="date"
-                            name="interventionDate"
+                            name="interveneAt"
                             onChange={handleChange}
-                            value={form.interventionDate}
+                            value={form.interveneAt}
 
                         />
 
@@ -622,21 +474,21 @@ const ViewJobs = (props: ViewJobsProps) => {
                             type="text"
                             name="material"
                             onChange={handleChange}
-                            value={form.material}
+                            value={form.materials.map(e => e).join(",")}
 
                         />
                         <Input
-                            label="Técnica"
+                            label="Técnico"
                             placeholder="Técnica"
                             type="text"
                             name="technical"
                             onChange={handleChange}
-                            value={form.technical}
+                            value={form.technical.firstName + " " + form.technical.secondName}
 
                         />
                         <div className="mt-1 d-flex justify-content-end">
                             {
-                                job.id === 0 ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
+                                form.id === 0 ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
                             }
 
                         </div>
@@ -741,7 +593,7 @@ const ViewJobs = (props: ViewJobsProps) => {
             <Modal className="modal-main" show={showModal} style={{}}>
                 <div className="card">
                     <div className="card-header">
-                        <h3>¿Desea eliminar la tarea ?</h3>
+                        <h3>¿Desea eliminar El trabajo {form.description} ?</h3>
                     </div>
                     <div className="card-footer d-flex justify-content-md-end">
                         <button type="button"
@@ -749,7 +601,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             onClick={() => setShowModal(false)}
                         >Cancelar</button>
                         <button type="button"
-                            onClick={() => handleDeleteJob(job)}
+                            onClick={() => handleDeleteJob(form)}
                             className="btn btn-danger ml-md-3">Eliminar</button>
                     </div>
                 </div>
@@ -765,8 +617,8 @@ const ViewJobs = (props: ViewJobsProps) => {
                             placeholder="Material"
                             type="text"
                             name="material"
-                            onChange={(e) => SetCloseJob({ ...closeJob, material: e.target.value })}
-                            value={closeJob.material}
+                            onChange={(e) => SetCloseJob({ ...closeJob, materials: e.target.value.split(',') })}
+                            value={closeJob.materials.join(',')}
 
                         />
                         <Input
@@ -774,8 +626,8 @@ const ViewJobs = (props: ViewJobsProps) => {
                             placeholder="Notas"
                             type="text"
                             name="note"
-                            onChange={(e) => SetCloseJob({ ...closeJob, note: e.target.value })}
-                            value={closeJob.note}
+                            onChange={(e) => SetCloseJob({ ...closeJob, description: e.target.value})}
+                            value={closeJob.description}
 
                         />
                         <Input

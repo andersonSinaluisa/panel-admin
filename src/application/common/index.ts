@@ -236,7 +236,7 @@ export const CLOSE_JOBS = "/core/jobs";
  * @description Eliminar un trabajo
  * @type {string}
  */
-export const DELETE_JOBS = "/core/jobs";
+export const DELETE_JOBS = "/core/jobs/";
 
 
 /**
@@ -261,7 +261,7 @@ export const CREATE_TASKS = "/core/tasks";
  * @type {string}
  * @memberof Constants
  */
-export const CLOSE_TASKS = "/core/tasks";
+export const CLOSE_TASKS = "/core/task/:task_id/state";
 
 /**
  * @constant DELETE_TASKS
@@ -269,7 +269,7 @@ export const CLOSE_TASKS = "/core/tasks";
  * @type {string}
  * @memberof Constants
  */
-export const DELETE_TASKS = "/core/tasks";
+export const DELETE_TASKS = "/core/tasks/";
 
 
 
@@ -297,8 +297,23 @@ export const CREATE_PRODUCTS = "/core/products";
  */
 export const UPDATE_PRODUCTS = "/core/products/";
 
-
+/**
+ * @constant UPDATE_STOCK_PRODUCT
+ * @deprecated
+ * @description Actualizar el stock de un producto
+ * @type {string}
+ * @memberof Constants
+ */
 export const UPDATE_STOCK_PRODUCT = "/products/update-stock/";
+
+/**
+ * @constant CATALOGE_PRODUCT
+ * @description Catalogar un producto
+ * @type {string}
+ * @deprecated
+ * @memberof Constants
+ * 
+ */
 export const CATALOGE_PRODUCT = "/products/catalog/";
 
 
@@ -313,36 +328,137 @@ export const DELETE_PRODUCT = "/core/products/";
 
 export const SEARCH = "/searcher/";
 
+/**
+ * @constant GET_BILLING
+ * @description Obtener las facturas
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
 export const GET_BILLING = "/core/invoices";
+
+/**
+ * @constant CREATE_BILLING
+ * @description Crear una factura
+ * @type {string}
+ * @memberof Constants
+ */
 export const CREATE_BILLING = "/core/invoices";
+
+/**
+ * 
+ * @constant DELETE_BILLING
+ * @description Eliminar una factura
+ * @type {string}
+ * @memberof Constants
+ */
 export const DELETE_BILLING = "/core/invoices";
 
 
 
-// Error Messages
+/**
+ * 
+ * @constant errorEncountered
+ * @description Mensaje de error
+ * @type {string}
+ * @memberof Constants
+ */
 export const errorEncountered = 'Error was encountered processing this request';
+
+/**
+ * 
+ * @constant timeoutMessage
+ * @description Mensaje de error
+ * @type {string}
+ * @memberof Constants
+ */
 export const timeoutMessage = "We are unable to fetch data at this time, kindly check your internet connection and we'll reconnect you.";
+
+/**
+ * 
+ * @constant timeoutDuration
+ * @description Duración del timeout
+ * @type {number}
+ * @memberof Constants
+ */
 export const timeoutDuration = 30000;
 
+/**
+ * 
+ * @constant SUCCESS_HTTP_CODE_CREATED
+ * @description Código de respuesta de creación
+ * @type {number}
+ * @memberof Constants
+ */
 export const SUCCESS_HTTP_CODE_CREATED = 200
 
+/**
+ * 
+ * @constant APP_NAME
+ * @description Nombre de la aplicación
+ * @type {string}
+ * @memberof Constants
+ */
 export const APP_NAME = "Panel"
 
 
-/*    { color: 'primary', label: "ACTIVO",id:'type_installation_state_armed' },
-    { color: 'primary', label: "ACTIVO",id:'type_installation_state_disarmed' },
-    { color: 'warning', label: "Dormir",id:'type_installation_state_asleep' },
-    { color: 'secondary', label: "Bloqueado",id:'type_installation_state_locked' },
-    { color: 'danger', label: "Apagado",id:'type_installation_state_switchedOff' },*/
-
-
+/**
+ * 
+ * @constant INSTALLATION_STATUS_ARMED
+ * @description Estado de la instalación activo
+ * @type {string}
+ * @memberof Constants
+ */
 export const INSTALLATION_STATUS_ARMED = 'type_installation_state_armed'
+
+/**
+ * 
+ * @constant INSTALLATION_STATUS_DISARMED
+ * @description Estado de la instalación desactivado
+ * @type {string}
+ * @memberof Constants
+ */
 export const INSTALLATION_STATUS_DISARMED = 'type_installation_state_disarmed'
+
+/**
+ * 
+ * @constant INSTALLATION_STATUS_ASLEEP
+ * @description Estado de la instalación dormido
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
 export const INSTALLATION_STATUS_ASLEEP = 'type_installation_state_asleep'
+
+/**
+ * 
+ * @constant INSTALLATION_STATUS_LOCKED
+ * @description Estado de la instalación bloqueado
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
 export const INSTALLATION_STATUS_LOCKED = 'type_installation_state_locked'
+
+/**
+ *  
+ * @constant INSTALLATION_STATUS_SWITCHEDOFF
+ * @description Estado de la instalación apagado
+ * @type {string}
+ * @memberof Constants
+ */
 export const INSTALLATION_STATUS_SWITCHEDOFF = 'type_installation_state_switchedOff'
 
 
+/**
+ * 
+ * @constant getStatusInstallation
+ * @description Obtener el estado de la instalación
+ * @param {string} id
+ * @returns {object}
+ * @memberof Constants
+ * 
+ */
 export const getStatusInstallation = (id: string) => {
     switch (id) {
         case  INSTALLATION_STATUS_ARMED:
@@ -361,6 +477,14 @@ export const getStatusInstallation = (id: string) => {
 }
 
 
+/**
+ * 
+ * @constant status
+ * @description Estados de la instalación
+ * @type {array}
+ * @memberof Constants
+ * 
+ */
 export const status = [
     { color: 'primary', label: "ACTIVO",id:'type_installation_state_armed' },
     { color: 'primary', label: "ACTIVO",id:'type_installation_state_disarmed' },
@@ -416,14 +540,38 @@ export const TASK_PRIORITY_HALF = "type_task_priority_half";
  */
 export const TASK_PRIORITY_LOW = "type_task_priority_low";
 
+//catalogue_type_task_name
+/**
+ * @constant CATALOGUE_TYPE_TASK_NAME
+ * @description Tipo de tarea
+ * @type {string}
+ * @memberof Constants
+ * */
+export const CATALOGUE_TYPE_TASK_NAME = "catalogue_type_task_name";
 
-//type_job_priority_high
+/**
+ * @constant JOB_PRIORITY_HIGH
+ * @description Tipo de trabajo alta
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
 export const JOB_PRIORITY_HIGH = "type_job_priority_high";
 
-//type_job_priority_half
+/**
+ * @constant JOB_PRIORITY_HALF
+ * @description Tipo de trabajo media
+ * @type {string}
+ * @memberof Constants
+ */
 export const JOB_PRIORITY_HALF = "type_job_priority_half";
 
-//type_job_priority_low
+/**
+ * @constant JOB_PRIORITY_LOW
+ * @description Tipo de trabajo baja
+ * @type {string}
+ * @memberof Constants
+ */
 export const JOB_PRIORITY_LOW = "type_job_priority_low";
 
 
@@ -530,3 +678,21 @@ export const CATALOGUE_TYPE_SECONDARY_ROL_CLIENT = "catalogue_type_secondary_rol
  * @memberof Constants
  */
 export const  CATALOGUE_TYPE_PRODUCT_IN_WAREHOUSE = "catalogue_type_product_in_warehouse";
+
+
+/**
+ * @constant CATALOGUE_TYPE_TASK_PRIORITY
+ * @description Tipo de prioridad de tarea
+ * @type {string}
+ * @memberof Constants
+ * */
+export const CATALOGUE_TYPE_TASK_PRIORITY = "catalogue_type_task_priority";
+
+
+/**
+ * @constant CATALOGUE_TYPE_TASK
+ * @description Tipo de tarea
+ * @type {string}
+ * @memberof Constants
+ * */
+export const CATALOGUE_TYPE_TASK = "catalogue_type_task";

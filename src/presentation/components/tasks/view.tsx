@@ -1,10 +1,14 @@
-import { TASK_OPEN ,TASK_PRIORITY_HALF,TASK_PRIORITY_LOW,TASK_PRIORITY_HIGH} from "application/common";
+import { TASK_OPEN, TASK_PRIORITY_HALF, TASK_PRIORITY_LOW, TASK_PRIORITY_HIGH, CATALOGUE_TYPE_TASK_PRIORITY, CATALOGUE_TYPE_TASK_NAME, CATALOGUE_TYPE_TASK, TASK_CLOSE } from "application/common";
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initTask } from "application/models/tasks";
 import { ExportToCsv } from "export-to-csv";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
+import { interface_core } from "infrastructure/api/core";
+import { State } from "infrastructure/api/core/interface";
+import { personal_request } from "infrastructure/api/personal";
 import { tasks_interface } from "infrastructure/api/tasks";
+import { CloseTaskRequest } from "infrastructure/api/tasks/interface";
 import { user_interface } from "infrastructure/api/users";
 import FilterLabel from "infrastructure/components/filter-label";
 import Input from "infrastructure/components/input";
@@ -19,6 +23,7 @@ import TodoMenu from "infrastructure/components/todo-menu";
 import TodoSearch from "infrastructure/components/todo-search";
 import { TasksViewProps } from "presentation/container/tasks/view-container";
 import React, { useEffect, useState } from "react";
+import AsyncSelect from "react-select/async";
 
 
 
@@ -38,21 +43,33 @@ const TaskView = (props: TasksViewProps) => {
         ...initialMetaResponse
     })
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [task, setTask] = useState<tasks_interface.Task>(initTask)
+    const [showModalClose, setShowModalClose] = useState<boolean>(false)
+    const [reload, setReload] = useState<boolean>(false)
     const [users, setUsers] = useState<user_interface.GetUsers>({
         data: [],
         ...initialMetaResponse
     })
 
-    const [form, setForm] = useState<tasks_interface.CreateTaskRequest>({
+    const initForm = {
         description: "",
-        interventionDate: "",
-        name: "",
+        interventionAt: "",
+        name: {
+            id: 0,
+        },
         observation: "",
-        priority: "",
-        responsible: "",
-        type: ""
-    })
+        priority: {
+            id: 0
+        },
+        responsible: {
+            id: 0
+        },
+        type: {
+            id: 0
+        }
+    }
+
+    const [form, setForm] = useState<tasks_interface.Task>(initTask)
+    
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
         visible: false,
@@ -66,7 +83,10 @@ const TaskView = (props: TasksViewProps) => {
 
     }, [])
 
-    useEffect(() => {
+    
+        
+
+    /*useEffect(() => {
 
         if (query.get("task")) {
             tasks.data.filter((task) => {
@@ -78,8 +98,54 @@ const TaskView = (props: TasksViewProps) => {
             })
         }
 
-    }, [tasks.message])
+    }, [tasks.message])*/
 
+
+    const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
+
+    useEffect(() => {
+        setCatalogues(props.catalogue.data.data);
+    }, [props.catalogue])
+
+
+
+    useEffect(() => {
+        if(props.DeleteTask.status === 200){
+            setMessage({
+                description: "Tarea Eliminada correctamente",
+                title: "Exito",
+                type: "success",
+                visible: true
+            })
+            setTimeout(() => {
+                setMessage({
+                    description: "",
+                    title: "",
+                    type: "success",
+                    visible: false
+                })
+            }, 3000)
+            return;
+        }
+
+        if(props.DeleteTask.status !== 0){
+            setMessage({
+                description: props.DeleteTask.error,
+                title: "Error",
+                type: "danger",
+                visible: true
+            })
+            setTimeout(() => {
+                setMessage({
+                    description: "",
+                    title: "",
+                    type: "success",
+                    visible: false
+                })
+            }, 3000)
+            return;
+        }
+    }, [props.DeleteTask])
 
 
     useEffect(() => {
@@ -90,6 +156,14 @@ const TaskView = (props: TasksViewProps) => {
                 type: "success",
                 visible: true
             })
+            setTimeout(() => {
+                setMessage({
+                    description: "",
+                    title: "",
+                    type: "success",
+                    visible: false
+                })
+            }, 3000)
             return;
         }
 
@@ -100,31 +174,40 @@ const TaskView = (props: TasksViewProps) => {
                 type: "danger",
                 visible: true
             })
+            setTimeout(() => {
+                setMessage({
+                    description: "",
+                    title: "",
+                    type: "success",
+                    visible: false
+                })
+            }, 3000)
             return;
         }
     }, [props.CreateTasks])
 
     useEffect(() => {
-
-        setTasks({
-            data: [
-                ...props.GetTasks.data,
-                ...tasks.data
-            ],
-            meta: props.GetTasks.meta,
-            links: props.GetTasks.links,
-            message: props.GetTasks.message,
-        })
-        setUsers(props.GetUsers)
-    }, [props.GetTasks, props.GetUsers])
+        if (reload){
+            setTasks(props.GetTasks)  
+        }else{
+            setTasks({
+                data: [
+                    ...props.GetTasks.data,
+                    ...tasks.data
+                ],
+                meta: props.GetTasks.meta,
+                links: props.GetTasks.links,
+                message: props.GetTasks.message,
+            })
+        }
+        
+    }, [props.GetTasks])
 
     useEffect(() => {
         props.onGetTasksAsync({
             token: props.token
         })
-        props.onGetUsersAync({
-            token: props.token
-        })
+        
         props.onClear()
 
     }, [props.token])
@@ -140,9 +223,20 @@ const TaskView = (props: TasksViewProps) => {
                     type: "success",
                     visible: true
                 })
+                setReload(true)
+                setTimeout(() => {
+                    setMessage({
+                        description: "",
+                        title: "",
+                        type: "danger",
+                        visible: false
+                    })
+                }, 3000)
                 props.onGetTasksAsync({
                     token: props.token
                 })
+                props.onClear()
+
                 return;
             }
             setMessage({
@@ -151,6 +245,14 @@ const TaskView = (props: TasksViewProps) => {
                 type: "danger",
                 visible: true
             })
+            setTimeout(() => {
+                setMessage({
+                    description: "",
+                    title: "",
+                    type: "danger",
+                    visible: false
+                })
+            }, 3000)
             return;
         }
 
@@ -171,67 +273,7 @@ const TaskView = (props: TasksViewProps) => {
 
     const handleSave = () => {
         //validate fields of form
-
-        if (form.name === "") {
-            setMessage({
-                description: "El nombre es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true,
-            });
-
-
-            return;
-        }
-
-        if (form.interventionDate === "") {
-            setMessage({
-                description: "La fecha de intervención es requerida",
-                title: "Error",
-                type: "danger",
-                visible: true,
-            });
-
-
-            return;
-        }
-
-        if (form.responsible === "") {
-            setMessage({
-                description: "El responsable es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true,
-            });
-
-
-            return;
-        }
-
-        if (form.priority === "") {
-            setMessage({
-                description: "La prioridad es requerida",
-                title: "Error",
-                type: "danger",
-                visible: true,
-            });
-
-
-            return;
-        }
-
-        if (form.type === "") {
-            setMessage({
-                description: "El tipo es requerido",
-                title: "Error",
-                type: "danger",
-                visible: true,
-            });
-
-
-            return;
-        }
-
+        console.log(form)
         props.onCreateTasksAsync({
             headers: {
                 token: props.token,
@@ -246,11 +288,59 @@ const TaskView = (props: TasksViewProps) => {
     }
 
     const handleCloseTask = (item: tasks_interface.Task) => {
+        setShowModalClose(true)
+        setForm(item)
+    }
+
+    const handleChangeSelect = (
+        event: React.FormEvent<HTMLSelectElement>
+      ) => {
+        setForm({
+          ...form,
+          [event.currentTarget.name]: {
+            id: event.currentTarget.value
+          },
+        });
+      };
+
+    const handleConfirmCloseTask = () => {
+
+        let state = catalogue.filter((item) => item.code == TASK_CLOSE );
+        if(state.length===0){
+            return;
+        }
+
+        let status_close = state[0].id;
+
+        let data:CloseTaskRequest={
+            state:{
+                id:status_close
+            }
+        }
+        setShowModalClose(false)
+        
+        props.onCloseTaskAsync({
+            body:data,
+            headers: {
+                token: props.token
+            },
+            id: form.id
+        })
+        props.onGetTasksAsync({
+            token: props.token
+        })
 
 
+    }
 
 
-
+    const getListByCode = (code: string) => {
+        return catalogue.filter((item) => item.type.code === code).map((item) => {
+            return {
+                label: item.name,
+                value: item.id
+            }
+        })
     }
 
     const handleDeleteTask = (item: tasks_interface.Task) => {
@@ -266,32 +356,44 @@ const TaskView = (props: TasksViewProps) => {
 
     //handleSelect for view info task
     const handleSelect = (item: tasks_interface.Task) => {
-
-        //cast item to form to show in modal
-
-        setTask(item)
         setShow(true)
+        setForm(item)
+
     }
 
     const handleOpenCreateTask = () => {
-        setTask(initTask)
-        setForm({
-            description: "",
-            interventionDate: "",
-            name: "",
-            observation: "",
-            priority: "",
-            responsible: "",
-            type: ""
-        })
+        setForm(initTask)
         setShow(true)
 
     }
 
     const handleShowModal = (item: tasks_interface.Task) => {
         setShowModal(true)
-        setTask(item)
+        setForm(item)
     }
+
+    const searchPersonal = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            personal_request.GetPersonal({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.firstName + " " + item.firstSurname + " / " + item.documentValue,
+                        value: item.id,
+                        item: item
+                    }
+                }) || [])
+            })
+        }
+
+
+    }
+
     return (
         <div className="content-area-wrapper" style={{ top: '-90px' }}>
             <SidebarLeft>
@@ -374,27 +476,30 @@ const TaskView = (props: TasksViewProps) => {
 
                 {/* todo new task sidebar */}
                 <SidebarRight
-                    title="Nueva Tarea"
+                    title={
+                        form.id === 0 ? "Nueva Tarea" : form.name.name
+                    }
                     onClose={() => setShow(!show)}
                     show={show}
 
                 >
                     <>
-                        <Input
-                            label="Titulo"
-                            placeholder="Titulo"
-                            type="text"
-                            name="name"
-                            onChange={handleChange}
-                            value={form.name}
-                        />
-                        <Input
+                        <Select
                             label="Tipo tarea"
-                            placeholder="Tipo tarea"
-                            type="text"
+                            options={getListByCode(CATALOGUE_TYPE_TASK_NAME)}
+                            name="name"
+                            onChange={handleChangeSelect}
+                            selected={form.name.id}
+                            disabled={form.id !== 0}
+
+                        />
+                        <Select
+                            label="Tipo tarea"
+                            options={getListByCode(CATALOGUE_TYPE_TASK)}
                             name="type"
-                            onChange={handleChange}
-                            value={form.type}
+                            onChange={handleChangeSelect}
+                            selected={form.type.id}
+                            disabled={form.id !== 0}
 
                         />
                         <div className="form-group">
@@ -403,56 +508,62 @@ const TaskView = (props: TasksViewProps) => {
                                 name="description"
                                 className="form-control" placeholder="Descripción" rows={3} value={
                                     form.description
-                                }></textarea>
+                                }
+                                disabled={form.id !== 0}
+
+                            ></textarea>
                         </div>
 
                         <Select
                             label="Prioridad"
-                            options={[
-                                {
-                                    label: "Alta",
-                                    value: "Alta"
-                                },
-                                {
-                                    label: "Media",
-                                    value: "Media"
-                                },
-                                {
-                                    label: "Baja",
-                                    value: "Baja"
-                                }
-                            ]}
+                            options={getListByCode(CATALOGUE_TYPE_TASK_PRIORITY)}
                             name="priority"
-                            onChange={handleChange}
-                            selected={form.priority}
-
+                            onChange={handleChangeSelect}
+                            selected={form.priority.id}
+                            disabled={form.id !== 0}
                         />
                         <Input
                             label="Fecha intervención"
                             placeholder="Fecha intervención"
                             type="date"
-                            name="interventionDate"
+                            name="interventionAt"
                             onChange={handleChange}
-                            value={form.interventionDate}
-
+                            value={form.interventionAt}
+                            enabled={form.id !== 0}
                         />
-                        <Select
-                            label="Responsable"
-                            options={[]}
+
+                        <label htmlFor="client">Responsable</label>
+                        <AsyncSelect
+                            loadOptions={(inputValue, callback) => {
+                                searchPersonal(inputValue, callback);
+
+                            }}
                             name="responsible"
-                            onChange={handleChange}
-                            selected={form.responsible}
+                            onChange={
+                                (newValue: any) => {
+                                    setForm({
+                                        ...form,
+                                        responsible: newValue.item
+
+                                    });
+                                }
+                            }
+                            isDisabled={form.id !== 0}
+
+                            value={form.responsible?.id ? { label: form.responsible.firstName + " " + form.responsible.firstSurname, value: form.responsible.id } : null}
                         />
                         <div className="form-group">
                             <label htmlFor="">Observación</label>
                             <textarea
                                 onChange={handleChange}
                                 name="observation"
+                                disabled={form.id !== 0}
+
                                 className="form-control" placeholder="Observación" rows={3} value={form.observation}></textarea>
                         </div>
                         <div className="mt-1 d-flex justify-content-end">
                             {
-                                task.id === 0 ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
+                                form.id === 0 ? <button type="button" className="btn btn-primary update-todo" onClick={() => handleSave()}>Crear Tarea</button> : null
                             }
 
                         </div>
@@ -501,7 +612,8 @@ const TaskView = (props: TasksViewProps) => {
                                         {/* task list start */}
                                         <TaskList
                                             fetchData={() => {
-                                                if (tasks.data.length < props.GetTasks.meta.total ) {
+                                                if (tasks.data.length < props.GetTasks.meta.total) {
+                                                    setReload(false)
 
                                                     props.onGetTasksAsync({
                                                         token: props.token,
@@ -556,7 +668,7 @@ const TaskView = (props: TasksViewProps) => {
             <Modal className="modal-main" show={showModal} style={{}}>
                 <div className="card">
                     <div className="card-header">
-                        <h3>¿Desea eliminar la tarea {task.name.name}?</h3>
+                        <h3>¿Desea eliminar la tarea {form.name.name}?</h3>
                     </div>
                     <div className="card-footer d-flex justify-content-md-end">
                         <button type="button"
@@ -564,8 +676,24 @@ const TaskView = (props: TasksViewProps) => {
                             onClick={() => setShowModal(false)}
                         >Cancelar</button>
                         <button type="button"
-                            onClick={() => handleDeleteTask(task)}
+                            onClick={() => handleDeleteTask(form)}
                             className="btn btn-danger ml-md-3">Eliminar</button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal className="modal-main" show={showModalClose} style={{}}>
+                <div className="card">
+                    <div className="card-header">
+                        <h3>¿Desea cerrar la tarea {form.name.name}?</h3>
+                    </div>
+                    <div className="card-footer d-flex justify-content-md-end">
+                        <button type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setShowModalClose(false)}
+                        >Cancelar</button>
+                        <button type="button"
+                            onClick={() => handleConfirmCloseTask()}
+                            className="btn btn-danger ml-md-3">Cerrar</button>
                     </div>
                 </div>
             </Modal>

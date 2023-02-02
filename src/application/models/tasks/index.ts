@@ -5,78 +5,81 @@ import { Task } from "infrastructure/api/tasks/interface";
 import { RootModel } from "..";
 
 
-interface GetTasksStateProps extends ResponseServer{
+export interface GetTasksStateProps extends ResponseServer {
     data: tasks_interface.GetTaskResponse;
 }
 
-export interface CreateTasksStateProps extends ResponseServer{
-    data:{
-        status:number;
-        message:string;
-    }
-}
-
-interface GetTaskByIdStateProps extends ResponseServer{
-    data:tasks_interface.GetTaskByIdResponse;
-}
-
-export interface CloseTaskStateProps extends ResponseServer{
+export interface CreateTasksStateProps extends ResponseServer {
     data: {
-        status:number;
-        message:string;
+        status: number;
+        message: string;
     }
 }
-export interface DeleteTaskStateProps extends ResponseServer{
+
+interface GetTaskByIdStateProps extends ResponseServer {
+    data: tasks_interface.GetTaskByIdResponse;
+}
+
+export interface CloseTaskStateProps extends ResponseServer {
     data: {
-        status:number;
-        message:string;
+        message: {
+            summary: string;
+            detail: string;
+            status: number;
+        }
+    }
+}
+export interface DeleteTaskStateProps extends ResponseServer {
+    data: {
+        status: number;
+        message: string;
     }
 }
 
-export const initTask:Task = {
+export const initTask: Task = {
 
-    id:0,
-    createdAt:"",
-    updatedAt:"",
-    deletedAt:null,
-    description:"",
-    observation:"",
-    interventionAt:"",
-    state:{
-        id:0,
-        createdAt:"",
-        updatedAt:"",
-        deletedAt:null,
-        type:{
-            code:"",
-            createdAt:"",
-            deletedAt:null,
-            id:0,
-            name:"",
-            updatedAt:""
-            
+    id: 0,
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: null,
+    description: "",
+    observation: "",
+    interventionAt: "",
+    state: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        type: {
+            code: "",
+            createdAt: "",
+            deletedAt: null,
+            id: 0,
+            name: "",
+            updatedAt: ""
+
         },
-        name:"",
-        code:""
+        name: "",
+        code: ""
     },
-    availability:{
-        id:0,
-        createdAt:"",
-        updatedAt:"",
-        deletedAt:null,
-        type:{
-            id:0,
-            createdAt:"",
-            updatedAt:"",
-            deletedAt:null,
-            name:"",
-            code:""
+    availability: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        type: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            name: "",
+            code: ""
         },
-        name:"",
-        code:""
+        name: "",
+        code: ""
     },
     responsible: {
- 
+
         id: 0,
         createdAt: "",
         updatedAt: "",
@@ -109,7 +112,7 @@ export const initTask:Task = {
         discount: "",
         tracing: "",
         description: "",
-        state:{
+        state: {
             createdAt: "",
             updatedAt: "",
             deletedAt: null,
@@ -147,7 +150,7 @@ export const initTask:Task = {
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
                 createdAt: "",
                 updatedAt: "",
                 deletedAt: null,
@@ -156,13 +159,13 @@ export const initTask:Task = {
                 code: ""
             },
         },
-        backupEmailRelationship:{
+        backupEmailRelationship: {
             createdAt: "",
             updatedAt: "",
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
                 createdAt: "",
                 updatedAt: "",
                 deletedAt: null,
@@ -171,13 +174,13 @@ export const initTask:Task = {
                 code: ""
             },
         },
-        country:{
+        country: {
             createdAt: "",
             updatedAt: "",
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
                 createdAt: "",
                 updatedAt: "",
                 deletedAt: null,
@@ -187,14 +190,14 @@ export const initTask:Task = {
             },
 
         },
-        documentType:{
+        documentType: {
             createdAt: "",
             updatedAt: "",
 
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
 
                 createdAt: "",
                 updatedAt: "",
@@ -204,13 +207,13 @@ export const initTask:Task = {
                 code: ""
             },
         },
-        personType:{
+        personType: {
             createdAt: "",
             updatedAt: "",
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
                 createdAt: "",
                 updatedAt: "",
                 deletedAt: null,
@@ -219,14 +222,14 @@ export const initTask:Task = {
                 code: ""
             },
         },
-        secondaryEmailRelationship:{
+        secondaryEmailRelationship: {
             createdAt: "",
             updatedAt: "",
 
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
                 createdAt: "",
                 updatedAt: "",
                 deletedAt: null,
@@ -235,13 +238,13 @@ export const initTask:Task = {
                 code: ""
             },
         },
-        streetType:{
+        streetType: {
             createdAt: "",
             updatedAt: "",
             deletedAt: null,
             id: 0,
             name: "",
-            type:  {
+            type: {
 
                 createdAt: "",
                 updatedAt: "",
@@ -252,44 +255,44 @@ export const initTask:Task = {
             },
         },
     },
-    type:{
-        id:0,
-        createdAt:"",
-        updatedAt:"",
-        deletedAt:null,
-        name:"",
-        code:""
+    type: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        name: "",
+        code: ""
     },
-    priority:{
-        id:0,
-        code:"",
-        createdAt:"",
-        updatedAt:"",
-        deletedAt:null,
-        name:"",
-        type:{
-            id:0,
-            createdAt:"",
-            updatedAt:"",
-            deletedAt:null,
-            name:"",
-            code:""
+    priority: {
+        id: 0,
+        code: "",
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        name: "",
+        type: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
+            name: "",
+            code: ""
         },
     },
-    name:{
-        id:0,
-        createdAt:"",
-        updatedAt:"",
-        deletedAt:null,
-        name:"",
-        type:{
-            id:0,
-            createdAt:"",
-            updatedAt:"",
-            deletedAt:null,
+    name: {
+        id: 0,
+        createdAt: "",
+        updatedAt: "",
+        deletedAt: null,
+        name: "",
+        type: {
+            id: 0,
+            createdAt: "",
+            updatedAt: "",
+            deletedAt: null,
 
-            name:"",
-            code:""
+            name: "",
+            code: ""
         }
     }
 
@@ -297,45 +300,48 @@ export const initTask:Task = {
 
 export const TASKS = createModel<RootModel>()({
     state: {
-        GetTasks:{
+        GetTasks: {
             data: {
-                data:[],
+                data: [],
                 ...initialMetaResponse
             },
-            status:0,
-            error:""
+            status: 0,
+            error: ""
         } as GetTasksStateProps,
-        CreateTasks:{
-            data:{
-                status:0,
-                message:""
+        CreateTasks: {
+            data: {
+                status: 0,
+                message: ""
             },
-            error:"",
-            status:0
+            error: "",
+            status: 0
         } as CreateTasksStateProps,
-        GetTaskById:{
-            data:{
-                message:{},
-                status:0
+        GetTaskById: {
+            data: {
+                message: {},
+                status: 0
             },
-            error:"",
-            status:0
+            error: "",
+            status: 0
         } as GetTaskByIdStateProps,
-        CloseTask:{
-            data:{
-                status:0,
-                message:""
+        CloseTask: {
+            data: {
+                message: {
+                    status: 0,
+                    detail: "",
+                    summary: ""
+                }
             },
-            error:"",
-            status:0
+            error: "",
+            status: 0
         } as CloseTaskStateProps,
-        DeleteTask:{
-            data:{
-                status:0,
-                message:""
+        DeleteTask: {
+            data: {
+                status: 0,
+                message: ""
             },
-            error:"",
-            status:0
+            error: "",
+            status: 0
         } as DeleteTaskStateProps
     },
     reducers: {
@@ -380,10 +386,12 @@ export const TASKS = createModel<RootModel>()({
                     error: ""
 
                 });
-            } catch (error:any) {
+            } catch (error: any) {
                 dispatch.TASKS.onGetTasks(
-                    { data: { data: [], ...initialMetaResponse }, 
-                    status: 0, error: error.response?error.response.data.message:error.message });
+                    {
+                        data: { data: [], ...initialMetaResponse },
+                        status: 0, error: error.response ? error.response.data.message : error.message
+                    });
             }
         },
         async onCreateTasksAsync(props: { headers: HeaderProps, body: tasks_interface.CreateTaskRequest }) {
@@ -395,8 +403,8 @@ export const TASKS = createModel<RootModel>()({
                     error: ""
 
                 });
-            } catch (error:any) {
-                dispatch.TASKS.onCreateTasks({ data: { status: 0, message: "" }, status: 0, error: error.response?error.response.data.message:error.message });
+            } catch (error: any) {
+                dispatch.TASKS.onCreateTasks({ data: { status: 0, message: "" }, status: 0, error: error.response ? error.response.data.message : error.message });
             }
         },
         async onGetTaskByIdAsync(props: { headers: HeaderProps, id: string }) {
@@ -408,11 +416,11 @@ export const TASKS = createModel<RootModel>()({
                     error: ""
 
                 });
-            } catch (error:any) {
-                dispatch.TASKS.onGetTaskById({ data: { message: {}, status: 0 }, status: 0, error: error.response?error.response.data.message:error.message });
+            } catch (error: any) {
+                dispatch.TASKS.onGetTaskById({ data: { message: {}, status: 0 }, status: 0, error: error.response ? error.response.data.message : error.message });
             }
         },
-        async onCloseTaskAsync(props:{headers:HeaderProps,body:tasks_interface.CloseTaskRequest,id:string}) {
+        async onCloseTaskAsync(props: { headers: HeaderProps, body: tasks_interface.CloseTaskRequest, id: string }) {
             try {
                 const response = await tasks_request.CloseTask(props).toPromise();
                 dispatch.TASKS.onCloseTask({
@@ -421,11 +429,23 @@ export const TASKS = createModel<RootModel>()({
                     error: ""
 
                 });
-            } catch (error:any) {
-                dispatch.TASKS.onCloseTask({ data: { status: 0, message: "" }, status: 0, error: error.response?error.response.data.message:error.message });
+            } catch (e: any) {
+                let error = e.response ? e.response.data?.message?.summary : "Ocurrió un error"
+                error += e.response ? e.response.data?.message?.detail : ""
+                dispatch.TASKS.onCloseTask({
+                    data: {
+                        message: {
+                            detail: "",
+                            status: 0,
+                            summary: ""
+                        }
+                    },
+                    status: e.response ? e.response.status : 400,
+                    error: error
+                });
             }
         },
-        async onDeleteTaskAsync(props:{headers:HeaderProps,id:number}) {
+        async onDeleteTaskAsync(props: { headers: HeaderProps, id: number }) {
             try {
                 const response = await tasks_request.DeleteTask(props).toPromise();
                 dispatch.TASKS.onDeleteTask({
@@ -434,16 +454,24 @@ export const TASKS = createModel<RootModel>()({
                     error: ""
 
                 });
-            } catch (error:any) {
-                dispatch.TASKS.onDeleteTask({ data: { status: 0, message: "" }, status: 0, error: error.response?error.response.data.message:error.message });
+            } catch (error: any) {
+                dispatch.TASKS.onDeleteTask({ data: { status: 0, message: "" }, status: 0, error: error.response ? error.response.data.message : error.message });
             }
         },
-        onClear(){
+        onClear() {
             dispatch.TASKS.onCreateTasks({ data: { status: 0, message: "" }, status: 0, error: "" });
             dispatch.TASKS.onGetTaskById({ data: { message: {}, status: 0 }, status: 0, error: "" });
-            dispatch.TASKS.onCloseTask({ data: { status: 0, message: "" }, status: 0, error: "" });
+            dispatch.TASKS.onCloseTask({
+                data: {
+                    message: {
+                        detail: "",
+                        status: 0,
+                        summary: ""
+                    }
+                }, status: 0, error: ""
+            });
             dispatch.TASKS.onDeleteTask({ data: { status: 0, message: "" }, status: 0, error: "" });
         }
-        
+
     })
 })

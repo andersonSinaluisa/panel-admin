@@ -13,6 +13,7 @@ interface SelectProps {
     selected?:number|undefined|string;
     multiple?:boolean;
     classes?:string;
+    disabled?:boolean;
 }
 
 const Select = (props: SelectProps) => {
@@ -22,6 +23,7 @@ const Select = (props: SelectProps) => {
             <select className={`${props.classes} form-control `} 
             id={props.name} name={props.name} onChange={props.onChange}
             multiple={props.multiple}
+            disabled={props.disabled}
             >   
             <option value="">{"Seleccione una opción"}</option>
                 {
