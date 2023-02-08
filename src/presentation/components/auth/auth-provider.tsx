@@ -32,7 +32,6 @@ const AuthProvider = (props: AuthProviderProps) => {
   const [dataLogin, setDataLogin] = React.useState<LoginResponse>(init);
   const [error,setError] = React.useState<string>("")
   useEffect(() => {
-    console.log(props.dataLogin)
     setDataLogin(props.dataLogin); 
     setError(props.error)
 

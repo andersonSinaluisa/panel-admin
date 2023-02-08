@@ -3,6 +3,7 @@ import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure
 import { jobs_interface, jobs_request } from "infrastructure/api/jobs";
 import { GetJobsResponse, Job } from "infrastructure/api/jobs/interface";
 import { RootModel } from "..";
+import { initialClient } from "../clients";
 
 interface GetJobsStateProps extends ResponseServer{
     data: GetJobsResponse;
@@ -88,6 +89,9 @@ export const initJob :Job = {
             updatedAt:"",
             deletedAt:""
         },
+    },
+    client:{
+        ...initialClient
     },
     technical:{
 

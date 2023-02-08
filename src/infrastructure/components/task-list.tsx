@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface TaskListProps {
@@ -23,12 +23,19 @@ interface TaskListProps {
 
 }
 
-const TaskList = (props: TaskListProps) => (
-    <InfiniteScroll
+const TaskList = (props: TaskListProps) => {
+    const [hasMore, setHasMore] = React.useState(true);
+    
+    React.useEffect(()=>{
+        setHasMore(props.hasMore!=undefined? props.hasMore : false)
+        console.log('hasMore', props.hasMore)
+    })
+
+    return <InfiniteScroll
     className="todo-task-list-wrapper list-unstyled" 
         dataLength={props.items.length} //This is important field to render the next data
         next={props.fetchData? props.fetchData : () => { }}
-        hasMore={props.hasMore? props.hasMore : false}
+        hasMore={hasMore}
         loader={
             //spinner
             <div className="d-flex justify-content-center align-items-center">
@@ -103,6 +110,6 @@ const TaskList = (props: TaskListProps) => (
 
     </InfiniteScroll>
 
-)
+        }
 
 export default TaskList;

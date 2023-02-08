@@ -1,4 +1,4 @@
-import { TASK_OPEN, TASK_PRIORITY_HALF, TASK_PRIORITY_LOW, TASK_PRIORITY_HIGH, CATALOGUE_TYPE_TASK_PRIORITY, CATALOGUE_TYPE_TASK_NAME, CATALOGUE_TYPE_TASK, TASK_CLOSE } from "application/common";
+import { TASK_OPEN, TASK_PRIORITY_HALF, TASK_PRIORITY_LOW, TASK_PRIORITY_HIGH, CATALOGUE_TYPE_TASK_PRIORITY, CATALOGUE_TYPE_TASK_NAME, CATALOGUE_TYPE_TASK, TASK_CLOSE, EXPORT_TASKS } from "application/common";
 import { useQuery } from "application/common/hooks/use-query";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initTask } from "application/models/tasks";
@@ -6,6 +6,7 @@ import { ExportToCsv } from "export-to-csv";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { interface_core } from "infrastructure/api/core";
 import { State } from "infrastructure/api/core/interface";
+import { ExportData } from "infrastructure/api/core/request";
 import { personal_request } from "infrastructure/api/personal";
 import { tasks_interface } from "infrastructure/api/tasks";
 import { CloseTaskRequest } from "infrastructure/api/tasks/interface";
@@ -50,6 +51,7 @@ const TaskView = (props: TasksViewProps) => {
         ...initialMetaResponse
     })
 
+
     const initForm = {
         description: "",
         interventionAt: "",
@@ -76,6 +78,7 @@ const TaskView = (props: TasksViewProps) => {
         title: "",
         description: "",
     });
+    const [hasMore, setHasMore] = useState<boolean>(true)
     useEffect(() => {
         document.body.className = ""
         document.body.className = "vertical-layout vertical-menu-modern boxicon-layout no-card-shadow content-left-sidebar todo-application navbar-sticky footer-static "
@@ -189,6 +192,8 @@ const TaskView = (props: TasksViewProps) => {
     useEffect(() => {
         if (reload){
             setTasks(props.GetTasks)  
+            setHasMore(props.GetTasks.meta.current_page!==props.GetTasks.meta.last_page)
+
         }else{
             setTasks({
                 data: [
@@ -199,10 +204,12 @@ const TaskView = (props: TasksViewProps) => {
                 links: props.GetTasks.links,
                 message: props.GetTasks.message,
             })
+            setHasMore(props.GetTasks.meta.current_page!==props.GetTasks.meta.last_page)
         }
         
     }, [props.GetTasks])
 
+  
     useEffect(() => {
         props.onGetTasksAsync({
             token: props.token
@@ -223,7 +230,6 @@ const TaskView = (props: TasksViewProps) => {
                     type: "success",
                     visible: true
                 })
-                setReload(true)
                 setTimeout(() => {
                     setMessage({
                         description: "",
@@ -268,12 +274,36 @@ const TaskView = (props: TasksViewProps) => {
         });
     };
 
+    const DownloadData = ()=>{
+        ExportData(EXPORT_TASKS,{
+          token:props.token,
+          
+        }).pipe().subscribe((data)=>{
+          //donwload excel file
+          //attachment; filename=clients-report-probulon.xlsx
+    
+          if(data.status==200){
+    
+            const blob  = new Blob([data.data])
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden','');
+            a.setAttribute('href',url);
+            a.setAttribute('download','tareas-reporte-probulon.xlsx');
+            document.body.appendChild(a);
+            a.click();
+    
+          }
+        })
+      }
 
+      
 
 
     const handleSave = () => {
         //validate fields of form
-        console.log(form)
+        setReload(true)
+
         props.onCreateTasksAsync({
             headers: {
                 token: props.token,
@@ -311,6 +341,7 @@ const TaskView = (props: TasksViewProps) => {
         }
 
         let status_close = state[0].id;
+        setReload(true)
 
         let data:CloseTaskRequest={
             state:{
@@ -586,22 +617,7 @@ const TaskView = (props: TasksViewProps) => {
                                             {
                                                 element: <button
                                                     className="btn btn-primary "
-                                                    onClick={() => {
-                                                        const options = {
-                                                            fieldSeparator: ',',
-                                                            quoteStrings: '"',
-                                                            decimalSeparator: '.',
-                                                            showLabels: true,
-                                                            showTitle: true,
-                                                            title: 'Reporte',
-                                                            useTextFile: false,
-                                                            useBom: true,
-                                                            useKeysAsHeaders: true,
-                                                            filename: 'reporte',
-                                                        };
-                                                        const csvExporter = new ExportToCsv(options);
-                                                        csvExporter.generateCsv(tasks.message);
-                                                    }}
+                                                    onClick={DownloadData}
                                                 >
                                                     Exportar <i className="bx bxs-download"></i>
                                                 </button>
@@ -612,15 +628,17 @@ const TaskView = (props: TasksViewProps) => {
                                         {/* task list start */}
                                         <TaskList
                                             fetchData={() => {
-                                                if (tasks.data.length < props.GetTasks.meta.total) {
+                                                if(!props.isLoading){
                                                     setReload(false)
-
+                                                    console.log("fetchData")
                                                     props.onGetTasksAsync({
                                                         token: props.token,
                                                         page: tasks.meta.current_page + 1,
                                                         perPage: 10,
                                                     })
                                                 }
+                                                   
+                                                
                                             }}
                                             items={tasks.data.map((item) => {
                                                 return {
@@ -649,7 +667,7 @@ const TaskView = (props: TasksViewProps) => {
                                             })}
                                             onChecked={handleCloseTask}
                                             key={1}
-                                            hasMore={tasks.data.length < props.GetTasks.meta.total}
+                                            hasMore={props.GetTasks.meta.current_page !== props.GetTasks.meta.last_page}
                                         />
                                         {/* task list end */}
                                         <div className="no-results">

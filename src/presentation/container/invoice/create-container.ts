@@ -5,13 +5,13 @@ import { CreateInvoiceStateProps } from 'application/models/invoice';
 import { CreateInvoiceRequest } from 'infrastructure/api/invoice/interface';
 import { GetClientsResponse } from 'infrastructure/api/clients/interface';
 import { GetProductsResponse } from 'infrastructure/api/products/interface';
+import { CatalogueState } from 'application/models/core';
 
 
 
 
 export interface CreateInvoiceProps {
     CreateInvoice: CreateInvoiceStateProps;
-    onGetClientsAsync: (payload: HeaderProps) => void;
     onCreateInvoiceAsync:(props:{
         body:CreateInvoiceRequest;
         headers:HeaderProps;
@@ -20,20 +20,19 @@ export interface CreateInvoiceProps {
     token: string;
     title: string;
     breadcrumbs: string[];
-    onGetProductsAsync:(props:HeaderProps)=>void;
-    GetProducts:GetProductsResponse
+    GetProducts:GetProductsResponse;
+    catalogues: CatalogueState
 }
 
 
 
-const mapStateToProps = ({ INVOICE , AUTH,CLIENTS,PRODUCTS}: any, ownProps:any) => {
+const mapStateToProps = ({ INVOICE , AUTH, CORE}: any, ownProps:any) => {
     return {
         CreateInvoice: INVOICE.CreateInvoice,
-        GetClients: CLIENTS.GetClients.data,
-        token: AUTH.Session.data.message.token,
+        token: AUTH.Session.data.token,
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
-        GetProducts: PRODUCTS.GetProducts.data,
+        catalogues: CORE.catalogues,
     };
 }
 
@@ -46,8 +45,6 @@ const mapDispatchToProps = ({ INVOICE,CLIENTS,PRODUCTS }: any) => {
             body:CreateInvoiceRequest;
             headers:HeaderProps;
         })=> INVOICE.onCreateInvoiceAsync(props),
-        onGetClientsAsync:(props:HeaderProps)=>CLIENTS.onGetClientsAsync(props),
-        onGetProductsAsync:(props:HeaderProps)=>PRODUCTS.onGetProductsAsync(props),
     };
 }
 

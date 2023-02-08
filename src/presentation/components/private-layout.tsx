@@ -1,9 +1,11 @@
 import { getStatusInstallation } from 'application/common';
+import { useSocket } from 'application/common/hooks/use-socket';
 import { initLogin } from 'application/models/auth';
 import { notification } from 'application/models/notifications';
 import { auth_interfaces } from 'infrastructure/api/auth';
 import { search_interface } from 'infrastructure/api/search';
 import { user_interface } from 'infrastructure/api/users';
+import Footer from 'infrastructure/components/footer';
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../application/common/hooks/use-auth";
@@ -58,14 +60,21 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
 
     }, [title])
 
+    useSocket({
+        type: "INCIDENT",
+        callBack: (payload: any) => {
+            console.log(payload)
+        }
+    });
+
 
     useEffect(() => {
-        if (token){
+        if (token) {
             props.getCataloguesAsync({
                 token: token as string
             })
         }
-        
+
     }, [token])
 
 
@@ -137,6 +146,8 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
                     </div>
                 </div>
             </div>
+
+            <Footer />
 
         </>
     )

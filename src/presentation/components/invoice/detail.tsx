@@ -1,7 +1,9 @@
+import { DOWNLOAD_INVOICE } from "application/common";
 import { initialClient } from "application/models/clients";
 import { initInvoice } from "application/models/invoice";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
+import { ExportData } from "infrastructure/api/core/request";
 import { invoice_interface } from "infrastructure/api/invoice";
 import { products_interface } from "infrastructure/api/products";
 import Input from "infrastructure/components/input";
@@ -246,7 +248,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             </p>
                                             <h6>Notas de la factura</h6>
                                             <p>
-                                               
+                                            {invoice.data.description}
                                             </p>
                                         </div>
                                         <div className="col-4 mt-2">
@@ -290,6 +292,30 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                 </div>
                 <div className="col-12 row ">
                     <div className="col-12 justify-content-end d-md-flex ">
+
+                        <button
+                            type="button"
+                            className="btn btn-lg btn-outline-primary m-2"
+                            onClick={() => {
+                                ExportData(DOWNLOAD_INVOICE+invoice.data.id,{
+                                    token:props.token,
+                                  }).pipe().subscribe((data)=>{
+                                    if(data.status==200){
+                                      const blob  = new Blob([data.data])
+                                      const url = window.URL.createObjectURL(blob);
+                                      const a = document.createElement('a');
+                                      a.setAttribute('hidden','');
+                                      a.setAttribute('href',url);
+                                      a.setAttribute('download',`factura-${invoice.data.id}.pdf`);
+                                      document.body.appendChild(a);
+                                      a.click();
+                                    }
+                                  })
+                            }}
+                        >
+                          <i className="bx bx-file"></i> Descargar
+                        </button>
+
                         <Link
                             type="button"
                             className="btn btn-lg btn-outline-dark m-2"

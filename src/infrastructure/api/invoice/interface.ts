@@ -51,18 +51,26 @@ interface ProductInvoice{
 
 interface CreateInvoiceRequest {
   
-    billingDate: string;
-    clientID: string;
-    NumeroIdentificacionFiscal: string;
-    products: ProductInvoice[];
+   
+    billingAt: string;
+    taxIdentificationNumber: string;
     workReport: string;
     workDirection: string;
-    clientDiscount: number;
     discount: number;
-    IVA: number;
-    impuestosVariables: number;
-    paymentMethod: string;
-    note: string;
+    clientDiscount: number;
+    iva: number;
+    variableTaxes: number;
+    description: string;
+    client: {
+        id: number;
+    },
+    paymentMethod: {
+        id: number;
+    },
+    detailsInvoice: {
+        amount: number;
+        productId: number;
+    }[]
 }
 
 export type {

@@ -8,6 +8,8 @@ import { personal_interface } from 'infrastructure/api/personal';
 import { ToastProps } from "infrastructure/components/toast";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { initPersonal } from "application/models/personal";
+import { ExportData } from "infrastructure/api/core/request";
+import { EXPORT_STAFF } from "application/common";
 
 
 const PersonalView = (props: PersonalViewProps) => {
@@ -136,6 +138,30 @@ const PersonalView = (props: PersonalViewProps) => {
     setShowModal(false);
   }
 
+  const DownloadData = ()=>{
+    ExportData(EXPORT_STAFF,{
+      token:props.token,
+      
+    }).pipe().subscribe((data)=>{
+      //donwload excel file
+      //attachment; filename=clients-report-probulon.xlsx
+
+      if(data.status==200){
+
+        const blob  = new Blob([data.data])
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden','');
+        a.setAttribute('href',url);
+        a.setAttribute('download','personal-reporte-probulon.xlsx');
+        document.body.appendChild(a);
+        a.click();
+
+      }
+    })
+  }
+
+
   return (
     <div className="row" id="table-borderless">
       <div className="col-12 mb-2">
@@ -187,6 +213,7 @@ const PersonalView = (props: PersonalViewProps) => {
                 page,
               });
             }}
+            onDownload={DownloadData}
             isLoading={load}
           />
         </div>

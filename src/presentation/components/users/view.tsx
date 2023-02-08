@@ -8,6 +8,8 @@ import Modal from "infrastructure/components/modal";
 import { ToastProps } from "infrastructure/components/toast";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { initUser } from "application/models/users";
+import { ExportData } from "infrastructure/api/core/request";
+import { EXPORT_USERS } from "application/common";
 
 const UserView = (props: UsersViewProps) => {
   useTitle(props.title);
@@ -105,6 +107,30 @@ const UserView = (props: UsersViewProps) => {
     setShowModal(false);
   }
 
+  const DownloadData = ()=>{
+    ExportData(EXPORT_USERS,{
+      token:props.token,
+      
+    }).pipe().subscribe((data)=>{
+      //donwload excel file
+      //attachment; filename=clients-report-probulon.xlsx
+
+      if(data.status==200){
+
+        const blob  = new Blob([data.data])
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden','');
+        a.setAttribute('href',url);
+        a.setAttribute('download','tareas-reporte-probulon.xlsx');
+        document.body.appendChild(a);
+        a.click();
+
+      }
+    })
+  }
+
+  
   return (
     <div className="row" id="table-borderless">
       <div className="col-12 mb-2">
@@ -151,6 +177,7 @@ const UserView = (props: UsersViewProps) => {
               });
             }}
             isLoading={load}
+            onDownload={DownloadData}
           />
         </div>
       </div>

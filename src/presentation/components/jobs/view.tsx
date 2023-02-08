@@ -3,7 +3,7 @@ import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initJob } from "application/models/jobs";
 import { ExportToCsv } from "export-to-csv";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
-import { clients_interface } from "infrastructure/api/clients";
+import { clients_interface, clients_request } from "infrastructure/api/clients";
 import { jobs_interface } from "infrastructure/api/jobs";
 import FilterLabel from "infrastructure/components/filter-label";
 import Input from "infrastructure/components/input";
@@ -20,7 +20,11 @@ import { ViewJobsProps } from "presentation/container/jobs/view-container";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SelectReact from 'react-select';
-import { JOB_PRIORITY_HIGH,JOB_PRIORITY_HALF,JOB_PRIORITY_LOW } from "application/common";
+import { JOB_PRIORITY_HIGH,JOB_PRIORITY_HALF,JOB_PRIORITY_LOW, CATALOGUE_TYPE_TASK, CATALOGUE_TYPE_JOB, CATALOGUE_TYPE_JOB_PRIORITY, EXPORT_JOBS } from "application/common";
+import { interface_core } from "infrastructure/api/core";
+import AsyncSelect from "react-select/async";
+import { personal_request } from "infrastructure/api/personal";
+import { ExportData } from "infrastructure/api/core/request";
 
 
 
@@ -66,6 +70,11 @@ const ViewJobs = (props: ViewJobsProps) => {
 
 
     const [form, setForm] = useState<jobs_interface.Job>(initJob)
+    const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
+
+    useEffect(() => {
+        setCatalogues(props.catalogue.data.data);
+    }, [props.catalogue])
 
     useEffect(() => {
         props.onGetJobsAsync({
@@ -140,6 +149,14 @@ const ViewJobs = (props: ViewJobsProps) => {
                 type: "success",
                 visible: true
             })
+            setTimeout(() => {
+                setMessage({
+                    type: "info",
+                    visible: false,
+                    title: "",
+                    description: "",
+                })
+            }, 3000)
             return;
         }
 
@@ -150,6 +167,14 @@ const ViewJobs = (props: ViewJobsProps) => {
                 type: "danger",
                 visible: true
             })
+            setTimeout(() => {
+                setMessage({
+                    type: "info",
+                    visible: false,
+                    title: "",
+                    description: "",
+                })
+            }, 3000)
             return;
         }
     }, [props.CreateJob])
@@ -188,6 +213,7 @@ const ViewJobs = (props: ViewJobsProps) => {
         }
 
     }, [props.CloseJob])
+    
 
     useEffect(() => {
         setJobs({
@@ -222,12 +248,12 @@ const ViewJobs = (props: ViewJobsProps) => {
 
     const handleSave = () => {
 
-       /* props.onCreateJobAsync({
+       props.onCreateJobAsync({
             body: form,
             headers: {
                 token: props.token
             }
-        })*/
+        })
 
         props.onGetJobsAsync({
             token: props.token
@@ -270,6 +296,96 @@ const ViewJobs = (props: ViewJobsProps) => {
     const handleSelect = (item: jobs_interface.Job) => {
         setForm(item)
         setShow(true)
+    }
+
+    
+    const getListByCode = (code: string) => {
+        return catalogue.filter((item) => item.type.code === code).map((item) => {
+            return {
+                label: item.name,
+                value: item.id
+            }
+        })
+    }
+
+    const handleChangeSelect = (
+        event: React.FormEvent<HTMLSelectElement>
+      ) => {
+        setForm({
+          ...form,
+          [event.currentTarget.name]: {
+            id: event.currentTarget.value
+          },
+        });
+      };
+
+      
+      const DownloadData = ()=>{
+        ExportData(EXPORT_JOBS,{
+          token:props.token,
+          
+        }).pipe().subscribe((data)=>{
+          //donwload excel file
+          //attachment; filename=clients-report-probulon.xlsx
+    
+          if(data.status==200){
+    
+            const blob  = new Blob([data.data])
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden','');
+            a.setAttribute('href',url);
+            a.setAttribute('download','trabajos-reporte-probulon.xlsx');
+            document.body.appendChild(a);
+            a.click();
+    
+          }
+        })
+      }
+
+
+      const searchPersonal = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            personal_request.GetPersonal({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.firstName + " " + item.firstSurname + " / " + item.documentValue,
+                        value: item.id,
+                        item: item
+                    }
+                }) || [])
+            })
+        }
+
+
+    }
+
+    const searchClient = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            clients_request.GetClients({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.firstName + " " + item.firstSurname + " / " + item.documentValue,
+                        value: item.id,
+                        item: item
+                    }
+                }) || [])
+            })
+        }
+
+
     }
 
     return (
@@ -361,95 +477,109 @@ const ViewJobs = (props: ViewJobsProps) => {
                     title="Nuevo Trabajo"
                     onClose={() => setShow(!show)}
                     show={show}
-
                 >
                     <>
-                            <label htmlFor="idClient">Cliente</label>
-                        <SelectReact
-                            isSearchable={true}
-                            name="idClient"
-                            options={clients.data.map(e => ({
-                                value: e.id,
-                                label: e.firstName + " " + e.secondName
-                            }))}
-                            placeholder="Seleccione un Cliente"
-                            onChange={
-                                (e: any) => {
-                                    setForm({
-                                        ...form,
-                                        //idClient: e.value,
-                                    })
-                                }
-                            }
-
-
+                        <Select
+                            name="type"
+                            label="Tipo"
+                            options={getListByCode(CATALOGUE_TYPE_JOB)}
+                            onChange={handleChangeSelect}
+                            selected={form.type.id}
+                            disabled={form.id !== 0}
                         />
 
-                        <Input
+                        
+                        <Select
+                            name="priority"
+                            options={getListByCode(CATALOGUE_TYPE_JOB_PRIORITY)}
+                            label="Prioridad"
+                            selected={form.priority.id}
+                            disabled={form.id !== 0}
+                            onChange={handleChangeSelect}
+
+                        />
+                       
+                       <Input
                             label="Dirección"
                             placeholder="Dirección"
                             type="text"
                             name="direction"
                             onChange={handleChange}
                             value={form.direction}
+                            enabled={form.id !== 0}
+
                         />
+
+                       <label htmlFor="technical">Técnico</label>
+                        <AsyncSelect
+                            isSearchable={true}
+                            name="technical"
+                            placeholder=""
+                            onChange={
+                                (e: any) => {
+                                    setForm({
+                                        ...form,
+                                        technical:e.item
+                                    })
+                                }
+                            }
+                            value={
+                                form.technical.id !== 0 ? {
+                                    label: form.technical.firstName+ " "+form.technical.firstSurname,
+                                    value: form.technical.id
+                                } : null
+                            }
+                            isDisabled={form.id !== 0}
+
+                            loadOptions={searchPersonal}
+                        />
+
+                        <label htmlFor="type">Cliente</label>
+                        <AsyncSelect
+                            isSearchable={true}
+                            name="client"
+                            placeholder=""
+                            onChange={
+                                (e: any) => {
+                                    setForm({
+                                        ...form,
+                                       client :e.item
+                                    })
+                                }
+                            }
+                            loadOptions={searchClient}
+                            value={
+                                form.client.id !== 0 ? {
+                                    label: form.client.firstName+ " "+form.client.firstSurname,
+                                    value: form.client.id
+                                } : null
+                            }
+                            isDisabled={form.id !== 0}
+                        />
+
+                        
+
                         <Input
-                            label="Nombre de contacto"
-                            placeholder="Dirección"
+                            label="Nombre Contacto"
+                            placeholder=""
                             type="text"
                             name="contactName"
                             onChange={handleChange}
                             value={form.contactName}
+                            enabled={form.id !== 0}
+
                         />
                         <Input
-                            label="Numero de contacto"
-                            placeholder="Numero de contacto"
-                            type="text"
+                            label="Telefono Contacto"
+                            placeholder=""
+                            type="tel"
                             name="contactPhone"
                             onChange={handleChange}
                             value={form.contactPhone}
-                        />
-                        <div className="form-group">
-                            <label htmlFor="">Observación Contacto</label>
-                            <textarea onChange={handleChange}
-                                name="obsContact"
-                                className="form-control" placeholder="Descripción" rows={3} value={
-                                    form.contactName
-                                }></textarea>
-                        </div>
-
-                        <Input
-                            label="Tipo tarea"
-                            placeholder="Tipo tarea"
-                            type="text"
-                            name="type"
-                            onChange={handleChange}
-                            value={form.type.id+""}
+                            enabled={form.id !== 0}
 
                         />
-
-
-                        <Select
-                            label="Prioridad"
-                            options={[
-                                {
-                                    label: "Alta",
-                                    value: "Alta"
-                                },
-                                {
-                                    label: "Media",
-                                    value: "Media"
-                                },
-                                {
-                                    label: "Baja",
-                                    value: "Baja"
-                                }
-                            ]}
-                            name="priority"
-                            onChange={handleChange}
-                            selected={form.priority.id}
-
-                        />
+                        
                         <Input
                             label="Fecha intervención"
                             placeholder="Fecha intervención"
@@ -457,6 +587,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                             name="interveneAt"
                             onChange={handleChange}
                             value={form.interveneAt}
+                            enabled={form.id !== 0}
 
                         />
 
@@ -464,17 +595,23 @@ const ViewJobs = (props: ViewJobsProps) => {
                             <label htmlFor="">Descripción</label>
                             <textarea onChange={handleChange}
                                 name="description"
-                                className="form-control" placeholder="Descripción" rows={3} value={
-                                    form.description
-                                }></textarea>
+                                className="form-control" placeholder="Descripción" rows={3} value={form.description}
+                                disabled={form.id !== 0}
+                                ></textarea>
                         </div>
                         <Input
-                            label="Material"
-                            placeholder="Material"
+                            label="Materiales"
+                            placeholder="Materiales separados por coma"
                             type="text"
                             name="material"
-                            onChange={handleChange}
+                            onChange={(e)=>{
+                                setForm({
+                                    ...form,
+                                    materials:e.target.value.split(",")
+                                })
+                            }}
                             value={form.materials.map(e => e).join(",")}
+                            enabled={form.id !== 0}
 
                         />
                         <Input
@@ -484,6 +621,17 @@ const ViewJobs = (props: ViewJobsProps) => {
                             name="technical"
                             onChange={handleChange}
                             value={form.technical.firstName + " " + form.technical.secondName}
+                            enabled={form.id !== 0}
+
+                        />
+                        <Input
+                            label="Reporte de trabajo"
+                            placeholder="..."
+                            type="text"
+                            name="workReport"
+                            onChange={handleChange}
+                            value={form.workReport}
+                            enabled={form.id !== 0}
 
                         />
                         <div className="mt-1 d-flex justify-content-end">
@@ -511,22 +659,7 @@ const ViewJobs = (props: ViewJobsProps) => {
                                             {
                                                 element: <button
                                                     className="btn btn-primary "
-                                                    onClick={() => {
-                                                        const options = {
-                                                            fieldSeparator: ',',
-                                                            quoteStrings: '"',
-                                                            decimalSeparator: '.',
-                                                            showLabels: true,
-                                                            showTitle: true,
-                                                            title: 'Reporte',
-                                                            useTextFile: false,
-                                                            useBom: true,
-                                                            useKeysAsHeaders: true,
-                                                            filename: 'reporte',
-                                                        };
-                                                        const csvExporter = new ExportToCsv(options);
-                                                        csvExporter.generateCsv(jobs.message);
-                                                    }}
+                                                    onClick={DownloadData}
                                                 >
                                                     Exportar <i className="bx bxs-download"></i>
                                                 </button>
@@ -566,15 +699,14 @@ const ViewJobs = (props: ViewJobsProps) => {
                                             onChecked={handleCloseJob}
                                             key={1}
                                             fetchData={()=>{
-                                                if(jobs.data.length<props.GetJobs.meta.total){
-                                                    props.onGetJobsAsync({
-                                                        token: props.token,
-                                                        page: props.GetJobs.meta.current_page + 1,
-                                                        
-                                                    })
-                                                }
+                                                props.onGetJobsAsync({
+                                                    token: props.token,
+                                                    page: jobs.meta.current_page + 1,
+                                                    
+                                                })
+                                                
                                             }}
-                                            hasMore={jobs.data.length<props.GetJobs.meta.total}
+                                            hasMore={jobs.meta.current_page !== props.GetJobs.meta.last_page}
                                         />
                                         {/* task list end */}
                                         <div className="no-results">

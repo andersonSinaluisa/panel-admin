@@ -1,7 +1,9 @@
+import { DOWNLOAD_INVOICE, EXPORT_INVOICES } from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initInvoice } from "application/models/invoice";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
+import { ExportData } from "infrastructure/api/core/request";
 import { invoice_interface } from "infrastructure/api/invoice";
 import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
@@ -79,13 +81,59 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
         onClick: (item: any) => {
           navigate(`/inicio/facturas/${item.id}`)
         },
-      },
+      },{
+        //donwload pdf
+        color: "primary",
+        icon: "bx bx-download",
+        label: "Descargar",
+        name: "download",
+        onClick: (item: any) => {
+          ExportData(DOWNLOAD_INVOICE+item.id,{
+            token:props.token,
+          }).pipe().subscribe((data)=>{
+            if(data.status==200){
+              const blob  = new Blob([data.data])
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.setAttribute('hidden','');
+              a.setAttribute('href',url);
+              a.setAttribute('download',`factura-${item.id}.pdf`);
+              document.body.appendChild(a);
+              a.click();
+            }
+          })
+        },
+      }
      
 
     )
 
     return actions;
   }
+
+  const DownloadData = ()=>{
+    ExportData(EXPORT_INVOICES,{
+      token:props.token,
+      
+    }).pipe().subscribe((data)=>{
+      //donwload excel file
+      //attachment; filename=clients-report-probulon.xlsx
+
+      if(data.status==200){
+
+        const blob  = new Blob([data.data])
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden','');
+        a.setAttribute('href',url);
+        a.setAttribute('download','facturas-reporte-probulon.xlsx');
+        document.body.appendChild(a);
+        a.click();
+
+      }
+    })
+  }
+  
   return (
     <div className="row" id="table-borderless">
       <div className="col-12 mb-2">
@@ -137,6 +185,7 @@ const ViewInvoices = (props: ViewInvoicesProps) => {
             }}
             meta={invoices.meta}
             isLoading={load}
+            onDownload={DownloadData}
           />
         </div>
       </div>

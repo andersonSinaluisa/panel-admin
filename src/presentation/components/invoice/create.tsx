@@ -1,9 +1,14 @@
+import { CATALOGUE_TYPE_INVOICE_PAYMENT_METHOD } from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initialClient } from "application/models/clients";
+import { initInvoice } from "application/models/invoice";
+import { initProduct } from "application/models/products";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
-import { clients_interface } from "infrastructure/api/clients";
+import { clients_interface, clients_request } from "infrastructure/api/clients";
+import { interface_core } from "infrastructure/api/core";
 import { invoice_interface } from "infrastructure/api/invoice";
-import { products_interface } from "infrastructure/api/products";
+import { CreateInvoiceRequest } from "infrastructure/api/invoice/interface";
+import { products_interface, products_request } from "infrastructure/api/products";
 import Input from "infrastructure/components/input";
 import Select from "infrastructure/components/select";
 import Toast, { ToastProps } from "infrastructure/components/toast";
@@ -11,6 +16,7 @@ import { CreateInvoiceProps } from "presentation/container/invoice/create-contai
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SelectReact from 'react-select';
+import AsyncSelect from "react-select/async";
 
 
 const CreateInvoice = (props: CreateInvoiceProps) => {
@@ -21,13 +27,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
     useTitle(props.title)
     useBreadcrumbs(props.breadcrumbs)
 
-    const [clients, setClients] = useState<clients_interface.GetClientsResponse>({
-        data: [],
-        ...initialMetaResponse
-    });
 
-
-    const [client, setClient] = useState<clients_interface.Client>(initialClient)
     const [message, setMessage] = useState<ToastProps>({
         type: "info",
         visible: false,
@@ -35,39 +35,30 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
         description: "",
     });
 
-    const [products, setProducts] = useState<products_interface.GetProductsResponse>({
-        data: [],
-        ...initialMetaResponse
-    });
+    const [form, setForm] = useState<invoice_interface.Invoice>(initInvoice)
+    const [catalogue, setCatalogues] = useState<interface_core.State[]>([])
 
-    const [itemProduct, setItemProduct] = useState<invoice_interface.ProductInvoice[]>([
-        {
-            productId: 0,
-            amount: 0,
+    useEffect(() => {
+
+        if (props.catalogues.status == 200) {
+          setCatalogues(props.catalogues.data.data)
+          return;
         }
-    ])
-
-    const [form, setForm] = useState<invoice_interface.CreateInvoiceRequest>({
-        billingDate: "",
-        clientDiscount: 0,
-        clientID: "",
-        discount: 0,
-        impuestosVariables: 0,
-        IVA: 0,
-        note: "",
-        paymentMethod: "",
-        NumeroIdentificacionFiscal: "",
-        products: [],
-        workDirection: "",
-        workReport: "",
-
-    })
-
-
+        if (props.catalogues.status != 0) {
+          setMessage({
+            description: props.catalogues.error,
+            title: "Error",
+            type: "danger",
+            visible: true
+          })
+          return;
+        }
+    
+      }, [props.catalogues])
 
 
     useEffect(() => {
-        if (props.CreateInvoice.status === 201) {
+        if (props.CreateInvoice.status === 200) {
             setMessage({
                 type: "success",
                 visible: true,
@@ -94,22 +85,20 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
 
 
 
-    useEffect(() => {
-        props.onGetClientsAsync({
-            token: props.token,
-        })
-        props.onGetProductsAsync({
-            token: props.token,
-        })
-    }, [])
-
-    useEffect(() => {
-        setProducts(props.GetProducts)
-        setClients(props.GetClients);
-    }, [props.GetClients, props.GetProducts])
 
 
 
+
+    const handleChangeSelect = (
+        event: React.FormEvent<HTMLSelectElement>
+      ) => {
+        setForm({
+          ...form,
+          [event.currentTarget.name]: {
+            id: event.currentTarget.value
+          },
+        });
+      };
 
     const handleChange = (
         event: React.FormEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -121,105 +110,98 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
     };
 
     const handleAddProduct = () => {
-        setItemProduct([
-            ...itemProduct,
-            {
-                productId: 0,
+
+        setForm({
+            ...form,
+            invoiceDetails: [...form.invoiceDetails, {
                 amount: 0,
-            },
-        ]);
+                availability: {
+                    code: "",
+                    createdAt: "",
+                    deletedAt  : "",
+                    id: 0,
+                    name: "",
+                    type: {
+                        code: "",
+                        createdAt: "",
+                        deletedAt: "",
+                        id: 0,
+                        name: "",
+                        updatedAt: "",
+                    },
+                    updatedAt: "",
+                },
+                createdAt: "",
+                deletedAt: "",
+                id: 0,
+                product: initProduct,
+                state: {
+                    code: "",
+                    createdAt: "",
+                    deletedAt: "",
+                    id: 0,
+                    name: "",
+                    type: {
+                        code: "",
+                        createdAt: "",
+                        deletedAt: "",
+                        id: 0,
+                        name: "",
+                        updatedAt: "",
+                    },
+                    updatedAt: "",
+                },
+                updatedAt: "",
+            }]
+        });
+
     };
 
 
     const handleSubmit = () => {
         //validadte form
-
-        form.products = itemProduct
-        if (form.clientID === "") {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Debe seleccionar un cliente",
-            });
-            return;
-
-
-        }
-
-        if (form.products.length === 0) {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Debe agregar al menos un producto",
-            });
-            return;
-
-
-        }
-
-        if (form.workDirection === "") {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Debe agregar una dirección de trabajo",
-            });
-            return;
-
-
-        }
-
-        if (form.workReport === "") {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Debe agregar un reporte de trabajo",
-            });
-            return;
-
-
-        }
-
-        if (form.paymentMethod === "") {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Debe agregar un metodo de pago",
-            });
-            return;
-
-
-        }
-
-        if (form.billingDate === "") {
-            setMessage({
-                type: "danger",
-                visible: true,
-                title: "Error",
-                description: "Debe agregar una fecha de facturación",
-            });
-            return;
-
-
+        form.iva = parseFloat(totalInvoiceWithIva());
+        form.discount = form.clientDiscount;
+        let data:CreateInvoiceRequest = {
+            billingAt: form.billingDate,
+            client: form.client,
+            clientDiscount: form.clientDiscount,
+            description: form.description,
+            
+            detailsInvoice: [
+                ...form.invoiceDetails.map((item) => {
+                    return {
+                        amount: item.amount,
+                        productId: item.product.id,
+                    }
+                })
+            ],
+            discount: form.discount,
+            iva: form.iva,
+            paymentMethod: form.paymentMethod,
+            taxIdentificationNumber: form.taxIdentificationNumber,
+            
+            variableTaxes: form.variableTaxes,
+            workDirection: form.workDirection,
+            workReport: form.workReport,
         }
 
         props.onCreateInvoiceAsync({
             headers: {
                 token: props.token,
             },
-            body: form
+            body: data
         })
 
     }
 
 
     const removeLastItem = () => {
-        if (itemProduct.length > 1) {
-            setItemProduct(itemProduct.slice(0, -1));
+        if (form.invoiceDetails.length > 1) {
+            setForm({
+                ...form,
+                invoiceDetails: form.invoiceDetails.slice(0, -1),
+            });
         }
     };
 
@@ -231,42 +213,157 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
         event: React.FormEvent<HTMLInputElement | HTMLSelectElement>,
         index: number
     ) => {
-        const newItems = [...itemProduct];
+        const newItems = [...form.invoiceDetails];
 
 
         newItems[index] = {
             ...newItems[index],
             [event.currentTarget.name]: event.currentTarget.value,
         };
+        
 
 
-        setItemProduct(newItems);
+        setForm({
+            ...form,
+            invoiceDetails: newItems,
+        })
     };
 
 
     const handleSelectedProduct = (
-        event: React.FormEvent<HTMLSelectElement>,
+        event:any,
         index: number
     ) => {
-        const newItems = [...itemProduct];
-        const product = products.data.find(
-            (product) => product.id + "" === event.currentTarget.value
-        );
+        const newItems = [...form.invoiceDetails];
 
-        if (product) {
-            newItems[index] = {
-                productId: product.id,
-                amount: 0,
-            }
+        newItems[index] =  {
+            amount: 0,
+            availability: {
+                code: "",
+                createdAt: "",
+                deletedAt  : "",
+                id: 0,
+                name: "",
+                type: {
+                    code: "",
+                    createdAt: "",
+                    deletedAt: "",
+                    id: 0,
+                    name: "",
+                    updatedAt: "",
+                },
+                updatedAt: "",
+            },
+            createdAt: "",
+            deletedAt: "",
+            id: 0,
+            product: event.item,
+            state: {
+                code: "",
+                createdAt: "",
+                deletedAt: "",
+                id: 0,
+                name: "",
+                type: {
+                    code: "",
+                    createdAt: "",
+                    deletedAt: "",
+                    id: 0,
+                    name: "",
+                    updatedAt: "",
+                },
+                updatedAt: "",
+            },
+            updatedAt: "",
         }
 
-        setItemProduct(newItems);
+        setForm({
+            ...form,
+            invoiceDetails: newItems
+        })
     };
 
 
     const handleSelectClient = (event: any) => {
+        setForm({
+            ...form,
+            client: event.item
+        })
+    }
+
+
+    const getListByCode = (code: string) => {
+        return catalogue.filter((item) => item.type.code === code).map((item) => {
+          return {
+            label: item.name,
+            value: item.id
+          }
+        })
+      }
+
+    
+
+    const totalInvoice = () => {
+        let total = form.invoiceDetails.reduce((total, item) => {
+            return total + (item.amount * parseFloat(item.product.priceForPublic))
+        }, 0)
+        return parseFloat(total.toFixed(2))
+    }
+
+    const totalInvoiceWithIva = () => {
+        let total = totalInvoice() * 0.21 
+        return total.toFixed(2)
+    }
+
+
+    const totalInvoiceWithIvaAndDiscount = () => {
+        let total = totalInvoice() + parseFloat(totalInvoiceWithIva()) - form.clientDiscount
+        return total.toFixed(2)
+    }
+
+    const searchClient = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            clients_request.GetClients({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.firstName + " " + item.firstSurname + " / " + item.documentValue,
+                        value: item.id,
+                        item: item
+                    }
+                }) || [])
+            })
+        }
+
 
     }
+
+
+    const searchProduct = (inputValue: string, callback: (options: any[]) => void) => {
+
+        if (inputValue.length > 3) {
+            products_request.GetProducts({
+                token: props.token,
+                page: 1,
+                perPage: 100,
+                search: inputValue
+            }).toPromise().then((res) => {
+                callback(res?.data?.data?.map((item) => {
+                    return {
+                        label: item.name,
+                        value: item.id,
+                        item: item
+                    }
+                }) || [])
+            })
+        }
+    }
+
 
     return (
         <section className="invoice-edit-wrapper">
@@ -284,8 +381,9 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                         <Input
                                             label="N° Factura"
                                             type="text"
-                                            name="numeroFactura"
+                                            name="taxIdentificationNumber"
                                             onChange={handleChange}
+                                            value={form.taxIdentificationNumber}
                                         />
                                         <Input
                                             label="Fecha factura"
@@ -299,7 +397,7 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             label="Código Cliente"
                                             type="text"
                                             name="code"
-                                            value={""}
+                                            value={form.client?.id+""}
                                             enabled={true}
 
                                         />
@@ -307,34 +405,33 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             label="SU PEDIDO"
                                             type="text"
                                             name="code"
+                                            enabled={true}
+                                            value={form.taxIdentificationNumber}
+
                                         />
                                     </div>
                                     <div className="col-3"></div>
                                     <div className="col-4">
                                         <h4>Datos Fiscales</h4>
                                         <label htmlFor="clientID">Cliente</label>
-                                        <SelectReact
-                                            name="clientID"
-                                            options={clients.data.map((client) => ({
-                                                value: client.id,
-                                                label: client.firstName + " " + client.secondName,
-                                            }))}
+                                        <AsyncSelect
+                                            name="client"
+                                            loadOptions={searchClient}
                                             onChange={handleSelectClient}
-
                                         />
                                         <Input
                                             label="Dirección"
                                             type="text"
                                             name="direction"
-                                            value={""}
                                             enabled={true}
+                                            value={form.client?.direction}
                                         />
 
                                         <Input
                                             label="Código Postal"
                                             type="text"
                                             name="direction"
-                                            value={""}
+                                            value={form.client?.postalCode}
                                             enabled={true}
                                         />
                                         <Input
@@ -342,12 +439,14 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             type="text"
                                             name="direction"
                                             enabled={true}
+                                            value={form.client?.province}
                                         />
                                         <Input
-                                            label="C.I.F. / N.I.F."
+                                            label={form.client?.documentType.name}
                                             type="text"
                                             name="direction"
                                             enabled={true}
+                                            value={form.client?.documentValue}
                                         />
                                     </div>
                                 </div>
@@ -378,53 +477,47 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                         <div className="invoice-item-filed row col-12 ">
 
                                                             {
-                                                                itemProduct.map((item, index) => (
+                                                                form.invoiceDetails.map((item, index) => (
                                                                     <>
 
                                                                         <div className="col-md-1 col-12 form-group">
                                                                             <Input
                                                                                 label=""
-                                                                                name="quantity"
+                                                                                name="amount"
                                                                                 type="number"
                                                                                 onChange={(event) => handleItemValue(event, index)}
-                                                                                value={""}
+                                                                                value={form.invoiceDetails[index].amount+""}
                                                                             />
                                                                         </div>
 
                                                                         <div className="col-12 col-md-2 mt-1">
-                                                                            <Select
-                                                                                label=""
-                                                                                name="productID"
-                                                                                options={products.data.map((product) => {
-                                                                                    return {
-                                                                                        value: product.id,
-                                                                                        label: product.code,
-                                                                                    }
-                                                                                }
-                                                                                )}
+                                                                            <AsyncSelect
+                                                                                name="product"
                                                                                 onChange={(event) => handleSelectedProduct(event, index)}
-                                                                                selected={
-                                                                                    item.productId
-                                                                                }
+                                                                                loadOptions={searchProduct}
                                                                             />
                                                                         </div>
                                                                         <div className="col-md-2 col-12  form-group mt-2">
                                                                             {
-                                                                                "00000"
+                                                                                form.invoiceDetails[index].product?.code
                                                                             }
                                                                         </div>
                                                                         <div className="col-md-4 col-12 form-group mt-2">
-                                                                            {products.data.find((product) => product.id === item.productId) && (
-                                                                                products.data.find((product) => product.id === item.productId)?.description
-                                                                            )}
+                                                                            {
+                                                                                form.invoiceDetails[index].product?.description
+                                                                            }
                                                                         </div>
 
 
                                                                         <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ {"0000"}</strong>
+                                                                            <strong className="text-primary align-middle">$ {
+                                                                                form.invoiceDetails[index].product?.priceForPublic
+                                                                            }</strong>
                                                                         </div>
                                                                         <div className="col-md-1 col-12 form-group mt-2">
-                                                                            <strong className="text-primary align-middle">$ 0000</strong>
+                                                                            <strong className="text-primary align-middle">$ {
+                                                                                parseFloat(form.invoiceDetails[index].product?.priceForPublic) * form.invoiceDetails[index].amount
+                                                                            }</strong>
                                                                         </div>
 
                                                                         <div className="col-12">
@@ -472,22 +565,13 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             <Select
                                                 label=""
                                                 name="paymentMethod"
-                                                options={[
-                                                    {
-                                                        value: "Efectivo",
-                                                        label: "Efectivo",
-                                                    },
-                                                    {
-                                                        value: "Tarjeta",
-                                                        label: "Tarjeta",
-                                                    },
-                                                ]}
-                                                onChange={handleChange}
+                                                options={getListByCode(CATALOGUE_TYPE_INVOICE_PAYMENT_METHOD)}
+                                                onChange={handleChangeSelect}
                                                 selected={
-                                                    form.paymentMethod
+                                                    form.paymentMethod.id
                                                 }
                                             />
-                                            <textarea name="note" id="note" cols={30} rows={10}
+                                            <textarea name="description" id="note" cols={30} rows={10}
                                                 className="form-control mt-1" placeholder="Nota"
                                                 onChange={handleChange}
                                             />
@@ -496,7 +580,9 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Importe Neto</span>
-                                                    <span className="invoice-value">0000</span>
+                                                    <span className="invoice-value">
+                                                        $ {totalInvoice()}
+                                                    </span>
                                                 </div>
 
                                                 {
@@ -511,13 +597,17 @@ const CreateInvoice = (props: CreateInvoiceProps) => {
                                                 }
 
                                                 <div className="invoice-calc d-flex justify-content-between">
-                                                    <span className="invoice-title">IVA</span>
-                                                    <span className="invoice-value">21%</span>
+                                                    <span className="invoice-title">IVA (21%)</span>
+                                                    <span className="invoice-value">
+                                                        $ {
+                                                            totalInvoiceWithIva()
+                                                        }
+                                                    </span>
                                                 </div>
                                                 <hr />
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Total</span>
-                                                    <span className="invoice-value">$ 0.00</span>
+                                                    <span className="invoice-value">$ {totalInvoiceWithIvaAndDiscount()}</span>
                                                 </div>
                                                 <div className="invoice-calc d-flex mt-3 justify-content-between">
                                                     <button className="btn btn-primary btn-block" onClick={handleSubmit}>

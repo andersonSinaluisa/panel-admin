@@ -23,12 +23,13 @@ export interface TasksViewProps{
     onDeleteTaskAsync:(props:{headers:HeaderProps,id:number})=>void;
     DeleteTask:DeleteTaskStateProps;
     catalogue: CatalogueState;
+    isLoading:boolean;
 
 }
 
 
 //connect to redux
-const mapStateToProps = ({AUTH,TASKS,USERS,CORE}:any,ownProps:any) => {
+const mapStateToProps = ({AUTH,TASKS,USERS,CORE,loading}:any,ownProps:any) => {
     return {
         token: AUTH.Session.data.token,
         title: ownProps.title,
@@ -39,6 +40,7 @@ const mapStateToProps = ({AUTH,TASKS,USERS,CORE}:any,ownProps:any) => {
         CloseTask:TASKS.CloseTask,
         DeleteTask:TASKS.DeleteTask,
         catalogue: CORE.catalogues,
+        isLoading: loading.effects.TASKS.onGetTasksAsync
 
     }
 }

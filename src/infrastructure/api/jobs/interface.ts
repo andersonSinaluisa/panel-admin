@@ -1,4 +1,5 @@
 import { MetaResponse } from "../api-handler";
+import { Client } from "../clients/interface";
 import { Availability, BackupEmailRelationship, DocumentType, Country, PersonType, Priority, Role, SecondaryEmailRelationship, State, StreetType, Type } from "../core/interface";
 
 interface Job{
@@ -59,6 +60,7 @@ interface Job{
     type: Type;
     priority: Priority;
     materials: string[];
+    client:Client;
 }
 
 

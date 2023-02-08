@@ -220,7 +220,7 @@ export const PRODUCTS = createModel<RootModel>()({
 
     },
     reducers: {
-        onGetProducts: (state, payload: GetProductsStateProps) => {
+        onGetProducts: (state, payload: any) => {
             return {
                 ...state,
                 GetProducts: payload
@@ -270,9 +270,9 @@ export const PRODUCTS = createModel<RootModel>()({
 
                 const response = await products_request.GetProducts(props).toPromise();
                 dispatch.PRODUCTS.onGetProducts({
-                    data: response.data,
+                    data: response?.data,
                     error: "",
-                    status: response.status
+                    status: response?.status
                 });
 
             } catch (e: any) {

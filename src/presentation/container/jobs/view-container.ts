@@ -5,6 +5,7 @@ import { CloseJobRequest, CreateJobRequest, GetJobsResponse } from "infrastructu
 import { } from 'application/models/jobs'
 import { CreateJobStateProps, DeleteJobStateProps, CloseJobStateProps } from "application/models/jobs";
 import { GetClientsResponse } from "infrastructure/api/clients/interface";
+import { CatalogueState } from "application/models/core";
 
 
 export interface ViewJobsProps {
@@ -22,12 +23,13 @@ export interface ViewJobsProps {
     breadcrumbs: string[];
     GetClients:GetClientsResponse;
     isLoading:boolean;
+    catalogue:CatalogueState
 }
 
 
 
 //connect to redux
-const mapStateToProps = ({ JOBS , AUTH,CLIENTS,loading}: any, ownProps:any) => {
+const mapStateToProps = ({ JOBS , AUTH,CLIENTS,loading,CORE}: any, ownProps:any) => {
     return {
         GetJobs: JOBS.GetJobs.data,
         CreateJob: JOBS.CreateJob,
@@ -37,7 +39,8 @@ const mapStateToProps = ({ JOBS , AUTH,CLIENTS,loading}: any, ownProps:any) => {
         title: ownProps.title,
         breadcrumbs: ownProps.breadcrumbs,
         GetClients: CLIENTS.GetClients.data,
-        isLoading:loading.effects.JOBS.onGetJobsAsync
+        isLoading:loading.effects.JOBS.onGetJobsAsync,
+        catalogue: CORE.catalogues
 
     };
 }

@@ -1,10 +1,12 @@
 import * as Globals from 'application/common';
+import { GetProductsStateProps } from 'application/models/products';
+import { Observable } from 'rxjs';
 import * as APIHANDLER from '../api-handler';
 import { CatalogProductRequest, CreateProductRequest, UpdateProductRequest, UpdateStockProductRequest } from './interface';
 
 
 
-const GetProducts = (props:APIHANDLER.HeaderProps)=>{
+const GetProducts = (props:APIHANDLER.HeaderProps):Observable<GetProductsStateProps>=>{
     let perPage = props.perPage || 15;
     let page = props.page || 1;
     return APIHANDLER.get(Globals.GET_PRODUCTS+"?perPage="+perPage+"&page="+page,{

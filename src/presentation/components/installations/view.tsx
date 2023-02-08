@@ -1,8 +1,9 @@
-import { getStatusInstallation ,status} from "application/common";
+import { EXPORT_CLIENTS, EXPORT_INSTALLATIONS, getStatusInstallation ,status} from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initialInstallation } from "application/models/installations";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
 import { clients_interface } from "infrastructure/api/clients";
+import { ExportData } from "infrastructure/api/core/request";
 import { installations_interface } from "infrastructure/api/installation";
 import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
@@ -159,7 +160,28 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
 
     //handle status update
 
+    const DownloadData = ()=>{
+      ExportData(EXPORT_INSTALLATIONS,{
+        token:props.token,
+        
+      }).pipe().subscribe((data)=>{
+        //donwload excel file
+        //attachment; filename=clients-report-probulon.xlsx
   
+        if(data.status==200){
+  
+          const blob  = new Blob([data.data])
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.setAttribute('hidden','');
+          a.setAttribute('href',url);
+          a.setAttribute('download','instalaciones-reporte-probulon.xlsx');
+          document.body.appendChild(a);
+          a.click();
+  
+        }
+      })
+    }
     return (
       <div className="row" id="table-borderless">
         <div className="col-12 mb-2">
@@ -229,6 +251,7 @@ const ViewInstallations = (props:ViewInstallationsProps)=>{
                 });
               }}
               isLoading={load}
+              onDownload={DownloadData}
             />
           </div>
         </div>

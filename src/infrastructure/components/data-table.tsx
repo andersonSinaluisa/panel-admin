@@ -41,7 +41,8 @@ export interface DataTableProps {
   },
   error?: string;
   onChangePage?: (page: number) => void;
-
+  onDownload?: () => void;
+  onSearch?: (search: string) => void;
 }
 
 
@@ -115,15 +116,10 @@ const DataTable = (props: DataTableProps) => {
   const onSearch = (event: React.ChangeEvent) => {
     const target: EventTarget & HTMLInputElement = event.target as EventTarget & HTMLInputElement;
     const search = target.value;
-    if (search === "") {
-      setDataTable(dataTable);
-      return;
+    if (props.onSearch) {
+      props.onSearch(search);
     }
-    const filteredData = dataTable.filter((item) =>
-      Object.values(item).some((value) => value.toString().includes(search))
-    );
-
-    setDataTable(filteredData);
+    
   };
 
   return (
@@ -145,23 +141,7 @@ const DataTable = (props: DataTableProps) => {
             <div className="col-6">
               <button
                 className="btn btn-primary "
-                onClick={() => {
-                  const options = {
-                    fieldSeparator: ',',
-                    quoteStrings: '"',
-                    decimalSeparator: '.',
-                    showLabels: true,
-                    showTitle: true,
-                    title: 'Reporte',
-                    useTextFile: false,
-                    useBom: true,
-                    useKeysAsHeaders: true,
-                    filename: 'reporte',
-                    headers: columns.map((column) => column.label),
-                  };
-                  const csvExporter = new ExportToCsv(options);
-                  csvExporter.generateCsv(data_table);
-                }}
+                onClick={props.onDownload}
               >
                 Exportar <i className="bx bxs-download"></i>
               </button>

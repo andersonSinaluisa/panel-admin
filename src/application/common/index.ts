@@ -356,6 +356,85 @@ export const DELETE_BILLING = "/core/invoices";
 
 
 
+///probulon/users-export
+/**
+ * @constant EXPORT_USERS
+ * @description Exportar usuarios
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_USERS = "/probulon/users-export";
+///probulon/clients-export
+/**
+ * @constant EXPORT_CLIENTS
+ * @description Exportar clientes
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_CLIENTS = "/probulon/clients-export";
+
+//probulon/installations-export
+/**
+ * @constant EXPORT_INSTALLATIONS
+ * @description Exportar instalaciones
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_INSTALLATIONS = "/probulon/installations-export";
+
+//probulon/staff-export
+/**
+ * @constant EXPORT_STAFF
+ * @description Exportar personal
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_STAFF = "/probulon/staff-export";
+
+//probulon/jobs-export
+/**
+ * @constant EXPORT_JOBS
+ * @description Exportar trabajos
+ * @type {string}
+ * @memberof Constants
+ * 
+ */
+export const EXPORT_JOBS = "/probulon/jobs-export";
+
+
+/**
+ * @constant EXPORT_TASKS
+ * @description Exportar tareas
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_TASKS = "/probulon/tasks-export";
+
+
+/**
+ * @constant EXPORT_WAREHOUSES
+ * @description Exportar almacenes
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_WAREHOUSES = "/probulon/warehouses-export";
+
+/**
+ * @constant EXPORT_INVOICES
+ * @description Exportar facturas
+ * @type {string}
+ * @memberof Constants
+ */
+export const EXPORT_INVOICES = "/probulon/invoices-export";
+
+/**
+ *  @constant DOWNLOAD_INVOICE
+ * @description Descargar factura
+ * @type {string}
+ * @memberof Constants
+ */
+export const DOWNLOAD_INVOICE = "/core/download-invoice/";
+
 /**
  * 
  * @constant errorEncountered
@@ -696,3 +775,30 @@ export const CATALOGUE_TYPE_TASK_PRIORITY = "catalogue_type_task_priority";
  * @memberof Constants
  * */
 export const CATALOGUE_TYPE_TASK = "catalogue_type_task";
+
+//catalogue_type_job
+/**
+ * @constant CATALOGUE_TYPE_JOB
+ * @description Tipo de trabajo
+ * @type {string}
+ * @memberof Constants
+ * */
+export const CATALOGUE_TYPE_JOB = "catalogue_type_job";
+
+
+/**
+ * @constant CATALOGUE_TYPE_JOB_PRIORITY
+ * @description Tipo de prioridad de trabajo
+ * @type {string}
+ * @memberof Constants
+ * */
+export const CATALOGUE_TYPE_JOB_PRIORITY = "catalogue_type_job_priority";
+
+
+/**
+ * @constant CATALOGUE_TYPE_INVOICE_PAYMENT_METHOD
+ * @description Tipo de método de pago
+ * @type {string}
+ * @memberof Constants
+ * */
+export const CATALOGUE_TYPE_INVOICE_PAYMENT_METHOD = "catalogue_type_invoice_payment_method";

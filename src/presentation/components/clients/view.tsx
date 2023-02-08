@@ -7,6 +7,8 @@ import Toast, { ToastProps } from "infrastructure/components/toast";
 import { ClientsViewProps } from "presentation/container/clients/view-container";
 import { clients_interface } from "infrastructure/api/clients";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
+import { ExportData } from "infrastructure/api/core/request";
+import { EXPORT_CLIENTS } from "application/common";
 
 const ClientsView = (props: ClientsViewProps) => {
   useTitle(props.title);
@@ -19,29 +21,29 @@ const ClientsView = (props: ClientsViewProps) => {
     ...initialMetaResponse
   });
 
-  const [itemSeleted,setItemSelected] = useState<clients_interface.Client|null>(null)
+  const [itemSeleted, setItemSelected] = useState<clients_interface.Client | null>(null)
   const [message, setMessage] = useState<ToastProps>({
     type: "info",
     visible: false,
     title: "",
     description: "",
   });
-  const [showModal,setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-  const [load,setLoad] = useState<boolean>(false)
+  const [load, setLoad] = useState<boolean>(false)
   useEffect(() => {
     setClients(props.ClientsData);
   }, [props.ClientsData]);
 
   useEffect(() => {
     setLoad(props.isLoading)
-  },[props.isLoading])
+  }, [props.isLoading])
 
-  
+
 
   //useEffect for DeleteClient
-  useEffect(() =>{
-    if(props.DeleteClient.status === 200){
+  useEffect(() => {
+    if (props.DeleteClient.status === 200) {
       setMessage({
         type: "success",
         visible: true,
@@ -63,7 +65,7 @@ const ClientsView = (props: ClientsViewProps) => {
       return;
     }
 
-    if(props.DeleteClient.status !== 0){
+    if (props.DeleteClient.status !== 0) {
       setMessage({
         type: "danger",
         visible: true,
@@ -81,60 +83,85 @@ const ClientsView = (props: ClientsViewProps) => {
       }, 3000);
       return;
     }
-    
 
-  },[props.DeleteClient])
+
+  }, [props.DeleteClient])
 
   useEffect(() => {
     props.onGetClientsAsync({
       token: props.token,
     });
     props.onClear()
-   
+
   }, []);
 
 
-  const getActions = ()=>{
-      let actions = [];
+  const getActions = () => {
+    let actions = [];
 
-      actions.push( {
-        color: "danger",
-        icon: "bx bx-trash-alt",
-        label: "Eliminar",
-        name: "delete",
-        onClick: (item: any) => {
-            setItemSelected(item);
-            setShowModal(true)
-        },
-      },{
-        color: "warning",
-        icon: "bx bx-edit-alt",
-        label: "Editar",
-        name: "edit",
-        onClick: (item: any) => {
-            navigate(`/inicio/clientes/${item.id}`)
-        },
-      })
-      
+    actions.push({
+      color: "danger",
+      icon: "bx bx-trash-alt",
+      label: "Eliminar",
+      name: "delete",
+      onClick: (item: any) => {
+        setItemSelected(item);
+        setShowModal(true)
+      },
+    }, {
+      color: "warning",
+      icon: "bx bx-edit-alt",
+      label: "Editar",
+      name: "edit",
+      onClick: (item: any) => {
+        navigate(`/inicio/clientes/${item.id}`)
+      },
+    })
 
-      return actions;
+
+    return actions;
   }
 
-  const handleDelete=(item:clients_interface.Client)=>{
+  const handleDelete = (item: clients_interface.Client) => {
     props.onDeleteClientAsync({
-      headers:{
-        token:props.token
+      headers: {
+        token: props.token
       },
-      id:item.id
+      id: item.id
     })
     setShowModal(false);
   }
+
+  const DownloadData = () => {
+    ExportData(EXPORT_CLIENTS, {
+      token: props.token,
+
+    }).pipe().subscribe((data) => {
+      //donwload excel file
+      //attachment; filename=clients-report-probulon.xlsx
+
+      if (data.status == 200) {
+
+        const blob = new Blob([data.data])
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'clients-report-probulon.xlsx');
+        document.body.appendChild(a);
+        a.click();
+
+      }
+    })
+  }
+
+
 
   return (
     <div className="row" id="table-borderless">
       <div className="col-12 mb-2">
         <Link to="/inicio/clientes/nuevo" className="btn btn-primary">
-          Nuevo Cliente 
+          Nuevo Cliente
         </Link>
       </div>
       <div className="col-12">
@@ -151,15 +178,15 @@ const ClientsView = (props: ClientsViewProps) => {
               },
               {
 
-                name:'firstName',
-                label:'Nombre',
-                type:'text'
+                name: 'firstName',
+                label: 'Nombre',
+                type: 'text'
               },
               {
 
-                name:'firstSurname',
-                label:'Apellido',
-                type:'text'
+                name: 'firstSurname',
+                label: 'Apellido',
+                type: 'text'
               },
 
               {
@@ -180,10 +207,29 @@ const ClientsView = (props: ClientsViewProps) => {
               props.onGetClientsAsync({
                 token: props.token,
                 page: page,
-                
+
               })
             }}
             isLoading={load}
+            onDownload={DownloadData}
+            onSearch={(search: string) => {
+
+              if (search.length == 0) {
+                props.onGetClientsAsync({
+                  token: props.token,
+                });
+                return;
+              }
+              if (search.length > 4) {
+                props.onGetClientsAsync({
+                  token: props.token,
+                  search: search,
+                });
+                return;
+              }
+
+            }
+            }
           />
         </div>
       </div>
@@ -191,15 +237,15 @@ const ClientsView = (props: ClientsViewProps) => {
       <Modal className="modal-main" show={showModal} style={{}}>
         <div className="card">
           <div className="card-header">
-              <h3>¿Desea eliminar el Cliente { itemSeleted?.firstName +" "+itemSeleted?.firstSurname + " / "+itemSeleted?.documentValue}  ?</h3>
+            <h3>¿Desea eliminar el Cliente {itemSeleted?.firstName + " " + itemSeleted?.firstSurname + " / " + itemSeleted?.documentValue}  ?</h3>
           </div>
           <div className="card-footer d-flex justify-content-md-end">
-              <button type="button" 
+            <button type="button"
               className="btn btn-secondary"
-              onClick={()=>setShowModal(false)}
-              >Cancelar</button>
-              <button type="button" 
-              onClick={()=>handleDelete(
+              onClick={() => setShowModal(false)}
+            >Cancelar</button>
+            <button type="button"
+              onClick={() => handleDelete(
                 itemSeleted as clients_interface.Client
               )}
               className="btn btn-danger ml-md-3">Eliminar</button>

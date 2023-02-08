@@ -1,6 +1,8 @@
+import { EXPORT_WAREHOUSES } from "application/common";
 import { useBreadcrumbs, useTitle } from "application/common/hooks/use-title";
 import { initProduct } from "application/models/products";
 import { initialMetaResponse } from "infrastructure/api/api-handler";
+import { ExportData } from "infrastructure/api/core/request";
 import { products_interface } from "infrastructure/api/products";
 import DataTable from "infrastructure/components/data-table";
 import Modal from "infrastructure/components/modal";
@@ -86,6 +88,31 @@ const ProductView = (props: ProductsViewProps) => {
     }
 
 
+    const DownloadData = ()=>{
+        ExportData(EXPORT_WAREHOUSES,{
+          token:props.token,
+          
+        }).pipe().subscribe((data)=>{
+          //donwload excel file
+          //attachment; filename=clients-report-probulon.xlsx
+    
+          if(data.status==200){
+    
+            const blob  = new Blob([data.data])
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden','');
+            a.setAttribute('href',url);
+            a.setAttribute('download','productos-reporte-probulon.xlsx');
+            document.body.appendChild(a);
+            a.click();
+    
+          }
+        })
+      }
+
+      
+
     return (
         <div className="row" id="table-borderless">
             <div className="col-12 mb-2">
@@ -146,6 +173,7 @@ const ProductView = (props: ProductsViewProps) => {
                         }}
                         isLoading={load}
                         error={props.errorGetProducts}
+                        onDownload={DownloadData}
                     />
                 </div>
             </div>

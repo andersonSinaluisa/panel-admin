@@ -14,5 +14,14 @@ const GetCatalogueType = (params: APIHANDLER.HeaderProps) => {
     })
 }
 
+const ExportData = (url:string,props:APIHANDLER.HeaderProps) => {
+    return APIHANDLER.get(url, {
+        headers: {
+            Authorization: "Bearer " + props.token
+        },
+        responseType:'blob'
+    })
+}
 
-export {GetCatalogueType}
+
+export {GetCatalogueType,ExportData}
