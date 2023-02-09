@@ -1,28 +1,33 @@
 import { URLAPI } from "application/common";
 import Echo from "laravel-echo";
-import io from "socket.io-client";
-
+import * as Pusher from "pusher-js";
 
 declare global {
   interface Window {
-    io: {};
+    Pusher: {};
     Echo: Echo;
   }
 }
 
-window.io = io;
+window.Pusher = Pusher;
 
 export function createSocketConnection(token: string) {
   if (!window.Echo) {
     window.Echo = new Echo({
-      broadcaster: "socket.io",
-      host: URLAPI,
-      transports: ["websocket", "polling", "flashsocket"],
-      auth: {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      broadcaster: "pusher",
+      key: "DsKg8oSmn2",
+      wsHost: "probulon-cloud.com.es",
+      authEndpoint: "https://probulon-cloud.com.es/broadcasting/auth",
+       auth: {
+         headers: {
+           Authorization: "Bearer " + token,
+           Accept: "application/json",
+         },
+       },
+      wsPort: 6001,
+      cluster: "mt1",
+      forceTLS: true,
+      encrypted: true,
     });
   }
 }

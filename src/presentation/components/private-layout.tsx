@@ -3,6 +3,8 @@ import { useSocket } from 'application/common/hooks/use-socket';
 import { initLogin } from 'application/models/auth';
 import { notification } from 'application/models/notifications';
 import { auth_interfaces } from 'infrastructure/api/auth';
+import { installations_interface } from 'infrastructure/api/installation';
+import { Installation } from 'infrastructure/api/installation/interface';
 import { search_interface } from 'infrastructure/api/search';
 import { user_interface } from 'infrastructure/api/users';
 import Footer from 'infrastructure/components/footer';
@@ -23,9 +25,7 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
     const { token, dataLogin, onLogout } = useAuth();
 
     let navigate = useNavigate();
-    const [showOverlay, setShowOverlay] = useState(false);
     const [onpenSearch, setOnpenSearch] = useState(false);
-    const [userData, setUserData] = useState<auth_interfaces.LoginResponse>(initLogin)
 
 
     useEffect(() => {
@@ -38,18 +38,6 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
 
     const [title, setTitle] = useState("");
     const [breadcrumbs, setBreadcrumbs] = useState([]);
-    const [search, setSearch] = useState<search_interface.SearchResponse>({
-        message: {
-            clients: [],
-            installations: [],
-            users: [],
-            jobs: [],
-            personal: [],
-            products: [],
-            tasks: [],
-        },
-        status: 0
-    });
 
 
 
@@ -60,10 +48,29 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
 
     }, [title])
 
+
+    let audio = new Audio(window.location.origin + '/assets/audio/audio.mp3');
+
+
     useSocket({
         type: "INCIDENT",
-        callBack: (payload: any) => {
+        callBack: (payload:{
+            installation: Installation
+        }) => {
+            audio.play();
             console.log(payload)
+            props.addNotification({
+                data: payload.installation,
+                datetime: new Date(),
+                type: "error",
+                description: "Se ha generado un incidente en la instalación del Cliente " + payload.installation.client?.firstName+" "+payload.installation.client?.firstSurname,
+                duration: 5000,
+                onSee: () => {
+                    navigate("/instalaciones/" + payload.installation.id)
+                },
+                see:false,
+                title: "Incidente"
+            })
         }
     });
 
@@ -76,12 +83,6 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
         }
 
     }, [token])
-
-
-
-
-
-
 
 
     if (!token) {
@@ -106,8 +107,7 @@ const PrivateLayout = (props: PrivateLayoutProps): JSX.Element => {
         <>
             <div className="header-navbar-shadow"></div>
 
-            <Navbar dataLogin={dataLogin} onLogout={onLogout}
-                dataSearch={search} onSearch={handleSearch} onOpenSearch={setOnpenSearch} openSearch={onpenSearch}
+            <Navbar dataLogin={dataLogin} onLogout={onLogout} onSearch={handleSearch} onOpenSearch={setOnpenSearch} openSearch={onpenSearch}
                 notifications={props.notifications}
             />
 

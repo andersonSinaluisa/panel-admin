@@ -325,8 +325,22 @@ export const CATALOGE_PRODUCT = "/products/catalog/";
  */
 export const DELETE_PRODUCT = "/core/products/";
 
+/**
+ * 
+ * @constant SEARCH
+ * @description Buscar
+ * @type {string}
+ * @memberof Constants
+ */
+export const SEARCH = "/probulon/super-searcher";
 
-export const SEARCH = "/searcher/";
+/**
+ * @constant GET_NOTIFICATIONS
+ * @description Obtener las notificaciones
+ * @type {string}
+ * @memberof Constants
+ */
+export const GET_NOTIFICATIONS = '/core/notifications';
 
 /**
  * @constant GET_BILLING

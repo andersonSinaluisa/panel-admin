@@ -15,7 +15,6 @@ interface NavbarProps {
   dataLogin: LoginResponse;
   onLogout: Function;
   onSearch: (value: string, type: string) => void;
-  dataSearch: search_interface.SearchResponse;
   openSearch: boolean;
   onOpenSearch: (value: boolean) => void;
   notifications: notification[];
@@ -27,18 +26,7 @@ const Navbar = (props: NavbarProps) => {
   const navigate = useNavigate();
 
   const [openSearch, setOpenSearch] = useState(false);
-  const [search, setSearch] = useState<search_interface.SearchResponse>({
-    message: {
-      clients: [],
-      installations: [],
-      jobs: [],
-      personal  : [],
-      tasks: [],
-      products  : [],
-      users: [],
-    },
-    status: 0
-  });
+
   const [showDrop, setShowDrop] = useState(false);
 
   const [showNotification, setShowNotification] = useState(false);
@@ -69,10 +57,6 @@ const Navbar = (props: NavbarProps) => {
     }
   }, [open]);
 
-  useEffect(() => {
-    setSearch(props.dataSearch);
-    setOpenSearch(props.openSearch);
-  }, [props.dataSearch, props.openSearch])
 
 
   useEffect(() => {
@@ -107,80 +91,6 @@ const Navbar = (props: NavbarProps) => {
     );
   }
 
-
-  const handleChangeType = (e: any) => {
-
-    //obtener la similitud de la palabra escrita en el input
-    let client = similarity(e.currentTarget.value, "Clientes");
-    let type = "";
-    let label = "";
-    if (client > 0.5) {
-      type = "clients";
-      label = "Clientes";
-    }
-
-    let installation = similarity(e.currentTarget.value, "Instalaciones");
-    if (installation > 0.5) {
-      type = "installations";
-      label = "Instalaciones";
-    }
-
-    let job = similarity(e.currentTarget.value, "Trabajos");
-    if (job > 0.5) {
-      type = "jobs";
-      label = "Trabajos";
-    }
-
-    let task = similarity(e.currentTarget.value, "Tareas");
-    if (task > 0.5) {
-      type = "tasks";
-      label = "Tareas";
-    }
-
-    let user = similarity(e.currentTarget.value, "Usuarios");
-    if (user > 0.5) {
-      type = "users";
-      label = "Usuarios";
-    }
-
-    let personal = similarity(e.currentTarget.value, "Personal");
-    if (personal > 0.5) {
-      type = "personal";
-      label = "Personal";
-    }
-
-    let billing = similarity(e.currentTarget.value, "Facturas");
-    if (billing > 0.5) {
-      type = "billing";
-      label = "Facturas";
-    }
-    
-
-
-    seachParam.type = type;
-
-    if (type != "") {
-
-      //si el tipo de busqueda no se encuentra en selectFilter
-      if (selectFilter.findIndex((item) => item.type == type) == -1) {
-
-        SetSelectFilter([{
-          type: type,
-          label: label
-        }])
-      }
-      console.log(selectFilter)
-
-    }
-    props.onSearch(
-      "",
-      type
-    );
-
-
-
-
-  }
 
 
 
@@ -359,71 +269,7 @@ const Navbar = (props: NavbarProps) => {
             </div>
 
             <ul className="nav navbar-nav float-right">
-              <li className="nav-item nav-search "><a className="nav-link nav-link-search"
-                onClick={() => props.onOpenSearch(!openSearch)}>
-                <i className="ficon bx bx-search"></i></a>
-                <div className={openSearch ? "search-input  open" : "search-input"}>
-                  <div className="row">
-                    <div className="search-input-icon col-1 mr-5" ><i className="bx bx-search primary"></i></div>
-
-                    <input className="input col-6 ml-5" type="text" placeholder="Buscar..."
-                      data-search="template-search" onChange={handleChangeType} />
-                    {
-                      seachParam.type !== "" ?
-                        <div>
-
-                          <div className="d-flex align-items-center justify-content--between w-100 col-12"
-
-                          >
-                            <div className="d-flex align-items-center">
-                              <div className="list-item-heading w-100 row" style={
-                                {
-                                  display: openSearch ? "flex" : "none"
-                                }
-                              }>
-                              </div>
-
-
-                            </div>
-                          </div>
-                        </div>
-
-                        : null
-                    }
-                    <div className="search-input-close col-1">
-                      <i className="bx bx-x" onClick={() => props.onOpenSearch(!openSearch)}></i>
-                    </div>
-                  </div>
-
-                  <ul className={openSearch ? 'search-list show' : 'search-list'}>
-                    <li className="d-flex cursor-pointer">
-                      {
-                        //add badge to search list
-                        selectFilter.map(item => {
-                          return (
-                            <a className="d-flex" href="content-helper-classes.html">
-                              <div className="chip chip-success chip-closeable">
-                                <div className="chip-body">
-                                  <span className="chip-text">{item.label}</span>
-                                </div>
-                                <button type="button" className="close" aria-label="Close">
-                                  <i className="bx bx-x"></i>
-                                </button>
-                              </div>
-
-                            </a>
-
-                          )
-                        })
-
-                      }
-                    </li>
-
-
-
-                  </ul>
-                </div>
-              </li>
+            
               <li className="dropdown dropdown-notification nav-item">
                 <a
                   className="nav-link nav-link-label"
@@ -438,7 +284,7 @@ const Navbar = (props: NavbarProps) => {
                 >
                   <i className="ficon bx bx-bell"></i>
                   <span className="badge badge-pill badge-primary badge-up">
-                    {not.filter(x=>x.title=='Instalación').length}
+                    {not.length}
                   </span>
                 </a>
                 <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${showNotification ? "show" : ""
@@ -457,7 +303,7 @@ const Navbar = (props: NavbarProps) => {
                     overflowY: "scroll",
                   }}>
                     {
-                      not.filter(x=>x.title=="Instalación").map((item, index) => {
+                      not.map((item, index) => {
                         return <div className="d-flex justify-content-between cursor-pointer">
                           <div className="media d-flex align-items-center">
                             <div className="media-left pr-0">

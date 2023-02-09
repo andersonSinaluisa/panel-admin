@@ -1,3 +1,4 @@
+import Footer from "infrastructure/components/footer";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../application/common/hooks/use-auth";
@@ -34,6 +35,7 @@ const PublicLayout = () => {
                     </div>
                 </div>
             </div>
+            <Footer></Footer>
         </>
     )
 }

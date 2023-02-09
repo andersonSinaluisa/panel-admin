@@ -20,6 +20,7 @@ import DetailInvoice from '../container/invoice/detail-container';
 import EditInstallation from '../container/installations/edit-container';
 import SearchView from '../container/search/view-container';
 import DetailPersonal from '../container/personal/detail-container';
+import NotificationsView from '../container/notifications/view-container';
 interface RoutesProps{
     name:string;
     relative_path:string;
@@ -336,6 +337,19 @@ const routes:RoutesProps[] =[
         order: 1,
 
     },
+    {
+        name:'Notificaciones',
+        relative_path:'notificaciones',
+        path:'/inicio/notificaciones',
+        element:<NotificationsView title="Notificaciones" breadcrumbs={["Notificaciones"]}/>,
+        icon:'bx bx-bell',
+        order:1,
+        visible_in_menu:true,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+    }
     
     
    
