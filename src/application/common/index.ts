@@ -816,3 +816,25 @@ export const CATALOGUE_TYPE_JOB_PRIORITY = "catalogue_type_job_priority";
  * @memberof Constants
  * */
 export const CATALOGUE_TYPE_INVOICE_PAYMENT_METHOD = "catalogue_type_invoice_payment_method";
+
+
+
+
+//type_notification_status_viewed
+/**
+ * @constant NOTIFICATION_STATUS_VIEWED
+ * @description Estado de notificación visto
+ * @type {string}
+ * @memberof Constants
+ * */
+export const NOTIFICATION_STATUS_VIEWED = "type_notification_status_viewed";
+
+
+//type_notification_status_delivered
+/**
+ * @constant NOTIFICATION_STATUS_DELIVERED
+ * @description Estado de notificación entregado
+ * @type {string}
+ * @memberof Constants
+ * */
+export const NOTIFICATION_STATUS_DELIVERED = "type_notification_status_delivered";

@@ -266,7 +266,7 @@ const DataTable = (props: DataTableProps) => {
                 key={link.label}
               >
                 <a className="page-link" href="#">
-                  {link.label.replace('&laquo;', '<<').replace('&raquo;', '>>').replace("Previous", "").replace("Next", "")}
+                  {link.label.replace('&laquo;', '<<').replace('&raquo;', '>>').replace("Anterior", "").replace("Próximo", "")}
                 </a>
               </li>
             )

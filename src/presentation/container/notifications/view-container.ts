@@ -1,4 +1,6 @@
+import { GetNotificationState } from "application/models/notifications";
 import { HeaderProps } from "infrastructure/api/api-handler";
+import { GetNotifications } from "infrastructure/api/notifications/interface";
 import NotificationsView from "presentation/components/notifications/view";
 import { connect } from "react-redux";
 
@@ -9,7 +11,7 @@ export interface NotificationsViewProps{
     title: string;
     breadcrumbs: string[];
     GetNotificationAsync:(payload: HeaderProps)=>void;
-    notifications: any;
+    notifications: GetNotificationState;
     isLoading: boolean;
 }
 

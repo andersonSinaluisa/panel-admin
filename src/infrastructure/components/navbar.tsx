@@ -81,77 +81,8 @@ const Navbar = (props: NavbarProps) => {
     document.body.style.overflow = "auto";
   };
 
-  const handleChange = (e: any) => {
 
 
-
-    props.onSearch(
-      e.currentTarget.value,
-      seachParam.type
-    );
-  }
-
-
-
-
-  
-
-
-  const handleSelectItem = (item: any) => {
-    console.log(item)
-    if (seachParam.type === "clients") {
-      navigate(`/inicio/clientes/${item._id}`);
-    }
-
-    if (seachParam.type === "installations") {
-      navigate(`/inicio/instalaciones/${item._id}`);
-    }
-
-    if (seachParam.type === "jobs") {
-      navigate(`/inicio/trabajos/${item._id}`);
-    }
-
-    if (seachParam.type === "personals") {
-      navigate(`/inicio/personal/${item._id}`);
-    }
-
-    if (seachParam.type === "tasks") {
-      navigate(`/inicio/tareas/${item._id}`);
-    }
-
-    if (seachParam.type === "users") {
-      navigate(`/inicio/usuarios/${item._id}`);
-    }
-
-    if (seachParam.type === "billing") {
-      navigate(`/inicio/facturas/${item._id}`);
-    }
-    props.onOpenSearch(false);
-  }
-
-
-
-  const handleFilterData = (e: any) => {
-    let value = e.currentTarget.value;
-
-    console.log(e.currentTarget)
-    let data = selectFilter;
-    //get selected
-
-    //if value and name no exist in selectFilter
-    if (data.findIndex((item) => item.label == value) == -1) {
-
-      data.push({
-        label: value,
-        type: value
-      })
-
-      SetSelectFilter(data);
-
-    }
-    setSelectedFilter(value);
-
-  }
 
 
   return (
@@ -171,81 +102,81 @@ const Navbar = (props: NavbarProps) => {
                   </a>
                 </li>
                 <li className="dropdown dropdown-notification nav-item">
-                <a
-                  className="nav-link nav-link-label"
-                  href="#"
-                  data-toggle="dropdown"
+                  <a
+                    className="nav-link nav-link-label"
+                    href="#"
+                    data-toggle="dropdown"
 
-                  onClick={
-                    (e) => {
-                      setShowNotTask(!showNotTask);
+                    onClick={
+                      (e) => {
+                        setShowNotTask(!showNotTask);
+                      }
                     }
-                  }
-                >
-                  <i className="ficon bx bx-check-square"></i>
-                  <span className="badge badge-pill badge-warning badge-up">
-                    { not.filter(x=>x.title=="Tareas").length}
-                  </span>
-                </a>
-                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-left ${showNotTask ? "show" : ""
-                  }`}>
-                  <li className="dropdown-menu-header bg-warning">
-                    <div className="dropdown-header px-1 py-75 d-flex justify-content-between">
-                      <span className="notification-title">
-                        { not.filter(x=>x.title=="Tareas").length} Nuevas Notificaciones
-                      </span>
-                      <span className="text-bold-400 cursor-pointer">
-                        Marcar como leidas
-                      </span>
-                    </div>
-                  </li>
-                  <li className="scrollable-container media-list" style={{
-                    overflowY: "scroll",
-                  }}>
-                    {
-                       not.filter(x=>x.title=="Tareas").map((item, index) => {
-                        return <div className="d-flex justify-content-between cursor-pointer" onClick={
-                          () => {
-                            navigate(`/inicio/tareas/?task=${item.data._id}`);
-                          }
-                        }>
-                          <div className="media d-flex align-items-center">
-                            <div className="media-left pr-0">
-                              <div className="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25">
-                                <span className="avatar-content text-primary font-medium-2">
-                                  <i className="bx bxs-briefcase-alt-2"></i>
-                                </span>
+                  >
+                    <i className="ficon bx bx-check-square"></i>
+                    <span className="badge badge-pill badge-warning badge-up">
+                      {not.filter(x => x.title == "Tareas").length}
+                    </span>
+                  </a>
+                  <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-left ${showNotTask ? "show" : ""
+                    }`}>
+                    <li className="dropdown-menu-header bg-warning">
+                      <div className="dropdown-header px-1 py-75 d-flex justify-content-between">
+                        <span className="notification-title">
+                          {not.filter(x => x.title == "Tareas").length} Nuevas Notificaciones
+                        </span>
+                        <span className="text-bold-400 cursor-pointer">
+                          Marcar como leidas
+                        </span>
+                      </div>
+                    </li>
+                    <li className="scrollable-container media-list" style={{
+                      overflowY: "scroll",
+                    }}>
+                      {
+                        not.filter(x => x.title == "Tareas").map((item, index) => {
+                          return <div className="d-flex justify-content-between cursor-pointer" onClick={
+                            () => {
+                              navigate(`/inicio/tareas/?task=${item.data._id}`);
+                            }
+                          }>
+                            <div className="media d-flex align-items-center">
+                              <div className="media-left pr-0">
+                                <div className="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25">
+                                  <span className="avatar-content text-primary font-medium-2">
+                                    <i className="bx bxs-briefcase-alt-2"></i>
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="media-body">
+                                <h6 className="media-heading">
+                                  <span className="text-bold-500">{item.title}</span>{" "}
+                                  <br />
+                                  {item.description}
+                                </h6>
+                                <small className="notification-text">{
+                                  item.datetime.toDateString()
+                                }</small>
                               </div>
                             </div>
-                            <div className="media-body">
-                              <h6 className="media-heading">
-                                <span className="text-bold-500">{item.title}</span>{" "}
-                                <br />
-                                {item.description}
-                              </h6>
-                              <small className="notification-text">{
-                                item.datetime.toDateString()
-                              }</small>
-                            </div>
                           </div>
-                        </div>
-                      })
-                    }
+                        })
+                      }
 
 
 
 
-                  </li>
-                  <li className="dropdown-menu-footer">
-                    <a
-                      className="dropdown-item p-50 text-primary justify-content-center"
-                      href="javascript:void(0)"
-                    >
-                      Read all notifications
-                    </a>
-                  </li>
-                </ul>
-              </li>
+                    </li>
+                    <li className="dropdown-menu-footer">
+                      <a
+                        className="dropdown-item p-50 text-primary justify-content-center"
+                        href="javascript:void(0)"
+                      >
+                        Read all notifications
+                      </a>
+                    </li>
+                  </ul>
+                </li>
               </ul>
 
               <ul className="nav navbar-nav">
@@ -269,7 +200,7 @@ const Navbar = (props: NavbarProps) => {
             </div>
 
             <ul className="nav navbar-nav float-right">
-            
+
               <li className="dropdown dropdown-notification nav-item">
                 <a
                   className="nav-link nav-link-label"
@@ -287,7 +218,7 @@ const Navbar = (props: NavbarProps) => {
                     {not.length}
                   </span>
                 </a>
-                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${showNotification ? "show" : ""
+                <ul className={`dropdown-menu dropdown-menu-media dropdown-menu-right ${showNotification} ${showNotification ? "show" : ""
                   }`}>
                   <li className="dropdown-menu-header">
                     <div className="dropdown-header px-1 py-75 d-flex justify-content-between">
@@ -328,9 +259,6 @@ const Navbar = (props: NavbarProps) => {
                       })
                     }
 
-
-
-
                   </li>
                   <li className="dropdown-menu-footer">
                     <a
@@ -352,13 +280,13 @@ const Navbar = (props: NavbarProps) => {
                   }
                 >
                   <div className="user-nav d-sm-flex d-none">
-                    <span className="user-name">{props.dataLogin.data.firstName+ " "+props.dataLogin.data.secondName}</span>
+                    <span className="user-name">{props.dataLogin.data.firstName + " " + props.dataLogin.data.secondName}</span>
                     <span className="user-status">{props.dataLogin.data.role?.name}</span>
                   </div>
                   <span>
                     <img
                       className="round"
-                      src={window.location.origin + "/assets/app-assets/images/portrait/small/avatar-s-11.jpg"}
+                      src={window.location.origin + "/assets/app-assets/images/images.png"}
                       alt="avatar"
                       height="40"
                       width="40"

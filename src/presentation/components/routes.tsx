@@ -21,6 +21,7 @@ import EditInstallation from '../container/installations/edit-container';
 import SearchView from '../container/search/view-container';
 import DetailPersonal from '../container/personal/detail-container';
 import NotificationsView from '../container/notifications/view-container';
+import NotificationDetail from '../components/notifications/detail'
 interface RoutesProps{
     name:string;
     relative_path:string;
@@ -345,6 +346,19 @@ const routes:RoutesProps[] =[
         icon:'bx bx-bell',
         order:1,
         visible_in_menu:true,
+        permissions:[
+            'view_analysis',
+            'view_analysislist'
+        ],
+    },
+    {
+        name:'Notificaciones',
+        relative_path:'/inicio/notificaciones/:id',
+        path:'/inicio/notificaciones/:id',
+        element:<NotificationDetail title="Notificaciones" breadcrumbs={["Notificaciones"]}/>,
+        icon:'bx bx-bell',
+        order:1,
+        visible_in_menu:false,
         permissions:[
             'view_analysis',
             'view_analysislist'

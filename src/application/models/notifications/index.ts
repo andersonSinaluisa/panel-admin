@@ -1,8 +1,10 @@
 import { createModel } from "@rematch/core";
 import { HeaderProps, initialMetaResponse, ResponseServer } from "infrastructure/api/api-handler";
 import { notifications_request } from "infrastructure/api/notifications";
-import { GetNotifications } from "infrastructure/api/notifications/interface";
+import { GetNotifications, Notification } from "infrastructure/api/notifications/interface";
 import { RootModel } from "..";
+import { initialClient } from "../clients";
+import { initialInstallation } from "../installations";
 
 interface notification{
     title:string;
@@ -16,8 +18,60 @@ interface notification{
 }
 
 
-interface GetNotificationState extends ResponseServer{
+export interface GetNotificationState extends ResponseServer{
     data:GetNotifications;
+}
+
+
+export const initNotification :Notification = {
+    id:0,
+    availability:{
+        code:"",
+        createdAt:"",
+        deletedAt:"",
+        id:0,
+        name:"",
+        type:{
+            code:"",
+            createdAt:"",
+            deletedAt:"",
+            id:0,
+            name:"",
+            updatedAt:""
+        },
+        updatedAt:""
+    },
+    client:initialClient,
+    createdAt:"",
+    deletedAt:"",
+    description:"",
+    device:{},
+    installation:initialInstallation,
+    state:{
+        code:"",
+        createdAt:"",
+        deletedAt:"",
+        id:0,
+        name:"",
+        type:{
+            code:"",
+            createdAt:"",
+            deletedAt:"",
+            id:0,
+            name:"",
+            updatedAt:""
+        },
+        updatedAt:""
+    },
+    type:{
+        code:"",
+        createdAt:"",
+        deletedAt:"",
+        id:0,
+        name:"",
+        updatedAt:""
+    },
+    updatedAt:""
 }
 
 

@@ -1,97 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="%PUBLIC_URL%/assets/app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/extensions/bootstrap-treeview.min.css">
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/app-assets/images/ico/apple-icon-120.png">
+  <link rel="shortcut icon" type="image/x-icon" href="%PUBLIC_URL%/assets/app-assets/images/ico/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700"
+    rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/editors/quill/quill.snow.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/extensions/dragula.min.css">
+  <!-- BEGIN: Vendor CSS-->
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/vendors.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="%PUBLIC_URL%/assets/app-assets/vendors/css/extensions/bootstrap-treeview.min.css">
 
-    <!-- END: Vendor CSS-->
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/editors/quill/quill.snow.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/extensions/dragula.min.css">
 
-    <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/colors.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/components.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/themes/dark-layout.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/themes/semi-dark-layout.css">
-    <!-- END: Theme CSS-->
+  <!-- END: Vendor CSS-->
 
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/forms/select/select2.min.css">
+  <!-- BEGIN: Theme CSS-->
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/bootstrap-extended.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/colors.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/components.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/themes/dark-layout.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/themes/semi-dark-layout.css">
+  <!-- END: Theme CSS-->
 
-    <!-- BEGIN: Page CSS-->
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/core/menu/menu-types/vertical-menu.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/vendors/css/forms/select/select2.min.css">
 
-    <!-- END: Page CSS-->
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/pages/app-email.css">
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/pages/app-todo.css">
+  <!-- BEGIN: Page CSS-->
+  <link rel="stylesheet" type="text/css"
+    href="%PUBLIC_URL%/assets/app-assets/css/core/menu/menu-types/vertical-menu.css">
 
-
-    <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/style.css">
-
-    
-    <title>Panel de control</title>
-    <!-- Google tag (gtag.js) -->
-<!--<script async src="https://www.googletagmanager.com/gtag/js?id=G-K3LP6LY4DS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-K3LP6LY4DS');
-</script>-->
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-   
-   
+  <!-- END: Page CSS-->
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/pages/app-email.css">
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/app-assets/css/pages/app-todo.css">
 
 
-    <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/vendors.min.js"></script>
-    <!-- BEGIN: Page Vendor JS-->
-    <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/editors/quill/quill.min.js"></script>
+  <!-- BEGIN: Custom CSS-->
+  <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/style.css">
 
-    <!-- END: Page Vendor JS-->
-    <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/extensions/bootstrap-treeview.min.js"></script>
 
-    <!-- BEGIN: Theme JS-->
-    <script src="%PUBLIC_URL%/assets/app-assets/js/core/app.js"></script>
-    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/components.js"></script>
-    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/footer.js"></script>
-    <!-- END: Theme JS-->
+  <title>Panel de control</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3LP6LY4DS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-    <!-- BEGIN: Page JS-->
-    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/pages/app-email.js"></script>
-    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/pages/app-todo.js"></script>
+    gtag('config', 'G-K3LP6LY4DS');
+  </script>
+</head>
 
-    <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/extensions/ext-component-treeview.js"></script>
-    <script>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+
+
+
+  <!-- BEGIN: Page Vendor JS-->
+  <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/editors/quill/quill.min.js"></script>
+
+  <!-- END: Page Vendor JS-->
+  <script src="%PUBLIC_URL%/assets/app-assets/vendors/js/extensions/bootstrap-treeview.min.js"></script>
+
+  <!-- BEGIN: Theme JS-->
+  <script src="%PUBLIC_URL%/assets/app-assets/js/core/app.js"></script>
+  <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/components.js"></script>
+  <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/footer.js"></script>
+  <!-- END: Theme JS-->
+
+  <!-- BEGIN: Page JS-->
+  <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/pages/app-email.js"></script>
+  <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/pages/app-todo.js"></script>
+
+  <script src="%PUBLIC_URL%/assets/app-assets/js/scripts/extensions/ext-component-treeview.js"></script>
+  <script>
 
         //hacer que solo se haga click una vez en un boton
-        
-      </script>
-  </body>
+
+  </script>
+</body>
+
 </html>
