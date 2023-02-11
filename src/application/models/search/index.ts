@@ -5,68 +5,109 @@ import { SearchResponse } from "infrastructure/api/search/interface";
 import { RootModel } from "..";
 
 
-export interface SearchStateProps extends ResponseServer{
-    data:SearchResponse
+export interface SearchStateProps extends ResponseServer {
+    data: SearchResponse
 }
 
 export const SEARCH = createModel<RootModel>()({
     state: {
-        search:{
-            data:{
-                message:{
-                    clients:[],
-                    installations:[],
-                    users:[],
-                    jobs:[],
-                    personal:[],
-                    products:[],
-                    tasks:[]
+        search: {
+            data: {
+                data: {
+                    clients: {
+                        data: []
+                    },
+                    installations: {
+                        data: []
+                    },
+                    invoices: {
+                        data: []
+                    },
+                    jobs: {
+                        data: []
+                    },
+                    products: {
+                        data: []
+                    },
+                    staff: {
+                        data: []
+                    },
+                    tasks: {
+                        data: []
+                    },
+                    users: {
+                        data: []
+                    }
                 },
-                status:0,
+                message: {
+                    detail: "",
+                    status: 0,
+                    summary: ""
+                }
             },
-            error:"",
-            status:0
+            error: "",
+            status: 0
         } as SearchStateProps
     },
     reducers: {
-        onSearch: (state, payload:SearchStateProps) => {
+        onSearch: (state, payload: SearchStateProps) => {
             return {
                 ...state,
-                search:payload
+                search: payload
             }
         }
     },
     effects: (dispatch) => ({
-        async onSearchAsync(props:{
-            headers:HeaderProps,
-            identityCounter:string,
-            type:string,
-        }){
-            try{
+        async onSearchAsync(props: {
+            headers: HeaderProps,
+            identityCounter: string,
+            type: string,
+        }) {
+            try {
                 const res = await search_request.Search(props).toPromise()
                 dispatch.SEARCH.onSearch({
-                    data:res.data,
-                    error:"",
-                    status:res.status
+                    data: res.data,
+                    error: "",
+                    status: res.status
                 })
-                
-            }catch(e:any){
+
+            } catch (e: any) {
                 dispatch.SEARCH.onSearch({
-                    data:{
-                        message:{
-                            clients:[],
-                            installations:[],
-                            users:[],
-                            jobs:[],
-                            personal:[],
-                            products:[],
-                            tasks:[]
-                            
+                    data: {
+                        data: {
+                            clients: {
+                                data: []
+                            },
+                            installations: {
+                                data: []
+                            },
+                            invoices: {
+                                data: []
+                            },
+                            jobs: {
+                                data: []
+                            },
+                            products: {
+                                data: []
+                            },
+                            staff: {
+                                data: []
+                            },
+                            tasks: {
+                                data: []
+                            },
+                            users: {
+                                data: []
+                            }
                         },
-                        status:0
+                        message: {
+                            detail: "",
+                            status: 0,
+                            summary: ""
+                        }
                     },
-                    error:e.message,
-                    status:e.status
+                    error: e.message,
+                    status: e.status
                 })
             }
         }

@@ -36,28 +36,70 @@ const SearchView = (props: SearchViewProps) => {
     const [types, setTypes] = useState<string[]>([]);
 
     const [data, setData] = useState<search_interface.SearchResponse>({
-        message: {
-            users: [],
-            installations: [],
-            clients: [],
-            jobs: [],
-            products: [],
-            tasks: [],
-            personal: [],
+        data: {
+            clients: {
+                data: []
+            },
+            installations: {
+                data: []
+            },
+            invoices: {
+                data: []
+            },
+            jobs: {
+                data: []
+            },
+            products: {
+                data: []
+            },
+            staff: {
+                data: []
+            },
+            tasks: {
+                data: []
+            },
+            users: {
+                data: []
+            }
         },
-        status: 0,
+        message: {
+            detail: "",
+            status: 0,
+            summary: ""
+        }
     });
     const [copy, setCopy] = useState<search_interface.SearchResponse>({
-        message: {
-            users: [],
-            installations: [],
-            clients: [],
-            jobs: [],
-            products: [],
-            tasks: [],
-            personal: [],
+        data: {
+            clients: {
+                data: []
+            },
+            installations: {
+                data: []
+            },
+            invoices: {
+                data: []
+            },
+            jobs: {
+                data: []
+            },
+            products: {
+                data: []
+            },
+            staff: {
+                data: []
+            },
+            tasks: {
+                data: []
+            },
+            users: {
+                data: []
+            }
         },
-        status: 0,
+        message: {
+            detail: "",
+            status: 0,
+            summary: ""
+        }
     });
     const [actions, setActions] = useState<any[]>([])
     const [filterFields, setFilterFields] = useState<{
@@ -120,22 +162,12 @@ const SearchView = (props: SearchViewProps) => {
 
         let datos = copy.message;
         
-        
+
 
         let actions: Columns = [];
 
-        //get last element types
-        let type = types[types.length - 1];
-        
 
-        let data = datos[type as keyof search_interface.SearchResponse["message"]];
-        if (data){
-            if (data.length > 0) {
-                actions = getFieldsByType(data[0])
 
-        }
-        }
-        
         return actions;
 
 
@@ -208,13 +240,13 @@ const SearchView = (props: SearchViewProps) => {
 
 
 
-       /* setData({
-            ...data,
-            message: {	
-                ...data.message,
-                [type]: final
-            }
-        })*/
+        /* setData({
+             ...data,
+             message: {	
+                 ...data.message,
+                 [type]: final
+             }
+         })*/
     }
 
 
@@ -222,7 +254,7 @@ const SearchView = (props: SearchViewProps) => {
 
     const getLabelDisplay = (field: string, value: string) => {
         if (field == "idClient" || field == "owner" || field == "clientID") {
-           
+
         }
         return value;
     }
@@ -231,29 +263,24 @@ const SearchView = (props: SearchViewProps) => {
     const getValuesByField = (field: string) => {
         let values: any[] = [];
         let type = types[types.length - 1];
-        let data = copy.message[type as keyof search_interface.SearchResponse["message"]];
-        data.map((item:any) => {
-            if (values.findIndex((item_) => item_ === item[field]) == -1) {
-                values.push(item[field])
-            }
-        })
+
         return values;
     }
 
-    const removeFilter = (field: string,value:string) => {
-       let final = filterFields.filter((item) => item.field !== field);
+    const removeFilter = (field: string, value: string) => {
+        let final = filterFields.filter((item) => item.field !== field);
 
-       if(final.length>0){
-            let clear_data:{
+        if (final.length > 0) {
+            let clear_data: {
                 field: string,
                 list: MultiValue<{ label: string, value: string }>
             }[] = [];
             clear_data.push({
-                field:field,
-                list:final[0].list.filter((item)=>item.value!==value)
+                field: field,
+                list: final[0].list.filter((item) => item.value !== value)
             });
             setFilterFields(clear_data);
-       }
+        }
 
 
     }
@@ -274,10 +301,10 @@ const SearchView = (props: SearchViewProps) => {
                                 { value: 'users', label: 'Usuarios' },
                                 { value: 'jobs', label: 'Trabajos' },
                                 { value: 'tasks', label: 'Tareas' },
-                                { value: 'billing', label: 'Facturas' },
+                                { value: 'invoices', label: 'Facturas' },
                                 { value: 'clients', label: 'Clientes' },
                                 { value: 'installations', label: 'Instalaciones' },
-                                { value: 'personal', label: 'Personal' },
+                                { value: 'staff', label: 'Personal' },
                                 { value: 'products', label: 'Productos' },
                             ].map((item, index) => {
                                 return (
@@ -310,7 +337,6 @@ const SearchView = (props: SearchViewProps) => {
                                             </label>
                                             <ReactSelect
                                                 key={item.name}
-
                                                 options={getValuesByField(item.name).map((item_) => {
                                                     return {
                                                         value: item_,

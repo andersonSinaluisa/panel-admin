@@ -70,7 +70,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                             <div className="card-body pb-0 mx-25">
                                 {/* header section */}
                                 <div className="row">
-                                    <div className="col-4">
+                                    <div className="col-12 col-md-4">
                                         <h4>N° Factura</h4>
                                         <Input
                                             label="N° Factura"
@@ -106,7 +106,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                         />
                                     </div>
                                     <div className="col-3"></div>
-                                    <div className="col-4">
+                                    <div className="col-12 col-md-4">
                                         <h4>Datos Fiscales</h4>
                                         
                                         <Input
@@ -162,13 +162,13 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             <div data-repeater-list="col-12">
                                                 <div data-repeater-item>
                                                     <div className="row ">
-                                                        <div className="col-1 invoice-item-title">Cantidad</div>
-                                                        <div className="col-1 ml-2 col-md-1 invoice-item-title">Ref</div>
+                                                        <div className="col-12 col-md-1 invoice-item-title">Cantidad</div>
+                                                        <div className="col-12 col-xl-1 ml-2 col-md-1 invoice-item-title">Ref</div>
 
-                                                        <div className="col-2 invoice-item-title">Nº Serie</div>
-                                                        <div className="col-3 invoice-item-title">Descripcion</div>
-                                                        <div className="col-2 col-md-1 invoice-item-title">Precio</div>
-                                                        <div className="col-2 col-md-1 invoice-item-title">Total</div>
+                                                        <div className="col-12 col-md-2 invoice-item-title">Nº Serie</div>
+                                                        <div className="col-12 col-md-3 invoice-item-title">Descripcion</div>
+                                                        <div className="col-12 col-md-2 col-md-1 invoice-item-title">Precio</div>
+                                                        <div className="col-12 col-md-2 col-md-1 invoice-item-title">Total</div>
                                                     </div>
                                                     <div className=" d-flex border rounded mb-1 row col-12">
 
@@ -203,12 +203,12 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
 
                                                                     <div className="col-md-2 col-12 form-group mt-2">
                                                                         <strong className="text-primary align-middle">
-                                                                            $ {item.product?.priceForPublic}
+                                                                            € {item.product?.priceForPublic}
                                                                         </strong>
                                                                     </div>
                                                                     <div className="col-md-2 col-12 form-group mt-2">
                                                                         <strong className="text-primary align-middle">
-                                                                            $ {parseInt(item.product?.priceForPublic||"0")*item.amount}
+                                                                            € {parseInt(item.product?.priceForPublic||"0")*item.amount}
                                                                         </strong>
                                                                     </div>
 
@@ -239,7 +239,7 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                 <div className="card-body pt-0 mx-25">
                                     <hr />
                                     <div className="row">
-                                        <div className="col-8">
+                                        <div className="col-12 col-md-8">
                                             <h6>Metodo de pago</h6>
                                             <p>
                                                 {
@@ -251,12 +251,12 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
                                             {invoice.data.description}
                                             </p>
                                         </div>
-                                        <div className="col-4 mt-2">
+                                        <div className="col-12 col-md-4 mt-2">
                                             <div className="invoice-subtotal">
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Importe Neto</span>
                                                     <span className="invoice-value">
-                                                        $ {invoice.data.invoiceDetails.map((item, index) => {
+                                                        € {invoice.data.invoiceDetails.map((item, index) => {
                                                             return parseInt(item.product?.priceForPublic||"0")*item.amount
                                                         }).reduce((a, b) => a + b, 0)
                                                         }
@@ -265,17 +265,17 @@ const DetailInvoice = (props: DetailInvoiceProps) => {
 
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Descuento </span>
-                                                    <span className="invoice-value">$ {invoice.data.clientDiscount}</span>
+                                                    <span className="invoice-value">€ {invoice.data.clientDiscount}</span>
                                                 </div>
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">IVA (12%)</span>
-                                                    <span className="invoice-value">$ {invoice.data.iva}</span>
+                                                    <span className="invoice-value">€ {invoice.data.iva}</span>
                                                 </div>
                                                 <hr />
                                                 <div className="invoice-calc d-flex justify-content-between">
                                                     <span className="invoice-title">Total</span>
                                                     <span className="invoice-value">
-                                                        $ {invoice.data.invoiceDetails.map((item, index) => {
+                                                        € {invoice.data.invoiceDetails.map((item, index) => {
                                                             return parseInt(item.product?.priceForPublic||"0")*item.amount- invoice.data.clientDiscount - invoice.data.iva
                                                         }).reduce((a, b) => a + b, 0)
                                                         }

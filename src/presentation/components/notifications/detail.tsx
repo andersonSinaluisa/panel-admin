@@ -48,7 +48,7 @@ const NotificationDetail = ({ title, breadcrumbs }: any) => {
 
                     </div>
                     <div className="card-footer row pt-0 border-top">
-                        <div className="col-6">
+                        <div className="col-12 col-md-6">
                             <label className="sidebar-label">Instalación</label>
                             <br />
                             <label className="sidebar-label">{
@@ -99,7 +99,7 @@ const NotificationDetail = ({ title, breadcrumbs }: any) => {
 
                             </ul>
                         </div>
-                        <div className="col-6">
+                        <div className="col-12 col-md-6">
                             <label className="sidebar-label">Cliente</label>
                             <br />
                             <label className="sidebar-label">{
@@ -155,7 +155,7 @@ const NotificationDetail = ({ title, breadcrumbs }: any) => {
 
                     </div>
                     <div className="card-footer row pt-0 border-top mt-5">
-                        <div className="col-2">
+                        <div className="col-12 col-md-2">
                             <Link to="/inicio/notificaciones/" className="btn btn-outline-dark btn-block">Volver</Link>
                         </div>
                     </div>
